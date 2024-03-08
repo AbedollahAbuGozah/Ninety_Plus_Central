@@ -42,4 +42,35 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+
+    }
+
+    public function instructor()
+    {
+        return $this->hasOne(Instructor::class);
+    }
+
+    public function roles()
+    {
+        return $this->hasMany(Role::class);
+    }
+
+    public function hasPermission($permissionAccess, $resourceId)
+    { 
+        $hasPermission = false;
+
+        foreach ($this->roles as $role){    
+           $hasPermission |= (bool)RolePermissionAssign::where([
+                'role_id' => $role->id,
+                'resource_id' => $resourceId,
+                 $permissionAccess => true,
+            ]);
+        }
+        
+        return $hasPermission;
+    }
 }
