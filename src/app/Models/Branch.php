@@ -8,4 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class Branch extends Model
 {
     use HasFactory;
+
+    protected $guarded = ['id'];
+
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
+
+    public function modules(){
+        //TODO: Implement modules relationship method.
+        return [
+            'math',
+            "chemistry",
+            "en",
+        ];
+    }
 }

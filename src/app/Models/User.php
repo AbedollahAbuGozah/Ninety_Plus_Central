@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -46,7 +47,6 @@ class User extends Authenticatable
     public function student()
     {
         return $this->hasOne(Student::class);
-
     }
 
     public function instructor()
@@ -59,18 +59,40 @@ class User extends Authenticatable
         return $this->hasMany(Role::class);
     }
 
-    public function hasPermission($permissionAccess, $resourceId)
-    { 
+    public function isAdmin()
+    {
+        return $this->roles()->where('name', 'admin')->exists();
+    }
+
+    public function isHr()
+    {
+        return $this->roles()->where('name', 'hr')->exists();
+    }
+
+    public function isInstructor()
+    {
+        return $this->roles()->where('name', 'instructor')->exists();
+    }
+
+
+    public function isStudent()
+    {
+        return $this->roles()->where('name', 'student')->exists();
+    }
+
+
+    public function hasPermissionAccess($permission, $resourceId)
+    {
         $hasPermission = false;
 
-        foreach ($this->roles as $role){    
-           $hasPermission |= (bool)RolePermissionAssign::where([
+        foreach ($this->roles as $role) {
+            $hasPermission |= (bool)RolePermissionAssign::where([
                 'role_id' => $role->id,
                 'resource_id' => $resourceId,
-                 $permissionAccess => true,
-            ]);
+                $permission => true,
+            ])->exists();;
         }
-        
+
         return $hasPermission;
     }
 }

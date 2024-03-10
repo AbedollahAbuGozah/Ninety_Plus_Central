@@ -8,4 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 class Instructor extends Model
 {
     use HasFactory;
+
+    protected $guarded = ['id'];
+
+    public function cv()
+    {
+        return $this->hasOne(Cv::class);
+    }
+
+    public function courses(){
+        //TODO: implement courses relation
+
+        return[
+            "كيمياء فصل اول",
+            "كيمياء فصل اول",
+            "كيمياء فصل اول",
+            "كيمياء فصل اول",
+            "كيمياء فصل اول",
+        ]
+    }
+
 }
