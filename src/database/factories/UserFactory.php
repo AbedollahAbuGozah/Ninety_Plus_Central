@@ -16,7 +16,6 @@ class UserFactory extends Factory
      */
     protected static ?string $password = '1233211';
 
-    public $cites = ['Tulkarem', 'Ramallah', 'Jenin' ,'Nablus', 'Hebron'];
 
     /**
      * Define the model's default state.
@@ -30,7 +29,7 @@ class UserFactory extends Factory
             'last_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->unique()->phoneNumber(),
-            'city' => fake()->city(),
+            'city_id' => rand(1,6),
             'gender' => rand(0, 1), // 0 for male and 1 for female
             'birth_date' => fake()->dateTime(),
             'email_verified_at' => now(),

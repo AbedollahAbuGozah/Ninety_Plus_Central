@@ -20,14 +20,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([BranchSeeder::class,
-        RoleSeeder::class,
-        ResourceSeeder::class,
-    ]);
+            RoleSeeder::class,
+            ResourceSeeder::class,
+            CitySeeder::class,
+        ]);
         User::factory(10)->create();
         Student::factory(5)->create();
         Instructor::factory(5)->create();
         Cv::factory(5)->create();
         UserRole::factory(10)->create();
-       
+
     }
 }

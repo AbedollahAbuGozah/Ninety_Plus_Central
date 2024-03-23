@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('first_name', 50);
             $table->string('last_name', 50);
-            $table->string('city', 50);
             $table->dateTime('birth_date');
             $table->boolean('gender')->default(false)->comment("1 - male, 0 - female");
             $table->string('phone', 20)->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->foreignId('city_id')->constrained('cites');
             $table->rememberToken();
             $table->timestamps();
         });
