@@ -27,6 +27,5 @@ class SendEmailVerificationJob implements ShouldQueue
      */
     public function handle(): void
     {
-        event(new Registered($this->user));
     }
 }

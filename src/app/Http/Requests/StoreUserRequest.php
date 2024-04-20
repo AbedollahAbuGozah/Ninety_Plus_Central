@@ -27,7 +27,7 @@ class StoreUserRequest extends FormRequest
         return [
             'first_name' => 'required|min:3|max:50',
             'last_name' => 'required|min:3|max:50',
-            'email' => 'required|email|max:30',
+            'email' => 'required|email|max:30|unique:users,email',
             'role_id' => [
                 'required',
                 'in:1,2,3,4',
@@ -45,12 +45,11 @@ class StoreUserRequest extends FormRequest
             ],
             'password' => [
                 'required',
+                'unique:users,phone',
                 'confirmed',
                 new PasswordRule(),
 
             ],
-            ""
-
         ];
     }
 }

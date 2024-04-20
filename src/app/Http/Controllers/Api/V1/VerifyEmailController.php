@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\HttpResponse;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 
@@ -23,8 +23,10 @@ class VerifyEmailController extends Controller
         $token = auth('api')->login($user);
 
         return $this->success([
-            'data' => $user,
-            'token' => $token
-        ], 'Email verified successfully', 200);
+            'user' => UserResource::make($user),
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60
+        ], trans('messages.success.verification'), 200);
     }
 }

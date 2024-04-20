@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\PasswordRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetPasswordReqeust extends FormRequest
+class StoreModuleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,14 +21,12 @@ class ResetPasswordReqeust extends FormRequest
      */
     public function rules(): array
     {
+        logger($this->route('country')['id']);
+        $this->merge(['country_id' => $this->route('country')['id']]);
         return [
-            'token' => 'required',
-            'email' => 'email|required',
-            'password' => [
-                'required',
-                'confirmed',
-                new PasswordRule()
-            ]
+            'name' => 'required|min:2|max:30',
+            'branch_id' => 'required|exists:branches,id',
+            'country_id' => 'required|exists:countries,id',
         ];
     }
 }

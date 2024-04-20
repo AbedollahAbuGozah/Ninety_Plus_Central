@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\PasswordRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetPasswordReqeust extends FormRequest
+class UpdateModuleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +22,8 @@ class ResetPasswordReqeust extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => 'required',
-            'email' => 'email|required',
-            'password' => [
-                'required',
-                'confirmed',
-                new PasswordRule()
-            ]
+            'name' => 'sometimes|required|min:2|max:30',
+            'branch_id' => 'sometimes|required|exists:branches,id',
         ];
     }
 }

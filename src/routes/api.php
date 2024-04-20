@@ -1,10 +1,14 @@
 <?php
 
-use App\Http\Controllers\Api\V1\RegisterUserController;
-use App\Http\Controllers\Api\V1\VerifyEmailController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\ModuleController;
+use App\Http\Controllers\Api\V1\StudentController;
+use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/auth.php';
-Route::post('register', RegisterUserController::class);
-Route::get('email/verify/{id}/{hash}', VerifyEmailController::class)->name('verification.verify');
+
+Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function () {
+    Route::apiResource('users', UserController::class);
+    Route::apiResource('countries.modules', ModuleController::class)->shallow();
+    Route::apiResource('students', StudentController::class);
+});

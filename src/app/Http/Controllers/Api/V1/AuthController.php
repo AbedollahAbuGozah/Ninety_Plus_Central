@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\GetPasswordResetCodeRequest;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\ResetPasswordReqeust;
 use App\Http\Requests\VerifyPasswordResetCode;
@@ -11,8 +13,7 @@ use App\Models\PasswordResetCode;
 use App\Models\User;
 use App\Notifications\SendResetPasswordcodeNotification;
 use App\Traits\HttpResponse;
-use Illuminate\Http\Request;
-use Mockery\Generator\StringManipulation\Pass\Pass;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -21,7 +22,6 @@ class AuthController extends Controller
     public function login(LoginUserRequest $request)
     {
         $credentials = $request->safe()->all();
-
         if (!$token = auth()->attempt($credentials)) {
             return $this->error(trans('messages.error.login'), 404);
         }
@@ -34,15 +34,17 @@ class AuthController extends Controller
         ], trans('messages.success.login'), 200);
     }
 
-    public function sendCode(Request $request, $email)
+    public function sendCode(GetPasswordResetCodeRequest $request)
     {
-        $user = User::where('email', '=', $email)->firstOrFail();
+        $email = $request->safe()->all();
+        $user = User::where($email)->firstOrFail();
         $passwordReset = PasswordResetCode::create([
             'code' => PasswordResetCode::generateCode(),
-            'email' => $email
+            'email' => $email['email']
         ]);
         $user->notify(new SendResetPasswordcodeNotification($passwordReset->code));
-        DeleteExpiredPasswordResetCode::dispatch($passwordReset);
+        DeleteExpiredPasswordResetCode::dispatch($passwordReset)->delay(Carbon::now()->addMinutes(5));
+        return $this->success([], trans('messages.send_code.success'), 200);
     }
 
     public function verifyCode(VerifyPasswordResetCode $request)
@@ -55,6 +57,7 @@ class AuthController extends Controller
         $passwordReset->delete();
         return $this->success([
             'token' => PasswordResetCode::generateToken($validatedData['email']),
+            'expire_in' => auth()->factory()->getTTL() * 60 * 2,
             'email' => $validatedData['email'],
         ], trans('messages.success.code_verification'), 200);
 
