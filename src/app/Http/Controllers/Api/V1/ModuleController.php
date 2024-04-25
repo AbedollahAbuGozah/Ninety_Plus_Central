@@ -23,7 +23,7 @@ class ModuleController extends Controller
 
     public function index(Request $request, Country $country)
     {
-        $modules = $country->modules;
+        $modules = $country->modules()->with(['branch', 'country'])->get();
         return $this->success(ModuleResource::collection($modules), trans('messages.success.index'), 200);
     }
 
@@ -31,19 +31,20 @@ class ModuleController extends Controller
     {
 
         $validatedData = $request->safe()->all();
-        $module = $this->moduleService->create($validatedData, new Module());
+        $module = $this->moduleService->create($validatedData, new Module(), ['country', 'branch']);
         return $this->success(ModuleResource::make($module), trans('messages.success.store'), 201);
     }
 
     public function show(Module $module)
     {
+        $module = $this->moduleService->get($module, ['country', 'branch']);
         return $this->success(ModuleResource::make($module), 'messages.success.show', 200);
     }
 
     public function update(UpdateModuleRequest $request, Module $module)
     {
         $validatedData = $request->safe()->all();
-        $this->moduleService->update($validatedData, $module);
+        $this->moduleService->update($validatedData, $module, ['country', 'branch']);
         return $this->success($module, 'messages.success.update', 200);
 
     }
@@ -51,6 +52,6 @@ class ModuleController extends Controller
     public function destroy(Module $module)
     {
         $this->moduleService->delete($module);
-        return $this->success($module, 'messages.success.delete', 200);
+        return $this->success([], 'messages.success.delete', 200);
     }
 }

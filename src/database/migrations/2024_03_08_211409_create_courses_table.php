@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,7 +14,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->foreignId('instructor_id')->constrained('instructors')->cascadeOnDelete();
-            $table->enum('period', ['first','second', 'third']);
+            $table->enum('period', ['first', 'second', 'third']);
+            $table->foreignId('module_id')->constrained('modules')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

@@ -6,18 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class BaseService
 {
-    public function create($data, Model $model)
+    public function create($data, Model $model, $relationsNeedToLoad = [])
     {
         $data = $this->preCreate($data, $model);
         $createdModel = $model->create($data);
+        $createdModel->load($relationsNeedToLoad);
         $this->postCreate($data, $createdModel);
         return $createdModel;
     }
 
-    public function update($data, Model $model)
+    public function update($data, Model $model, $relationsNeedToLoad = [])
     {
         $this->preUpdate($data, $model);
         $model->update($data);
+        $model->load($relationsNeedToLoad);
         $this->postUpdate($data, $model);
         return $model;
     }
@@ -28,6 +30,16 @@ class BaseService
         $model->delete();
         $this->postDelete($data, $model);
 
+    }
+
+    public function getAll(Model $model, $relationsNeedToLoad = [])
+    {
+        return $model::with($relationsNeedToLoad)->get();
+    }
+
+    public function get(Model $model, $relationsNeedToLoad)
+    {
+        return $model->load($relationsNeedToLoad);
     }
 
     protected function preCreate($data, Model $model)

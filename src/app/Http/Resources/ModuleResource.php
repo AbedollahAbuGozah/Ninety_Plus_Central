@@ -12,8 +12,13 @@ class ModuleResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'branch' => $this->branch,
-            'country' => $this->country,
+            'country' => $this->whenLoaded('country', function () {
+                return  ($this->country);
+            }, $this->country_id),
+            'branch' => $this->whenLoaded('branch', function () {
+                return  ($this->branch);
+            }, $this->country_id),
+
         ];
     }
 }

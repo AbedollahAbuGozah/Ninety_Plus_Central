@@ -30,8 +30,6 @@ class UserController extends Controller
     {
         $validatedData = $request->safe()->all();
 
-        return $validatedData;
-
         DB::beginTransaction();
         $user = $this->userService->create($validatedData, new User());
         DB::commit();
