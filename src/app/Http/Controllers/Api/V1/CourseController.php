@@ -3,60 +3,55 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CourseRequest;
 use App\Http\Resources\CourseResource;
+use App\Models\Course;
 use App\Models\Module;
 use App\services\CourseService;
 use App\Traits\HttpResponse;
-use Illuminate\Http\Request;
-use PhpParser\Node\Expr\AssignOp\Mod;
 
 class CourseController extends Controller
 {
 
     use HttpResponse;
 
-    public function __construct(protected CourseService $courseService )
+    public function __construct(protected CourseService $courseService)
     {
 
     }
-    public function index(Request $request, Module $module)
+
+    public function index(CourseRequest $request, Module $module)
     {
         $courses = $module->courses()->with(['instructor', 'module'])->get();
-        $this->success(CourseResource::make($courses), trans('messages.success.index'), 200);
 
+
+        return $this->success(CourseResource::collection($courses), trans('messages.success.index'), 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request, Module $module)
+    public function store(CourseRequest $request, Module $module)
     {
         $validatedData = $request->safe()->all();
-        $courses = $this->courseService->create($validatedData, $module);
-        $this->success(CourseResource::make($courses), trans('messages.success.index'), 200);
+        logger($request->isStore());
+        $course = $this->courseService->create($validatedData, new Course(), ['instructor', 'module']);
+        return $this->success(CourseResource::make($course), trans('messages.success.store'), 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(CourseRequest $request, Course $course)
     {
-        //
+        $course = $this->courseService->get($course, ['instructor', 'module']);
+        return $this->success(CourseResource::make($course), trans('messages.success.index'), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(CourseRequest $request, Course $course)
     {
-        //
+        $validatedData = $request->safe()->all();
+        $course = $this->courseService->update($validatedData, $course, ['instructor', 'module']);
+        return $this->success(CourseResource::make($course), trans('messages.success.update'), 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(CourseRequest $request, Course $course)
     {
-        //
+        $course->delete();
+        return $this->success([], trans('messages.success.delete'), 200);
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\Student;
+use App\Models\User;
 use App\Traits\HttpResponse;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,7 @@ class StudentController extends Controller
 
     public function index()
     {
-        $students = Role::firstWhere('name', Roles::STUDENT)->users;
+        $students = User::students()->get();
         return $this->success(UserResource::collection($students), trans('messages.success.index'), 200);
     }
 

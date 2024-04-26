@@ -18,7 +18,6 @@ Route::group(['prefix' => 'v1/auth', 'middleware' => 'api'], function () {
 
     Route::post('register', RegisterUserController::class);
     Route::get('email/verify/{id}/{hash}', VerifyEmailController::class)->name('email-verification');
-
 });
 
 

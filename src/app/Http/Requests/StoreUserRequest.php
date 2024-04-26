@@ -28,14 +28,8 @@ class StoreUserRequest extends FormRequest
             'first_name' => 'required|min:3|max:50',
             'last_name' => 'required|min:3|max:50',
             'email' => 'required|email|max:30|unique:users,email',
-            'role_id' => [
-                'required',
-                'in:1,2,3,4',
-                new BranchIdRule($this->input('branch_id')),
-            ],
-            'branch_id' => [
-                'exists:branches,id',
-            ],
+            'role_name' => 'required|in:student,instructor',
+            'branch_id' => 'required_if:role_name,student|exists:branches,id',
             'city_id' => 'required|exists:cites,id',
             'birth_date' => 'required',
             'gender' => 'required|boolean',
@@ -48,7 +42,6 @@ class StoreUserRequest extends FormRequest
                 'unique:users,phone',
                 'confirmed',
                 new PasswordRule(),
-
             ],
         ];
     }

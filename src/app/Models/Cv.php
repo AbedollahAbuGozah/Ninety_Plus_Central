@@ -11,8 +11,4 @@ class Cv extends Model
 
     protected $guarded = ['id'];
 
-    public function instructor()
-    {
-        return $this->belongsTo(Instructor::class);
-    }
 }

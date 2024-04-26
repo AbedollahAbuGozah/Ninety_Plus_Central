@@ -11,10 +11,20 @@ class CourseResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->name,
-            'instructor' => $this->whenLoaded('instructor', $this->instructor, $this->instructor_id),
-            'module_id' => $this->whenLoaded('module', $this->module, $this->module_id),
+            'title' => $this->title,
+            'instructor' => $this->whenLoaded('instructor', function () {
+                return [
+                    'id' => $this->instructor_id,
+                    'name' => $this->instructor->first_name
+                ];
+            }, $this->instructor_id),
 
+            'module' => $this->whenLoaded('module', function () {
+                return [
+                    'id' => $this->module_id,
+                    'name' => $this->module->name
+                ];
+            }, $this->module_id),
         ];
     }
 }

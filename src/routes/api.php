@@ -12,5 +12,5 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('countries.modules', ModuleController::class)->shallow();
     Route::apiResource('students', StudentController::class);
-    Route::apiResource('modules/courses', CourseController::class)->shallow();
+    Route::apiResource('modules.courses', CourseController::class)->shallow();
 });

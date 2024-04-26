@@ -30,4 +30,6 @@ class Module extends Model
     {
         return $this->belongsTo(Branch::class);
     }
+
+
 }

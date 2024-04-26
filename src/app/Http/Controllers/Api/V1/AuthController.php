@@ -12,6 +12,7 @@ use App\Jobs\DeleteExpiredPasswordResetCode;
 use App\Models\PasswordResetCode;
 use App\Models\User;
 use App\Notifications\SendResetPasswordcodeNotification;
+use App\services\CurrentUserService;
 use App\Traits\HttpResponse;
 use Carbon\Carbon;
 
@@ -82,7 +83,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        auth()->logout();
+        (new CurrentUserService())::logout();
         return $this->success([], trans('messages.success.logout'), 200);
     }
 }

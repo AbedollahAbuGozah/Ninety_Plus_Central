@@ -19,7 +19,12 @@ class UserResource extends JsonResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
-            'city_id' => $this->city_id,
+            'city_id' => $this->whenLoaded('city', function (){
+                return [
+                    'id' => $this->city_id,
+                    'name' => $this->city->name
+                ];
+            }, $this->city_id),
             'email_verified' => $this->email_verified_at ?? false,
             'gender' => $this->gender,
             'birth_date' => $this->birth_date,

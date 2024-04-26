@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cvs', function (Blueprint $table) {
             $table->id();
             $table->string('path')->unique();
-            $table->foreignId('instructor_id')->constrained('instructors')->cascadeOnDelete();
+            $table->foreignId('instructor_id')->constrained('users')->cascadeOnDelete();
             $table->boolean('is_verified')->default(false);
             $table->boolean('is_accepted')->default(false);
             $table->timestamps();

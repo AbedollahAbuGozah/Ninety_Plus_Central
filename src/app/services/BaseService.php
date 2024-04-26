@@ -37,7 +37,7 @@ class BaseService
         return $model::with($relationsNeedToLoad)->get();
     }
 
-    public function get(Model $model, $relationsNeedToLoad)
+    public function get(Model $model, $relationsNeedToLoad = [])
     {
         return $model->load($relationsNeedToLoad);
     }

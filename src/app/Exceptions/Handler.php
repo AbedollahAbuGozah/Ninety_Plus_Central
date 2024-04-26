@@ -33,7 +33,7 @@ class Handler extends ExceptionHandler
 
         $this->renderable(function (Throwable $e) {
             DB::rollBack();
-            if (in_array(get_class($e), self::$except) && config('app.debug')) {
+            if (in_array(get_class($e), self::$except) || config('app.debug')) {
                 return;
             }
             return response()->json($this->getCustomMessage($e), $this->getStatusCode($e));

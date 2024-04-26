@@ -25,8 +25,6 @@ class DatabaseSeeder extends Seeder
             CitySeeder::class,
         ]);
         User::factory(10)->create();
-        Student::factory(5)->create();
-        Instructor::factory(5)->create();
         Cv::factory(5)->create();
         UserRole::factory(10)->create();
 

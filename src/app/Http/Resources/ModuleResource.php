@@ -11,14 +11,20 @@ class ModuleResource extends JsonResource
     {
         return [
             'id' => $this->id,
+
             'name' => $this->name,
             'country' => $this->whenLoaded('country', function () {
-                return  ($this->country);
+                return [
+                    'id' => $this->country_id,
+                    'name' => $this->country->name
+                ];
             }, $this->country_id),
             'branch' => $this->whenLoaded('branch', function () {
-                return  ($this->branch);
-            }, $this->country_id),
-
-        ];
+                return [
+                    'id' => $this->branch_id,
+                    'name' => $this->branch->name
+                ];
+            }, $this->branch_id),
+            'courses' => $this->whenLoaded('courses', $this->courses->pluck('id', 'name'))];
     }
 }

@@ -2,9 +2,7 @@
 
 namespace App\services;
 
-use App\Jobs\SendEmailVerificationJob;
-use App\Models\Instructor;
-use App\Models\Student;
+use App\Models\Role;
 use App\Models\UserRole;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,21 +18,15 @@ class UserService extends BaseService
 
     protected function postCreate($data, Model $user)
     {
+        $roleId = Role::where([
+            'name' => $data['role_name']
+        ])->value('id');
+
         UserRole::create([
             'user_id' => $user->id,
-            'role_id' => $data['role_id'],
+            'role_id' => $roleId,
         ]);
-        if ($user->isStudent()) {
-            Student::create([
-                'user_id' => $user->id,
-                'branch_id' => $data['branch_id'],
-            ]);
-        } elseif ($user->isInstructor()) {
-            Instructor::create([
-                'user_id' => $user->id,
-            ]);
-            //TODO:insert instructor cv
-        }
+
         return $user;
     }
 
