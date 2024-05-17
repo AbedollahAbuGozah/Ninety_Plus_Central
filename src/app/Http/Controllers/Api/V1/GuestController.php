@@ -12,7 +12,11 @@ class GuestController extends BaseController
     {
         $data = [];
         $data['roles'] = Role::whereIn('name', [Roles::STUDENT, Roles::INSTRUCTOR])->pluck('name', 'id');
-        $data['countries'] = Country::with('cites')->pluck('name', 'id');
+        $data['countries'] = Country::with(['cites' => function ($query) {
+            $query->select('id', 'country_id', 'name'); // Make sure to include the foreign key 'country_id'
+        }])->get();
+
+
         return $this->success($data, 'registration data retrieved successfully', 200);
     }
 }
