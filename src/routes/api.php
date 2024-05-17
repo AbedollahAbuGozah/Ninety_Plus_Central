@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\CourseController;
+use App\Http\Controllers\Api\V1\GuestController;
 use App\Http\Controllers\Api\V1\ModuleController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\StudentController;
@@ -8,6 +9,8 @@ use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/auth.php';
+
+Route::get('v1/guest/registration-data', [GuestController::class, 'getRegistrationData']);
 
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function () {
     Route::apiResource('users', UserController::class);
