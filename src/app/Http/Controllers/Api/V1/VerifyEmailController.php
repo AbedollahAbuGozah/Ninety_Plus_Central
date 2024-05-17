@@ -9,13 +9,11 @@ use App\Traits\HttpResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 
-class VerifyEmailController extends Controller
+class VerifyEmailController extends BaseController
 {
-    use HttpResponse;
-
-    public function __invoke(Request $request, $id, $hash)
+    public function __invoke(Request $request, $userId, $hash)
     {
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($userId);
         if (!URL::hasValidSignature($request) or !sha1($user->getEmailForVerification()) == $hash) {
             return $this->error('Invalid or expired verification link.', 500);
         }

@@ -2,54 +2,29 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\constants\Roles;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Models\Role;
+use App\Models\Course;
 use App\Models\Student;
-use App\Models\User;
+use App\Notifications\BingStudentNotification;
 use App\Traits\HttpResponse;
-use Illuminate\Http\Request;
 
-class StudentController extends Controller
+class StudentController extends BaseController
 {
     use HttpResponse;
 
-    public function index()
+    public function index(Course $course)
     {
-        $students = User::students()->get();
+        $students = $course->students;
         return $this->success(UserResource::collection($students), trans('messages.success.index'), 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Student $student)
     {
-        //
+        return $this->success(UserResource::make($student), trans('messages.success.index'), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Student $student)
+    public function bing(Student $student)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Student $student)
-    {
-        //
+        $student->notify(new BingStudentNotification());
     }
 }

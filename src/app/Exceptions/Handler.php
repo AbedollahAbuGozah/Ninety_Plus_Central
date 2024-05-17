@@ -30,7 +30,6 @@ class Handler extends ExceptionHandler
 
     public function register(): void
     {
-
         $this->renderable(function (Throwable $e) {
             DB::rollBack();
             if (in_array(get_class($e), self::$except) || config('app.debug')) {
@@ -38,7 +37,6 @@ class Handler extends ExceptionHandler
             }
             return response()->json($this->getCustomMessage($e), $this->getStatusCode($e));
         });
-
     }
 
     protected function getCustomMessage(Throwable $e)

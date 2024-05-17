@@ -22,16 +22,6 @@ class CourseRequest extends BaseFormRequest
     public function rules(): array
     {
         $rules = [];
-
-        if ($this->isUpdate()) {
-            $rules = [
-                'title' => 'sometimes|required|max:190',
-                'period' => 'sometimes|required|in:first,second,third',
-                'module_id' => 'sometimes|required|exists:modules,id',
-                'chapters' => 'sometimes|required|array',
-                'chapters.*' => 'required|exists:chapters,id'
-            ];
-        }
         if ($this->isStore()) {
             $rules = [
                 'title' => 'required|max:190',
@@ -42,6 +32,17 @@ class CourseRequest extends BaseFormRequest
                 'chapters.*id' => 'required|exists:chapters,id'
             ];
         }
+
+        if ($this->isUpdate()) {
+            $rules = [
+                'title' => 'sometimes|required|max:190',
+                'period' => 'sometimes|required|in:first,second,third',
+                'module_id' => 'sometimes|required|exists:modules,id',
+                'chapters' => 'sometimes|required|array',
+                'chapters.*' => 'required|exists:chapters,id'
+            ];
+        }
+
         return $rules;
     }
 }

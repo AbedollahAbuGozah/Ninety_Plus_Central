@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Carbon\Carbon;
+
 return [
 
     /*
@@ -101,7 +103,7 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL', 60),
+    'ttl' => env('JWT_TTL', 60*1000),
 
     /*
     |--------------------------------------------------------------------------
@@ -295,6 +297,7 @@ return [
         */
 
         'storage' => Tymon\JWTAuth\Providers\Storage\Illuminate::class,
+
 
     ],
 

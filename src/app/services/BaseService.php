@@ -8,6 +8,7 @@ class BaseService
 {
     public function create($data, Model $model, $relationsNeedToLoad = [])
     {
+        $data = $this->preCreateOrUpdate($data, $model);
         $data = $this->preCreate($data, $model);
         $createdModel = $model->create($data);
         $createdModel->load($relationsNeedToLoad);
@@ -71,6 +72,12 @@ class BaseService
     {
 
     }
+
+    protected function preCreateOrUpdate($data, Model $model)
+    {
+       return $data ;
+    }
+
 
 
 }

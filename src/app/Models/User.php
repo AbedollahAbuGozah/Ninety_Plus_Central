@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\constants\Roles;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,7 +15,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
 
     protected $guarded = ['id'];
-
+    protected $table = 'users';
     protected $hidden = [
         'password',
         'remember_token',
@@ -35,6 +34,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function isAdmin()
@@ -79,36 +83,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return Str::random(10);
     }
 
-    //Relations
     public function roles()
     {
-        return $this->belongsToMany(Role::class);
-    }
-
-    public function courses()
-    {
-        if ($this->isStudent()) {
-            return $this->belongsToMany(Course::class, 'course_students', 'student_id');
-        }
-            return $this->hasMany(Course::class, 'instructor_id');
-    }
-
-    //Scopes
-
-    public function scopeStudents($query)
-    {
-        $query->whereHas('roles', function ($query) {
-            return $query->where('name', Roles::STUDENT);
-        }
-        );
-    }
-
-    public function scopeInstructor($query)
-    {
-        $query->whereHas('roles', function ($query) {
-            return $query->where('name', Roles::INSTRUCTOR);
-        }
-        );
+        return $this->belongsToMany(Role::class, 'role_user', 'user_id');
     }
 
 }

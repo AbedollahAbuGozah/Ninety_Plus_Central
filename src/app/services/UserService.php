@@ -4,14 +4,18 @@ namespace App\services;
 
 use App\Models\Role;
 use App\Models\UserRole;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserService extends BaseService
 {
 
-    protected function preCreate($data, Model $user)
+    protected function preCreateOrUpdate($data, Model $user)
     {
-        $data['password'] = bcrypt($data['password']);
+        if (isset($data['password']))
+            $data['password'] = bcrypt($data['password']);
 
         return $data;
     }
@@ -30,26 +34,27 @@ class UserService extends BaseService
         return $user;
     }
 
-    public function preUpdate($data, Model $user)
+    public static function generatePasswordResetJwtToken($user = null)
     {
-        if (isset($data['password']))
-            $data['password'] = bcrypt($data['password']);
-        return $data;
+        $user = $user ?? CurrentUserService::get();
+
+        $claims = [
+            'sub' => $user->id,
+            'exp' => Carbon::now()->addMinutes(20)->timestamp,
+            'type' => 'password_reset',
+        ];
+
+        return JWTAuth::customClaims($claims)->fromUser($user);
     }
 
-//    protected function postUpdate($data, Model $user)
-//    {
-//
-//        if ($data['branch_id'] && $user->isStudent()) {
-//            $user->student->update([
-//                'branch_id' => $data['branch_id'],
-//            ]);
-//        }
-//        SendEmailVerificationJob::dispatch($user)->afterCommit();
-//        return $user;
-//    }
-
-
+    public function resetPassword($user, $newPassWord, $oldPassword = null)
+    {
+        if ($oldPassword) {
+            throw new \Exception('Old password Filed should be equal your current password');
+        }
+        $user->password = bcrypt($newPassWord);
+        $user->save();
+    }
 }
 
 

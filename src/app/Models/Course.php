@@ -11,10 +11,14 @@ class Course extends Model
     protected $guarded = ['id'];
     public function instructor()
     {
-        return $this->belongsTo(User::class, 'instructor_id');
+        return $this->belongsTo(Instructor::class);
     }
     public function module()
     {
         return $this->belongsTo(Module::class);
+    }
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'course_students');
     }
 }

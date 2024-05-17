@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,7 @@ class TestController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return User::find(1)->isInstructor();
+        $students = Student::with('courses')->get();
+        return $students;
     }
 }
