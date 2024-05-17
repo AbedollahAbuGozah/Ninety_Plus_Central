@@ -17,7 +17,7 @@ services:
   ports:
     - 3306:3306
   environment:
-   MYSQL_DATABASE: User_central
+   MYSQL_DATABASE: ninetyplus_central
    MYSQL_USER: user
    MYSQL_PASSWORD: root
    MYSQL_ROOT_PASSWORD: root
