@@ -22,13 +22,9 @@ class UserService extends BaseService
 
     protected function postCreate($data, Model $user)
     {
-        $roleId = Role::where([
-            'name' => $data['role_name']
-        ])->value('id');
-
         UserRole::create([
             'user_id' => $user->id,
-            'role_id' => $roleId,
+            'role_id' => $data['role_id'],
         ]);
 
         return $user;

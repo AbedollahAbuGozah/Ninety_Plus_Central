@@ -25,6 +25,7 @@ class CourseResource extends JsonResource
                     'name' => $this->module->name
                 ];
             }, $this->module_id),
+            'status' => $this->status
         ];
     }
 }

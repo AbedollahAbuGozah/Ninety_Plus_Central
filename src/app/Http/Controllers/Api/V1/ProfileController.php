@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Instructor;
 use App\Models\Student;
 use App\Models\User;
 use App\services\UserService;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class ProfileController extends BaseController
@@ -21,7 +21,8 @@ class ProfileController extends BaseController
 
     public function show(Request $request, User $user)
     {
-        return $this->success(UserResource::make($user), trans('messages.success.index'), 200);
+        $user = Student::find($user->id) ?? Instructor::find($user->id);
+        return $this->success(UserResource::make($user->load(['courses.instructor', 'courses.module'])), trans('messages.success.index'), 200);
     }
 
     public function update(UpdateProfileRequest $request, User $user)

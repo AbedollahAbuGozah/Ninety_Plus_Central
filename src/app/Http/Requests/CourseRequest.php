@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\constants\CourseStatusOptions;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CourseRequest extends BaseFormRequest
@@ -29,7 +30,7 @@ class CourseRequest extends BaseFormRequest
                 'instructor_id' => 'required|exists:users,id',
                 'module_id' => 'required|exists:modules,id',
                 'chapters' => 'required|array',
-                'chapters.*id' => 'required|exists:chapters,id'
+                'chapters.*' => 'required|exists:chapters,id'
             ];
         }
 
@@ -39,7 +40,8 @@ class CourseRequest extends BaseFormRequest
                 'period' => 'sometimes|required|in:first,second,third',
                 'module_id' => 'sometimes|required|exists:modules,id',
                 'chapters' => 'sometimes|required|array',
-                'chapters.*' => 'required|exists:chapters,id'
+                'chapters.*' => 'required|exists:chapters,id',
+                'status' => 'required|in' . implode(',', CourseStatusOptions::options())
             ];
         }
 

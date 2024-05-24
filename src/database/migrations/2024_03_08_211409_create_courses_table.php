@@ -1,5 +1,6 @@
 <?php
 
+use App\constants\CourseStatusOptions;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,6 +17,7 @@ return new class extends Migration {
             $table->foreignId('instructor_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->enum('period', ['first', 'second', 'third']);
             $table->foreignId('module_id')->constrained('modules')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->enum('status', CourseStatusOptions::options())->default(CourseStatusOptions::DRAFT);
             $table->timestamps();
         });
     }

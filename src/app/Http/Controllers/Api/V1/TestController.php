@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\constants\CourseStatusOptions;
 use App\Http\Controllers\Controller;
-use App\Models\Student;
-use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
@@ -14,7 +14,6 @@ class TestController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $students = Student::with('courses')->get();
-        return $students;
+        return CourseStatusOptions::options();
     }
 }

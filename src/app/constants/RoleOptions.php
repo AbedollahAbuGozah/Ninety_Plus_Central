@@ -2,7 +2,7 @@
 
 namespace App\constants;
 
-class Roles
+class RoleOptions
 {
     const STUDENT = 'student';
     const ADMIN = 'admin';

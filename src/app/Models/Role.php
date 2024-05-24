@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\constants\Roles;
+use App\constants\RoleOptions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +19,6 @@ class Role extends Model
 
     public static function getAllowedRegister()
     {
-      return  Role::whereIn('name', [Roles::INSTRUCTOR, Roles::STUDENT])->pluck('id');
+      return  Role::whereIn('name', [RoleOptions::INSTRUCTOR, RoleOptions::STUDENT]);
     }
 }

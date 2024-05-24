@@ -16,14 +16,15 @@ class UserRequest extends BaseFormRequest
     public function rules(): array
     {
         $rules = [];
+        $studentId = Role::where('name', 'student')->value('id');
 
         if ($this->isStore()) {
             $rules = [
                 'first_name' => 'required|min:3|max:50',
                 'last_name' => 'required|min:3|max:50',
-                'email' => 'required|email|max:30|unique:users,email',
-                'role_name' => 'required|in:' . implode(',', Role::getAllowedRegister()),
-                'branch_id' => 'required_if:role_name,student|exists:branches,id',
+                'email' => 'required|email|max:100|unique:users,email',
+                'role_id' => 'required|in:' . implode(',', Role::getAllowedRegister()->pluck('id')->flatten()),
+                'branch_id' => 'required_if:role_id,' . $studentId . '|exists:branches,id',
                 'city_id' => 'required|exists:cites,id',
                 'birth_date' => 'required',
                 'gender' => 'required|boolean',
@@ -45,7 +46,6 @@ class UserRequest extends BaseFormRequest
                 'first_name' => 'sometimes|required|min:3|max:50',
                 'last_name' => 'sometimes|required|min:3|max:50',
                 'email' => 'sometimes|required|email|max:30',
-
                 'branch_id' => [
                     'sometimes',
                     'exists:branches,id',

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\constants\Roles;
+use App\constants\RoleOptions;
 
 class Student extends User
 {
@@ -17,7 +17,7 @@ class Student extends User
 
         static::addGlobalScope('student', function ($query) {
             $query->whereHas('roles', function ($query) {
-                return $query->where('name', Roles::STUDENT);
+                return $query->where('name', RoleOptions::STUDENT);
             }
             );
         });
