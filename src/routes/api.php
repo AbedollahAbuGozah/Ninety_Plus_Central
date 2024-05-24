@@ -13,17 +13,12 @@ Route::group(['prefix' => 'v1/guest', 'controller' => GuestController::class], f
     Route::get('registration-data', 'getRegistrationData');
 });
 
-Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function () {
+Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], function () {
 
     Route::apiResource('users', UserController::class);
     Route::apiResource('countries.modules', ModuleController::class)->shallow();
     Route::apiResource('modules.courses', CourseController::class)->shallow();
     Route::apiResource('courses.students', StudentController::class)->shallow()->only(['index', 'show']);
-
-    Route::controller(StudentController::class)->group(function () {
-        Route::get('students/{student}/bing');
-    });
-
     Route::group(['prefix' => 'profiles', 'controller' => ProfileController::class], function () {
         Route::get('{user}', 'show');
         Route::put('{user}', 'update');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\NinetyPlusCentralFacade;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -83,7 +84,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'ar',
 
     /*
     |--------------------------------------------------------------------------
@@ -182,7 +183,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // 'Example' => App\Facades\Example::class,
+            'NinetyPlus' => NinetyPlusCentralFacade::class
     ])->toArray(),
 
 ];

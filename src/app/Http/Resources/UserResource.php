@@ -26,7 +26,10 @@ class UserResource extends JsonResource
                 ];
             }, $this->city_id),
             'courses' => CourseResource::collection($this->whenLoaded('courses')),
-        'email_verified' => $this->email_verified_at ?? false,
+            'email_verified' => (bool)$this->email_verified_at,
+            'about' => $this->when($this->isInstructor(), function () {
+                return $this->about;
+            }),
             'gender' => $this->gender,
             'birth_date' => $this->birth_date,
             'phone' => $this->phone,

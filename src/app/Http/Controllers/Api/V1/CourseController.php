@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Requests\ChangeCourseStatusRequest;
 use App\Http\Requests\CourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
@@ -20,7 +21,6 @@ class CourseController extends BaseController
     public function index(CourseRequest $request, Module $module)
     {
         $courses = $module->courses()->with(['instructor', 'module'])->get();
-
 
         return $this->success(CourseResource::collection($courses), trans('messages.success.index'), 200);
     }
@@ -50,5 +50,12 @@ class CourseController extends BaseController
     {
         $course->delete();
         return $this->success([], trans('messages.success.delete'), 200);
+    }
+
+    public function changeCourseStatus(ChangeCourseStatusRequest $request, Course $course)
+    {
+        $validatedData['request'] = $request->safe()->all();
+        $this->courseService->changeStatus($course, $validatedData);
+        return $this->success($course, 'messages.success.updated', 200);
     }
 }

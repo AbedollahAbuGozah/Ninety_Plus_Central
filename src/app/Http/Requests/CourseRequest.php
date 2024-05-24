@@ -41,9 +41,9 @@ class CourseRequest extends BaseFormRequest
                 'module_id' => 'sometimes|required|exists:modules,id',
                 'chapters' => 'sometimes|required|array',
                 'chapters.*' => 'required|exists:chapters,id',
-                'status' => 'required|in' . implode(',', CourseStatusOptions::options())
             ];
         }
+
 
         return $rules;
     }

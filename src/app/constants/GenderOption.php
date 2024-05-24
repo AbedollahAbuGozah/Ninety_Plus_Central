@@ -2,13 +2,10 @@
 
 namespace App\constants;
 
-class RoleOptions
+class GenderOption
 {
-    const STUDENT = 'student';
-    const ADMIN = 'admin';
-    const INSTRUCTOR = 'instructor';
-    const HR = 'hr';
-
+    const MALE = 'male';
+    const FEMALE = 'female';
     public static function options()
     {
         $reflection = new \ReflectionClass(__CLASS__);

@@ -3,10 +3,12 @@
 namespace App\services;
 
 use App\Models\Role;
+use App\Models\User;
 use App\Models\UserRole;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserService extends BaseService
@@ -43,10 +45,10 @@ class UserService extends BaseService
         return JWTAuth::customClaims($claims)->fromUser($user);
     }
 
-    public function resetPassword($user, $newPassWord, $oldPassword = null)
+    public function resetPassword(User $user, $newPassWord, $oldPassword = null)
     {
-        if ($oldPassword) {
-            throw new \Exception('Old password Filed should be equal your current password');
+        if ($oldPassword && !Hash::check($oldPassword, $user->password)) {
+            throw new \Dotenv\Exception\ValidationException('Incorrect old password');
         }
         $user->password = bcrypt($newPassWord);
         $user->save();

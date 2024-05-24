@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\constants\CourseStatusOptions;
 use App\Http\Controllers\Controller;
-use App\Models\Role;
+use NinetyPlus;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
@@ -14,6 +13,6 @@ class TestController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return CourseStatusOptions::options();
+        return NinetyPlus::foo();
     }
 }
