@@ -62,20 +62,14 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->roles()->where('name', 'student')->exists();
     }
 
-
-    public function hasPermissionAccess($permission, $resourceId)
+    public function authorize($permission, $resource)
     {
-        $hasPermission = false;
-
-        foreach ($this->roles as $role) {
-            $hasPermission |= (bool)RolePermissionAssign::where([
-                'role_id' => $role->id,
-                'resource_id' => $resourceId,
+        return $this->roles()->whereHas('permissions', function ($query) use ($resource, $permission) {
+            $query->where([
+                'resource_name' => $resource,
                 $permission => true,
-            ])->exists();
-        }
-
-        return $hasPermission;
+            ]);
+        })->exists();
     }
 
     public function generatePasswordResetCode()
@@ -87,5 +81,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->belongsToMany(Role::class, 'role_user', 'user_id');
     }
+
 
 }

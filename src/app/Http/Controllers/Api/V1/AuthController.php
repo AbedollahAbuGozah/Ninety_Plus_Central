@@ -12,6 +12,11 @@ class AuthController extends BaseController
 {
     use HttpResponse;
 
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login']]);
+    }
+
     public function login(LoginUserRequest $request)
     {
         $credentials = $request->safe()->all();
@@ -30,7 +35,8 @@ class AuthController extends BaseController
 
     public function me()
     {
-        return response()->json((new CurrentUserService())::get());
+        $user = (new CurrentUserService())::get()->load('roles.permissions');
+        return $this->success($user, trans('messages.me.success'), 200);
     }
 
     protected function respondWithToken($token)

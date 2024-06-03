@@ -19,6 +19,11 @@ class Role extends Model
 
     public static function getAllowedRegister()
     {
-      return  Role::whereIn('name', [RoleOptions::INSTRUCTOR, RoleOptions::STUDENT]);
+        return Role::whereIn('name', [RoleOptions::INSTRUCTOR, RoleOptions::STUDENT]);
+    }
+
+    public function permissions()
+    {
+        return $this->hasMany(Permission::class);
     }
 }

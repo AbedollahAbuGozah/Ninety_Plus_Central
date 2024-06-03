@@ -4,12 +4,12 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Course;
+use App\Models\CourseStudent;
+use App\Models\Module;
 use App\Models\User;
 use App\Models\Cv;
-use App\Models\Instructor;
-use App\Models\Student;
 use App\Models\UserRole;
-use Database\Factories\UserRoleFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -24,9 +24,14 @@ class DatabaseSeeder extends Seeder
             ResourceSeeder::class,
             CitySeeder::class,
         ]);
+
         User::factory(10)->create();
         Cv::factory(5)->create();
         UserRole::factory(10)->create();
+        Module::factory(10)->create();
+        Course::factory(30)->create();
+        CourseStudent::factory(10)->create();
+
 
     }
 }

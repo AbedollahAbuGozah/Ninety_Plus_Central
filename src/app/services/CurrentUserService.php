@@ -8,6 +8,7 @@ class CurrentUserService
     {
         auth()->logout();
     }
+
     public static function get()
     {
         return auth()->user();

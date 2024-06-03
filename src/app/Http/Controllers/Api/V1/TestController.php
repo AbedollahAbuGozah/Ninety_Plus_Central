@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use NinetyPlus;
+use App\Policies\CoursePolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
-
 class TestController extends Controller
 {
     /**
@@ -13,6 +13,7 @@ class TestController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return NinetyPlus::foo();
+        $key = array_search(CoursePolicy::class, Gate::policies());
+        return response($key);
     }
 }

@@ -20,6 +20,7 @@ class CourseController extends BaseController
 
     public function index(CourseRequest $request, Module $module)
     {
+//      $this->authorize('viewAny', Course::class);
         $courses = $module->courses()->with(['instructor', 'module'])->get();
 
         return $this->success(CourseResource::collection($courses), trans('messages.success.index'), 200);
@@ -28,7 +29,6 @@ class CourseController extends BaseController
     public function store(CourseRequest $request, Module $module)
     {
         $validatedData = $request->safe()->all();
-        logger($request->isStore());
         $course = $this->courseService->create($validatedData, new Course(), ['instructor', 'module']);
         return $this->success(CourseResource::make($course), trans('messages.success.store'), 200);
     }

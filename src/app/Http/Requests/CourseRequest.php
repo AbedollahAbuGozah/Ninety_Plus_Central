@@ -23,6 +23,7 @@ class CourseRequest extends BaseFormRequest
     public function rules(): array
     {
         $rules = [];
+
         if ($this->isStore()) {
             $rules = [
                 'title' => 'required|max:190',
@@ -30,6 +31,8 @@ class CourseRequest extends BaseFormRequest
                 'instructor_id' => 'required|exists:users,id',
                 'module_id' => 'required|exists:modules,id',
                 'chapters' => 'required|array',
+                'starts_at' => 'required|date|',
+                'ends_at' => 'required|date|gte:starts_at',
                 'chapters.*' => 'required|exists:chapters,id'
             ];
         }

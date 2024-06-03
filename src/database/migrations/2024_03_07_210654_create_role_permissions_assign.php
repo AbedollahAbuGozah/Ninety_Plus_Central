@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('role_permissions_assign', function (Blueprint $table) {
             $table->id();
             $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('resource_id')->constrained('resources')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('resource_name');
             $table->boolean('view_access')->default(false);
             $table->boolean('modify_access')->default(false);
             $table->boolean('delete_access')->default(false);

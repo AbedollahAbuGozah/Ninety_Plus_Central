@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1/auth', 'middleware' => 'api'], function () {
     Route::controller(AuthController::class)->group(function (){
         Route::post('login', 'login');
-        Route::post('logout', 'logout')->middleware(['auth:api']);
+        Route::post('logout', 'logout');
+        Route::get('me');
     });
 
     Route::controller(PasswordResetController::class)->group(function (){

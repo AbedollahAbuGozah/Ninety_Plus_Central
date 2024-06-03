@@ -2,12 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\RolePermissionAssign;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 
 class BasePolicy
 {
+    protected $resource ;
     /**
      * Create a new policy instance.
      */
@@ -16,8 +14,4 @@ class BasePolicy
 
     }
 
-    public function can(User $user)
-    {
-//        RolePermissionAssign::whereIn('role_id',$user->roles()->pluck('id'))->where('resource', User::ta)
-    }
 }
