@@ -56,6 +56,7 @@ class AuthController extends BaseController
                 'can_view' => rand(1, 0),
             ]
         ];
+        return $user;
     }
 
     protected function respondWithToken($token)
