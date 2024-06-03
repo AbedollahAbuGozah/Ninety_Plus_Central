@@ -38,7 +38,6 @@ class PasswordResetController extends BaseController
             return $this->error(trans('messages.error.code_verification'), 403);
         }
         $user = User::where('email', $validatedData['email'])->firstOrFail();
-        logger($user);
         return $this->success([
             'token' => UserService::generatePasswordResetJwtToken($user),
             'expire_in' => 20,
