@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Policies\CoursePolicy;
-use Illuminate\Support\Facades\Gate;
+use App\Http\Resources\PermissionRescourse;
+use App\Models\User;
+use App\services\CurrentUserService;
 use Illuminate\Http\Request;
+
 class TestController extends Controller
 {
     /**
@@ -13,7 +15,6 @@ class TestController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $key = array_search(CoursePolicy::class, Gate::policies());
-        return response($key);
+        return (new CurrentUserService())->getPermissions();
     }
 }

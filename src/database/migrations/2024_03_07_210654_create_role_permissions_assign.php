@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,8 +12,19 @@ return new class extends Migration
     {
         Schema::create('role_permissions_assign', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('resource_name');
+
+            $table->foreignId('role_id')
+                ->constrained('roles')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->foreign('resource_name')
+                ->references('name')
+                ->on('resources')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+
             $table->boolean('view_access')->default(false);
             $table->boolean('modify_access')->default(false);
             $table->boolean('delete_access')->default(false);

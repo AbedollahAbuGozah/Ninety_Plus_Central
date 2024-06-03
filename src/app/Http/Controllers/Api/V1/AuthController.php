@@ -35,25 +35,26 @@ class AuthController extends BaseController
 
     public function me()
     {
+       // return UserResource::make(auth()->user());
         $user = (new CurrentUserService())::get();
-        $user->permission = [
+        $user->permissions = [
             'user' => [
-                'can_update' => rand(1, 0),
-                'can_delete' => rand(1, 0),
-                'can_modify' => rand(1, 0),
-                'can_view' => rand(1, 0),
+                'manage_access' => rand(1, 0),
+                'delete_access' => rand(1, 0),
+                'modify_access' => rand(1, 0),
+                'view_access' => rand(1, 0),
             ],
             'course' => [
-                'can_update' => rand(1, 0),
-                'can_delete' => rand(1, 0),
-                'can_modify' => rand(1, 0),
-                'can_view' => rand(1, 0),
+                'manage_access' => rand(1, 0),
+                'delete_access' => rand(1, 0),
+                'modify_access' => rand(1, 0),
+                'view_access' => rand(1, 0),
             ],
             'module' => [
-                'can_update' => rand(1, 0),
-                'can_delete' => rand(1, 0),
-                'can_modify' => rand(1, 0),
-                'can_view' => rand(1, 0),
+                'manage_access' => rand(1, 0),
+                'delete_access' => rand(1, 0),
+                'modify_access' => rand(1, 0),
+                'view_access' => rand(1, 0),
             ]
         ];
         return $user;

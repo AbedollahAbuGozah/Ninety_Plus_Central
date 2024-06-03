@@ -51,7 +51,7 @@ class PasswordResetController extends BaseController
         $validatedData = $request->safe()->all();
         $decoded = JWTAuth::parseToken()->authenticate();
 
-        if ($decoded?->type === 'password_reset' && $user = User::find($decoded['sub'])) {
+        if ($user = User::find($decoded['sub'])) {
             (new UserService())->resetPassword($user, $validatedData['password']);
             return $this->success([], trans('messages.success.reset'), 200);
         }

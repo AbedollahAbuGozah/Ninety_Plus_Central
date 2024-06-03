@@ -12,7 +12,7 @@ Route::group(['prefix' => 'v1/auth', 'middleware' => 'api'], function () {
     Route::controller(AuthController::class)->group(function (){
         Route::post('login', 'login');
         Route::post('logout', 'logout');
-        Route::get('me');
+        Route::get('me', 'me');
     });
 
     Route::controller(PasswordResetController::class)->group(function (){

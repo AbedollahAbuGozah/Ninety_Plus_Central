@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\services\CurrentUserService;
+use App\services\NinetyPlusCentral;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -34,6 +36,7 @@ class UserResource extends JsonResource
             'birth_date' => $this->birth_date,
             'phone' => $this->phone,
             'roles' => $this->roles->pluck('name'),
+            'permissions' => ((new CurrentUserService())->getPermissions()),
         ];
     }
 }
