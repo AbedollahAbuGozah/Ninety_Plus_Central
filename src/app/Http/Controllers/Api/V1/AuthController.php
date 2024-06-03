@@ -35,8 +35,27 @@ class AuthController extends BaseController
 
     public function me()
     {
-        $user = (new CurrentUserService())::get()->load('roles.permissions');
-        return $this->success($user, trans('messages.me.success'), 200);
+        $user = (new CurrentUserService())::get();
+        $user->permission = [
+            'user' => [
+                'can_update' => rand(1, 0),
+                'can_delete' => rand(1, 0),
+                'can_modify' => rand(1, 0),
+                'can_view' => rand(1, 0),
+            ],
+            'course' => [
+                'can_update' => rand(1, 0),
+                'can_delete' => rand(1, 0),
+                'can_modify' => rand(1, 0),
+                'can_view' => rand(1, 0),
+            ],
+            'module' => [
+                'can_update' => rand(1, 0),
+                'can_delete' => rand(1, 0),
+                'can_modify' => rand(1, 0),
+                'can_view' => rand(1, 0),
+            ]
+        ];
     }
 
     protected function respondWithToken($token)
