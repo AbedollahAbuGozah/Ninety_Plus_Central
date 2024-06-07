@@ -40,7 +40,7 @@ class CurrentUserService
             return PermissionRescourse::make($permission);
         });
 
-        return response()->json($consolidatedPermissions);
+        return $consolidatedPermissions;
     }
 }
 

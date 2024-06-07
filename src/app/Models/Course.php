@@ -9,6 +9,11 @@ class Course extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+
+    protected $casts = [
+        'properties' => 'json',
+    ];
+
     public function instructor()
     {
         return $this->belongsTo(Instructor::class);
@@ -20,5 +25,9 @@ class Course extends Model
     public function students()
     {
         return $this->belongsToMany(Student::class, 'course_students');
+    }
+
+    public function chapters(){
+        return $this->belongsToMany(Chapter::class, 'course_chapters');
     }
 }

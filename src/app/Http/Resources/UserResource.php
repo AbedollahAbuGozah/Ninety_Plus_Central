@@ -21,17 +21,17 @@ class UserResource extends JsonResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
+
             'city_id' => $this->whenLoaded('city', function () {
                 return [
                     'id' => $this->city_id,
                     'name' => $this->city->name
                 ];
             }, $this->city_id),
+
             'courses' => CourseResource::collection($this->whenLoaded('courses')),
             'email_verified' => (bool)$this->email_verified_at,
-            'about' => $this->when($this->isInstructor(), function () {
-                return $this->about;
-            }),
+            'about' => $this->when($this->isInstructor(), fn() => $this->about),
             'gender' => $this->gender,
             'birth_date' => $this->birth_date,
             'phone' => $this->phone,

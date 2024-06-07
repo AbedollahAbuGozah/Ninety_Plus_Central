@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Instructor;
 use App\Models\Module;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,6 +25,14 @@ class CourseFactory extends Factory
             'instructor_id' => fake()->randomElement($instructors),
             'period' => fake()->randomElement(['first', 'second', 'third']),
             'module_id' => fake()->randomElement($modules),
+            'description' => fake()->text(),
+            'properties' => [
+                "cover_image" => fake()->url(),
+                "weekly_lectures" => fake()->numberBetween(1, 10),
+                "intro_video" => fake()->url(),
+                "welcome_message" => fake()->text(),
+                "ending_message" => fake()->text()
+            ]
         ];
     }
 }

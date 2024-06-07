@@ -35,29 +35,7 @@ class AuthController extends BaseController
 
     public function me()
     {
-       // return UserResource::make(auth()->user());
-        $user = (new CurrentUserService())::get();
-        $user->permissions = [
-            'user' => [
-                'manage_access' => rand(1, 0),
-                'delete_access' => rand(1, 0),
-                'modify_access' => rand(1, 0),
-                'view_access' => rand(1, 0),
-            ],
-            'course' => [
-                'manage_access' => rand(1, 0),
-                'delete_access' => rand(1, 0),
-                'modify_access' => rand(1, 0),
-                'view_access' => rand(1, 0),
-            ],
-            'module' => [
-                'manage_access' => rand(1, 0),
-                'delete_access' => rand(1, 0),
-                'modify_access' => rand(1, 0),
-                'view_access' => rand(1, 0),
-            ]
-        ];
-        return $user;
+        return $this->success(UserResource::make((new CurrentUserService())::get()), 'message.me.success', 200);
     }
 
     protected function respondWithToken($token)

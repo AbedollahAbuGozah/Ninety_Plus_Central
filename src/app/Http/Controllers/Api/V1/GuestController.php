@@ -14,10 +14,14 @@ class GuestController extends BaseController
         $data = [];
         $data['roles'] = Role::getAllowedRegister()->select('id', 'name')->get();
         $data['branches'] = Branch::query()->select('id', 'name')->get();
-        $data['genders'] = GenderOption::options();
+        $data['genders'] = [];
+        $genders = GenderOption::options();
 
-        foreach ($data['genders'] as $gender) {
-            $role['name'] = trans('general.genders.' . $gender);
+        foreach ($genders as $index => $gender) {
+            $data['genders'][] = [
+                'id' => $index,
+                'name' => trans('general.genders.' . $gender)
+            ];
         }
         foreach ($data['roles'] as $role) {
             $role['name'] = trans('general.roles.' . $role->name);

@@ -4,12 +4,14 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\CourseStudent;
 use App\Models\Module;
 use App\Models\User;
 use App\Models\Cv;
 use App\Models\UserRole;
+use Database\Factories\ChapterFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -31,7 +33,7 @@ class DatabaseSeeder extends Seeder
         Module::factory(10)->create();
         Course::factory(30)->create();
         CourseStudent::factory(10)->create();
-
+        Chapter::factory(60)->create();
 
     }
 }

@@ -20,6 +20,8 @@ return new class extends Migration {
             $table->date('ends_at')->default(now());
             $table->foreignId('module_id')->constrained('modules')->cascadeOnDelete()->cascadeOnUpdate();
             $table->enum('status', CourseStatusOptions::options())->default(CourseStatusOptions::DRAFT);
+            $table->text('description');
+            $table->json('properties');
             $table->timestamps();
         });
     }

@@ -12,6 +12,7 @@ class CourseResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+
             'instructor' => $this->whenLoaded('instructor', function () {
                 return [
                     'id' => $this->instructor_id,
@@ -25,6 +26,19 @@ class CourseResource extends JsonResource
                     'name' => $this->module->name
                 ];
             }, $this->module_id),
+            'description' => $this->description,
+
+            'chapters' => $this->when(
+                $this->relationLoaded('chapters') && $this->chapters->isNotEmpty(),
+                fn() => ChapterResource::collection($this->chapters),
+                'All chapters'
+            ),
+            'cover_image' => $this->when(isset($this->properties['cover_image']), fn() => $this->properties['cover_image']),
+            'intro_video' => $this->when(isset($this->properties['intro_video']), fn() => $this->properties['intro_video']),
+            'weekly_lectures' => $this->when(isset($this->properties['weekly_lectures']), fn() => $this->properties['weekly_lectures']),
+            'welcome_message' => $this->when(isset($this->properties['welcome_message']), fn() => $this->properties['welcome_message']),
+            'ending_message' => $this->when(isset($this->properties['ending_message']), fn() => $this->properties['ending_message']),
+
             'status' => $this->status
         ];
     }

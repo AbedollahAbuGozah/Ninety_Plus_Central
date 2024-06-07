@@ -20,8 +20,7 @@ class CourseController extends BaseController
 
     public function index(CourseRequest $request, Module $module)
     {
-//      $this->authorize('viewAny', Course::class);
-        $courses = $module->courses()->with(['instructor', 'module'])->get();
+        $courses = $module->courses()->with(['instructor', 'module', 'chapters'])->get();
 
         return $this->success(CourseResource::collection($courses), trans('messages.success.index'), 200);
     }
@@ -29,20 +28,20 @@ class CourseController extends BaseController
     public function store(CourseRequest $request, Module $module)
     {
         $validatedData = $request->safe()->all();
-        $course = $this->courseService->create($validatedData, new Course(), ['instructor', 'module']);
+        $course = $this->courseService->create($validatedData, new Course(), ['instructor', 'module', 'chapters']);
         return $this->success(CourseResource::make($course), trans('messages.success.store'), 200);
     }
 
     public function show(CourseRequest $request, Course $course)
     {
-        $course = $this->courseService->get($course, ['instructor', 'module']);
+        $course = $this->courseService->get($course, ['instructor', 'module', 'chapters']);
         return $this->success(CourseResource::make($course), trans('messages.success.index'), 200);
     }
 
     public function update(CourseRequest $request, Course $course)
     {
         $validatedData = $request->safe()->all();
-        $course = $this->courseService->update($validatedData, $course, ['instructor', 'module']);
+        $course = $this->courseService->update($validatedData, $course, ['instructor', 'module', 'chapters']);
         return $this->success(CourseResource::make($course), trans('messages.success.update'), 200);
     }
 
