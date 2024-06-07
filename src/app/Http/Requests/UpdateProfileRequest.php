@@ -21,6 +21,7 @@ class UpdateProfileRequest extends FormRequest
             'city_id' => 'sometimes|required|exists:cites,id',
             'birth_date' => 'sometimes|required',
             'gender' => 'sometimes|required|boolean',
+            'profile_image' => 'sometimes|image',
             'phone' => [
                 'sometimes',
                 'required',

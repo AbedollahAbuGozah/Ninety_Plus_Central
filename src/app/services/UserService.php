@@ -19,7 +19,17 @@ class UserService extends BaseService
         if (isset($data['password']))
             $data['password'] = bcrypt($data['password']);
 
+
         return $data;
+    }
+
+    public function postCreateOrUpdate($data, Model $user)
+    {
+        if (request()->hasFile('profile_image')) {
+            $user->clearMediaCollection(User::PROFILE_IMAGE_MEDIA_COLLECTION);
+            $user->addMediaFromRequest('profile_image')
+                ->toMediaCollection(User::PROFILE_IMAGE_MEDIA_COLLECTION);
+        }
     }
 
     protected function postCreate($data, Model $user)

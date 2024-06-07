@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use App\Http\Resources\PermissionRescourse;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject, MustVerifyEmail
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMedia
 {
-    use Notifiable, HasFactory;
+    use Notifiable, HasFactory, InteractsWithMedia;
 
 
     protected $guarded = ['id'];
@@ -26,6 +27,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    const PROFILE_IMAGE_MEDIA_COLLECTION = 'profile_image';
 
     public function getJWTIdentifier()
     {
@@ -83,7 +86,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->belongsToMany(Role::class, 'role_user', 'user_id');
     }
-
 
 
 }

@@ -40,8 +40,8 @@ class CourseRequest extends BaseFormRequest
                 'starts_at' => 'required|date',
                 'ends_at' => 'required|date|gte:starts_at',
                 'chapters.*' => 'required|exists:chapters,id',
-                'cover_image' => 'sometimes|required|image',
-                'intro_video' => 'sometimes|required|video',
+                'cover_image' => 'sometimes|image',
+                'intro_video' => 'sometimes|mimes:mp4,mov,ogg,qt',
                 'welcome_message' => 'sometimes|required|string',
                 'ending_message' => 'sometimes|required|string'
             ];

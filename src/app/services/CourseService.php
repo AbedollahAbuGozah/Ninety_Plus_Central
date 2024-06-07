@@ -27,6 +27,7 @@ class CourseService extends BaseService
         $props = [];
         $keys = ['welcome_message', 'ending_message', 'cover_image', 'weekly_lectures', 'intro_video'];
 
+
         foreach ($keys as $key) {
             request()->whenHas($key, function () use (&$props, $key) {
                 $props[$key] = request($key);
@@ -40,6 +41,22 @@ class CourseService extends BaseService
 
     public function postCreateOrUpdate($data, $model)
     {
+        $courseProps = $model->properties;
+        if (request()->hasFile('cover_image')) {
+            $coverImage = $model->addMediaFromRequest('cover_image')
+                ->toMediaCollection(Course::COURSE_COVER_IMAGE_MEDIA_COLLECTION);
+
+            $courseProps['cover_image'] = $coverImage->getUrl();;
+        }
+
+        if (request()->hasFile('intro_video')) {
+            $introVideo = $model->addMedia(request()->file('intro_video'))
+                ->toMediaCollection(Course::COURSE_INTRO_VIDEO_MEDIA_COLLECTION);
+
+            $courseProps['intro_video'] = $introVideo->getUrl();
+        }
+        $model->properties = $courseProps;
+        $model->save();
 
         if (isset($data['chapters'])) {
             $chapterIds = $data['chapters'];
@@ -52,6 +69,7 @@ class CourseService extends BaseService
             }, $chapterIds);
             CourseChapter::insert($insertData);
         }
+
     }
 
 }

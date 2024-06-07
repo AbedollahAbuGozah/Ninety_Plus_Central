@@ -20,9 +20,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
     Route::apiResource('modules.courses', CourseController::class)->shallow();
     Route::apiResource('courses.students', StudentController::class)->shallow()->only(['index', 'show']);
     Route::group(['prefix' => 'profiles', 'controller' => ProfileController::class], function () {
-        Route::get('{user}', 'show');
-        Route::put('{user}', 'update');
-        Route::patch('{user}/change-password', 'changePassword');
+        Route::get('', 'show');
+        Route::put('', 'update');
+        Route::patch('change-password', 'changePassword');
     });
 });
 

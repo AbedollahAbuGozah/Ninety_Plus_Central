@@ -33,6 +33,7 @@ class CourseResource extends JsonResource
                 fn() => ChapterResource::collection($this->chapters),
                 'All chapters'
             ),
+
             'cover_image' => $this->when(isset($this->properties['cover_image']), fn() => $this->properties['cover_image']),
             'intro_video' => $this->when(isset($this->properties['intro_video']), fn() => $this->properties['intro_video']),
             'weekly_lectures' => $this->when(isset($this->properties['weekly_lectures']), fn() => $this->properties['weekly_lectures']),
