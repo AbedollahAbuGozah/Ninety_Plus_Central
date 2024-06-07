@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CommentController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\GuestController;
 use App\Http\Controllers\Api\V1\ModuleController;
@@ -24,6 +25,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
         Route::put('', 'update');
         Route::patch('change-password', 'changePassword');
     });
+    Route::post('comments/{commentableType}/{commentableId}', [CommentController::class, 'store']);
+    Route::get('comments/{commentableType}/{commentableId}',  [CommentController::class, 'index']);
+    Route::apiResource('comments', CommentController::class)->except(['store', 'index']);
 });
 
 Route::get('foo', \App\Http\Controllers\Api\V1\TestController::class);
