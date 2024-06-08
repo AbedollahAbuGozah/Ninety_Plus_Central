@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\GuestController;
 use App\Http\Controllers\Api\V1\ModuleController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\RateController;
 use App\Http\Controllers\Api\V1\StudentController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
@@ -20,14 +21,26 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
     Route::apiResource('countries.modules', ModuleController::class)->shallow();
     Route::apiResource('modules.courses', CourseController::class)->shallow();
     Route::apiResource('courses.students', StudentController::class)->shallow()->only(['index', 'show']);
+
     Route::group(['prefix' => 'profiles', 'controller' => ProfileController::class], function () {
         Route::get('', 'show');
         Route::put('', 'update');
         Route::patch('change-password', 'changePassword');
     });
-    Route::post('comments/{commentableType}/{commentableId}', [CommentController::class, 'store']);
-    Route::get('comments/{commentableType}/{commentableId}',  [CommentController::class, 'index']);
+
+    Route::group(['prefix' => 'comments/{commentableType}/{commentableId}', 'controller' => CommentController::class], function (){
+        Route::post('', 'store');
+        Route::get('',   'index');
+    });
+
+    Route::group(['prefix' => 'rates/{ratableType}/{ratableId}', 'controller' => RateController::class], function (){
+        Route::post('', 'store');
+        Route::get('',   'index');
+    });
+
     Route::apiResource('comments', CommentController::class)->except(['store', 'index']);
+    Route::apiResource('rates', RateController::class)->except(['store', 'index']);
+
 });
 
 Route::get('foo', \App\Http\Controllers\Api\V1\TestController::class);

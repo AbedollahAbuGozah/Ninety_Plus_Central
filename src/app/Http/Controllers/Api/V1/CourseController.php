@@ -20,7 +20,9 @@ class CourseController extends BaseController
 
     public function index(CourseRequest $request, Module $module)
     {
-        $courses = $module->courses()->with(['instructor', 'module', 'chapters'])->get();
+        $courses = $module->courses()->with(['instructor', 'module', 'chapters', 'rates'])
+            ->withCount('students')
+            ->paginate($request->get('per_page') ?? 10);
 
         return $this->success(CourseResource::collection($courses), trans('messages.success.index'), 200);
     }

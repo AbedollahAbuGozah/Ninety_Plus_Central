@@ -2,12 +2,12 @@
 
 namespace App\Http\Resources;
 
+use App\Facades\NinetyPlusCentralFacade;
 use App\Models\User;
 use App\services\CurrentUserService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class UserResource extends BaseResource
 {
     /**
      * Transform the resource into an array.
@@ -34,6 +34,7 @@ class UserResource extends JsonResource
             'courses' => CourseResource::collection($this->whenLoaded('courses')),
             'email_verified' => (bool)$this->email_verified_at,
             'about' => $this->when($this->isInstructor(), fn() => $this->about),
+            'rate' => $this->when($this->isInstructor(), NinetyPlusCentralFacade::getRatableRate($this->instructor)),
             'gender' => $this->gender,
             'birth_date' => $this->birth_date,
             'phone' => $this->phone,

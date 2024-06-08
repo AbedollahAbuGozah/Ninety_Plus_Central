@@ -7,7 +7,6 @@ use App\Http\Requests\CommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\services\CommentService;
-use Illuminate\Http\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class CommentController extends BaseController

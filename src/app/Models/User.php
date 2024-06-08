@@ -66,6 +66,17 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
         return $this->roles()->where('name', 'student')->exists();
     }
 
+    public function student()
+    {
+        return Student::hydrate([$this->toArray()])->first();
+    }
+
+    public function instructor()
+    {
+        return Instructor::hydrate([$this->toArray()])->first();
+    }
+
+
     public function authorize($permission, $resource)
     {
         return $this->roles()->whereHas('permissions', function ($query) use ($resource, $permission) {

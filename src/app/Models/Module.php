@@ -31,5 +31,10 @@ class Module extends Model
         return $this->belongsTo(Branch::class);
     }
 
+    public function chapters()
+    {
+        return $this->hasMany(Chapter::class);
+    }
+
 
 }
