@@ -19,7 +19,7 @@ class CourseResource extends BaseResource
                     'name' => $this->instructor->first_name
                 ];
             }, $this->instructor_id),
-
+            'students' => $this->whenLoaded('student', fn() => $this->student->select('id', 'name')),
             'module' => $this->whenLoaded('module', function () {
                 return [
                     'id' => $this->module_id,
