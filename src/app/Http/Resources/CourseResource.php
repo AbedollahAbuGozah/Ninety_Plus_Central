@@ -4,9 +4,8 @@ namespace App\Http\Resources;
 
 use App\Facades\NinetyPlusCentralFacade;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class CourseResource extends JsonResource
+class CourseResource extends BaseResource
 {
     public function toArray(Request $request): array
     {

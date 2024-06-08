@@ -18,7 +18,7 @@ class UserController extends BaseController
 
     public function index(UserRequest $request)
     {
-        $users = UserResource::collection(User::all());
+        $users = UserResource::collection(User::query()->paginate($request->get('per_page') ?? 10));
         return $this->success($users, trans('messages.index.success'), 200);
     }
 

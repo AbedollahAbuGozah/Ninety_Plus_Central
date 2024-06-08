@@ -21,7 +21,7 @@ class ModuleController extends BaseController
 
     public function index(ModuleRequest $request, Country $country)
     {
-        $modules = $country->modules()->with(['branch', 'country'])->get();
+        $modules = $country->modules()->with(['branch', 'country'])->paginate($request->get('per_page') ?? 10);
         return $this->success(ModuleResource::collection($modules), trans('messages.success.index'), 200);
     }
 

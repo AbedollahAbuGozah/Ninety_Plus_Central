@@ -22,7 +22,7 @@ class CourseController extends BaseController
     {
         $courses = $module->courses()->with(['instructor', 'module', 'chapters', 'rates'])
             ->withCount('students')
-            ->get();
+            ->paginate($request->get('per_page') ?? 10);
 
         return $this->success(CourseResource::collection($courses), trans('messages.success.index'), 200);
     }
