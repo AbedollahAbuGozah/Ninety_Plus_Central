@@ -34,7 +34,7 @@ class ModuleController extends BaseController
 
     public function show(ModuleRequest $request, Module $module)
     {
-        $module = $this->moduleService->get($module, ['country', 'branch']);
+        $module = $this->moduleService->get($module, ['country', 'branch', 'chapters']);
         return $this->success(ModuleResource::make($module), 'messages.success.show', 200);
     }
 

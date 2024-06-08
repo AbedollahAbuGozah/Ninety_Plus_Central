@@ -25,6 +25,9 @@ class ModuleResource extends BaseResource
                     'name' => $this->branch->name
                 ];
             }, $this->branch_id),
-            'courses' => $this->whenLoaded('courses', $this->courses->pluck('id', 'name'))];
+            'courses' => $this->whenLoaded('courses', fn() => $this->courses->select('id', 'title')),
+            'chapters' => $this->whenLoaded('chapters', fn() => ChapterResource::collection($this->chapters))
+        ];
+
     }
 }
