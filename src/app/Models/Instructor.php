@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\constants\RoleOptions;
+use App\Traits\HasRates;
 
 class Instructor extends User
 {
+    use HasRates;
     public function courses()
     {
         return $this->hasMany(Course::class);
