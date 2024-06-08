@@ -34,13 +34,13 @@ class UserResource extends BaseResource
             'courses' => CourseResource::collection($this->whenLoaded('courses')),
             'email_verified' => (bool)$this->email_verified_at,
             'about' => $this->when($this->isInstructor(), fn() => $this->about),
-            'rate' => $this->when($this->isInstructor(), NinetyPlusCentralFacade::getRatableRate($this->instructor)),
+            'rate' => $this->when($this->isInstructor(), NinetyPlusCentralFacade::calcRatableRate($this->instructor())),
             'gender' => $this->gender,
             'birth_date' => $this->birth_date,
             'phone' => $this->phone,
             'profile_image' => $this->when($profileImagePath, fn() => $profileImagePath),
             'roles' => $this->roles->pluck('name'),
-            'permissions' => ((new CurrentUserService())->getPermissions()),
+            'permissions' => $this->when(auth()->check() , fn() => ((new CurrentUserService())->getPermissions())),
         ];
     }
 }

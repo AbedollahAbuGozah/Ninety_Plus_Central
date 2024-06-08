@@ -18,10 +18,8 @@ class RegisterUserController extends BaseController
 
     public function __invoke(UserRequest $request)
     {
-            DB::beginTransaction();
             $validatedData = $request->safe()->all();
             $user = $this->userService->create($validatedData, new User());
-            DB::commit();
             return $this->success(UserResource::make($user), trans('messages.success.register'), 201);
     }
 }
