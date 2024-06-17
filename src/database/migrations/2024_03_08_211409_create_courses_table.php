@@ -15,14 +15,15 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->foreignId('instructor_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->enum('period', ['first', 'second', 'third']);
+            $table->enum('period', ['first', 'second', 'third'])->default('first');
             $table->date('starts_at')->default(now());
             $table->date('ends_at')->default(now());
             $table->foreignId('module_id')->constrained('modules')->cascadeOnDelete()->cascadeOnUpdate();
             $table->enum('status', CourseStatusOptions::options())->default(CourseStatusOptions::DRAFT);
             $table->integer('price')->default(0);
             $table->text('description');
-            $table->json('properties');
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
+
             $table->timestamps();
         });
     }

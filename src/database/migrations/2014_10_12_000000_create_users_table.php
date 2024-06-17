@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->string('password');
             $table->string('about')->default('');
             $table->foreignId('city_id')->constrained('cites');
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->rememberToken();
             $table->timestamps();
         });

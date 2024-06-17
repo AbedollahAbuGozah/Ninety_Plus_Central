@@ -20,12 +20,12 @@ class CommentController extends BaseController
     public function index(CommentRequest $request, $commentableType, $commentableId)
     {
         if (!($commentable_model = NinetyPlusCentralFacade::getCommentableModel($commentableType))) {
-            throw new RouteNotFoundException('page not found');
+            throw new RouteNotFoundException();
         }
 
         $commentable = $commentable_model::findOrFail($commentableId);
 
-        return $this->success(CommentResource::collection($commentable->comments), 'message.index.success', 201);
+        return $this->success(CommentResource::collection($commentable->comments, $request->boolean('paginate'), $request->get('page_size')), 'message.index.success', 201);
 
     }
 

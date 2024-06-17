@@ -4,10 +4,13 @@ namespace App\services;
 
 
 use App\constants\CommentableTypeOptions;
+use App\constants\FavorableTypeOptions;
 use App\constants\RatableTypeOptions;
+use Illuminate\Database\Schema\Blueprint;
 
 class NinetyPlusCentral
 {
+
     public function getCommentableModel($type)
     {
         $modelConst = strtoupper($type);
@@ -21,6 +24,14 @@ class NinetyPlusCentral
         $ratableOptions = RatableTypeOptions::options();
         return $ratableOptions[$modelConst] ?? false;
     }
+
+    public function getFavoriteModel($type)
+    {
+        $modelConst = strtoupper($type);
+        $ratableOptions = FavorableTypeOptions::options();
+        return $ratableOptions[$modelConst] ?? false;
+    }
+
 
     public function calcRatableRate($ratable)
     {
@@ -43,5 +54,19 @@ class NinetyPlusCentral
         }
     }
 
+    public function addPropsColumn(Blueprint $table): void
+    {
+        $table->json('properties')->nullable()->default(null);
+    }
+
+    public function getModelResource($modelClass)
+    {
+        $nameSpace = 'App\Http\Resources\\';
+        return $nameSpace . class_basename($modelClass) . 'Resource';
+    }
+
+    private static function getBaseModelClassName($model)
+    {
+    }
 
 }

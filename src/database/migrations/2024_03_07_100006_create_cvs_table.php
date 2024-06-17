@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('instructor_id')->constrained('users')->cascadeOnDelete();
             $table->boolean('is_verified')->default(false);
             $table->boolean('is_accepted')->default(false);
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamps();
         });
     }

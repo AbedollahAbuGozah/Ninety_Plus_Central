@@ -19,7 +19,7 @@ return new class extends Migration {
                 ->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamps();
         });
     }

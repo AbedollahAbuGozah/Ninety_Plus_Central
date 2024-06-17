@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('attempts');
             $table->unsignedInteger('reserved_at')->nullable();
             $table->unsignedInteger('available_at');
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->unsignedInteger('created_at');
         });
     }

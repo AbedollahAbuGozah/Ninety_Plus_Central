@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Models\User;
-use App\Notifications\SendUserEmaillVerificationNotification;
+use App\Notifications\SendUserEmailVerificationNotification;
 
 class UserObserver
 {
@@ -12,7 +12,7 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        $user->notify(new SendUserEmaillVerificationNotification());
+        $user->notify(new SendUserEmailVerificationNotification());
     }
 
     /**

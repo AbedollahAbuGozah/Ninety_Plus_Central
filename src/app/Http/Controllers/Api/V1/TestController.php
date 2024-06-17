@@ -14,7 +14,7 @@ class TestController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $ins = User::find(10);
-        return $ins = Instructor::hydrate([$ins->toArray()])->first()->courses;
+        $user = User::find(1);
+        return basename(str_replace('\\', '/', get_class($user)));
     }
 }

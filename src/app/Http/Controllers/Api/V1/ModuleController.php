@@ -21,20 +21,20 @@ class ModuleController extends BaseController
 
     public function index(ModuleRequest $request, Country $country)
     {
-        $modules = $country->modules()->with(['branch', 'country'])->paginate($request->get('per_page') ?? 10);
-        return $this->success(ModuleResource::collection($modules), trans('messages.success.index'), 200);
+        $modules = $country->modules()->with(['branch', 'country', 'chapters', 'courses']);
+        return $this->success(ModuleResource::collection($modules, $request->boolean('paginate'), $request->get('page_size')), trans('messages.success.index'), 200);
     }
 
     public function store(ModuleRequest $request, Country $country)
     {
         $validatedData = $request->safe()->all();
-        $module = $this->moduleService->create($validatedData, new Module(), ['country', 'branch']);
+        $module = $this->moduleService->create($validatedData, new Module(), ['country', 'branch', 'chapters']);
         return $this->success(ModuleResource::make($module), trans('messages.success.store'), 201);
     }
 
     public function show(ModuleRequest $request, Module $module)
     {
-        $module = $this->moduleService->get($module, ['country', 'branch', 'chapters']);
+        $module = $this->moduleService->get($module, ['country', 'branch', 'chapters', 'courses']);
         return $this->success(ModuleResource::make($module), 'messages.success.show', 200);
     }
 

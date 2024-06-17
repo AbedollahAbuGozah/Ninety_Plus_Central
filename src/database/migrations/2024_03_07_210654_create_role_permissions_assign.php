@@ -30,6 +30,8 @@ return new class extends Migration {
             $table->boolean('delete_access')->default(false);
             $table->boolean('add_access')->default(false);
             $table->boolean('manage_access')->default(false);
+           $table->unique(['resource_name', 'role_id']);
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamps();
 
         });

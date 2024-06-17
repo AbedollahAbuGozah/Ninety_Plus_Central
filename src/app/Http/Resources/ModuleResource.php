@@ -11,23 +11,24 @@ class ModuleResource extends BaseResource
     {
         return [
             'id' => $this->id,
-
             'name' => $this->name,
+
             'country' => $this->whenLoaded('country', function () {
                 return [
                     'id' => $this->country_id,
                     'name' => $this->country->name
                 ];
             }, $this->country_id),
+
             'branch' => $this->whenLoaded('branch', function () {
                 return [
                     'id' => $this->branch_id,
                     'name' => $this->branch->name
                 ];
             }, $this->branch_id),
-            'courses' => $this->whenLoaded('courses', fn() => $this->courses->select('id', 'title')),
-            'chapters' => $this->whenLoaded('chapters', fn() => ChapterResource::collection($this->chapters))
-        ];
 
+            'courses' => $this->whenLoaded('courses', fn() => $this->courses->select('id', 'title')),
+            'chapters' => $this->whenLoaded('chapters', fn() => $this->chapters->select('id', 'title'))
+        ];
     }
 }

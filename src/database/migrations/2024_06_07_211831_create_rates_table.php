@@ -21,6 +21,7 @@ return new class extends Migration {
                 ->cascadeOnDelete();
 
             $table->enum('rate_value', [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]);
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamps();
         });
     }

@@ -8,7 +8,7 @@ use App\Http\Requests\VerifyPasswordResetCode;
 use App\Jobs\ExpirePasswordResetCodeJob;
 use App\Models\PasswordResetCode;
 use App\Models\User;
-use App\Notifications\SendResetPasswordcodeNotification;
+use App\Notifications\SendResetPasswordCodeNotification;
 use App\services\UserService;
 use Carbon\Carbon;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -24,7 +24,7 @@ class PasswordResetController extends BaseController
             'email' => $email['email']
         ]);
 
-        $user->notify(new SendResetPasswordcodeNotification($passwordReset->code));
+        $user->notify(new SendResetPasswordCodeNotification($passwordReset->code));
 
         ExpirePasswordResetCodeJob::dispatch($passwordReset)->delay(Carbon::now()->addMinutes(5));
         return $this->success([], trans('messages.send_code.success'), 200);

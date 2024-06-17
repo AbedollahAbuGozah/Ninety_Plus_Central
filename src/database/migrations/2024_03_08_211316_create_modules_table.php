@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('branch_id')->constrained('branches')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('country_id')->constrained('countries')->cascadeOnDelete()->cascadeOnUpdate();
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamps();
         });
     }

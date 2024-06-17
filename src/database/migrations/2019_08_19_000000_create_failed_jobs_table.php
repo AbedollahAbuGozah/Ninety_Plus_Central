@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('queue');
             $table->longText('payload');
             $table->longText('exception');
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamp('failed_at')->useCurrent();
         });
     }

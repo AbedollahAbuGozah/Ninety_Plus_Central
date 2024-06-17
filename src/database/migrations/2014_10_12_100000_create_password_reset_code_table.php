@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('email');
             $table->string('code');
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamp('created_at')->nullable();
         });
     }

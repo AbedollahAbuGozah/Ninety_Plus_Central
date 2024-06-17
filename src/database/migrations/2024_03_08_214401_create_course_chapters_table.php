@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('course_id')->constrained('courses')->cascadeOnUpdate();
             $table->foreignId('chapter_id')->constrained('chapters')->cascadeOnUpdate();
+            $table->unique(['course_id', 'chapter_id']);
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamps();
         });
     }
