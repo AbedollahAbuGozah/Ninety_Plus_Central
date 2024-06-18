@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Filterable
 {
-    protected $filterable = [];
+    protected array $filterable = [];
 
     public function scopeFilter(Builder $builder)
     {

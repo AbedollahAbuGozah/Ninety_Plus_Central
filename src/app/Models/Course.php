@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Filterable;
 use App\Traits\HasComments;
 use App\Traits\HasRates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,16 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Course extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, HasComments, HasRates, Markable;
+    use HasFactory, InteractsWithMedia, HasComments, HasRates, Markable, Filterable;
+
+    public function __construct()
+    {
+        $this->filterable = [
+            'title',
+            'instructor_id',
+            'module_id',
+        ];
+    }
 
     protected $guarded = ['id'];
 
