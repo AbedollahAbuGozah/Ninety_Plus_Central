@@ -65,8 +65,9 @@ class NinetyPlusCentral
         return $nameSpace . class_basename($modelClass) . 'Resource';
     }
 
-    private static function getBaseModelClassName($model)
+    public static function getAwsPath($path)
     {
+        return config('filesystem.AWS_URL') . $path;
     }
 
 }

@@ -5,6 +5,7 @@ namespace App\services;
 
 use App\Models\Course;
 use App\Models\CourseChapter;
+use Illuminate\Support\Facades\Storage;
 
 class CourseService extends BaseService
 {
@@ -42,19 +43,24 @@ class CourseService extends BaseService
     public function postCreateOrUpdate($data, $model)
     {
         $courseProps = $model->properties;
+
         if (request()->hasFile('cover_image')) {
             $coverImage = $model->addMediaFromRequest('cover_image')
-                ->toMediaCollection(Course::COURSE_COVER_IMAGE_MEDIA_COLLECTION);
+                ->withCustomProperties(['visibility' => 'public'])
+                ->toMediaCollection(Course::COURSE_COVER_IMAGE_MEDIA_COLLECTION, 's3');
+            Storage::disk('s3')->setVisibility($coverImage->getPath(), 'public');
 
             $courseProps['cover_image'] = $coverImage->getUrl();;
         }
 
         if (request()->hasFile('intro_video')) {
-            $introVideo = $model->addMedia(request()->file('intro_video'))
+            $introVideo = $model->addMediaFromRequest('intro_video')
                 ->toMediaCollection(Course::COURSE_INTRO_VIDEO_MEDIA_COLLECTION);
+            Storage::disk('s3')->setVisibility($introVideo->getPath(), 'public');
 
             $courseProps['intro_video'] = $introVideo->getUrl();
         }
+
         $model->properties = $courseProps;
         $model->save();
 
@@ -67,6 +73,7 @@ class CourseService extends BaseService
                     'course_id' => $model->id,
                 ];
             }, $chapterIds);
+
             CourseChapter::insert($insertData);
         }
 

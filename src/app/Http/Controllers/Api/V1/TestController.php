@@ -10,11 +10,11 @@ use Illuminate\Http\Request;
 class TestController extends Controller
 {
     /**
+     *
      * Handle the incoming request.
      */
     public function __invoke(Request $request)
     {
-        $user = User::find(1);
-        return basename(str_replace('\\', '/', get_class($user)));
+        return $request->file('file')->storePu('public/images');
     }
 }

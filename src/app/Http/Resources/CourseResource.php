@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Facades\NinetyPlusCentralFacade;
 use Illuminate\Http\Request;
+use Maize\Markable\Models\Favorite;
 
 class CourseResource extends BaseResource
 {
@@ -41,6 +42,7 @@ class CourseResource extends BaseResource
             'ending_message' => $this->when(isset($this->properties['ending_message']), fn() => $this->properties['ending_message']),
             'rate' => $this->whenLoaded('rates', fn() => NinetyPlusCentralFacade::calcRatableRate($this)),
             'students_count' => $this->students_count,
+            'is_favorite' => $this->when(auth()->user()->isStudent(), fn() => Favorite::has($this->resource, auth()->user())),
             'status' => $this->status
         ];
     }

@@ -8,7 +8,12 @@ class Student extends User
 {
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_students');
+        return $this->belongsToMany(Course::class, 'course_students')->withTimestamps();
+    }
+
+    public function profile()
+    {
+        return $this;
     }
 
     protected static function boot()

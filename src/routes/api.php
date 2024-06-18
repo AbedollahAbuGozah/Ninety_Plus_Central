@@ -55,4 +55,4 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
 
 });
 
-Route::get('foo', \App\Http\Controllers\Api\V1\TestController::class);
+Route::post('foo', \App\Http\Controllers\Api\V1\TestController::class);

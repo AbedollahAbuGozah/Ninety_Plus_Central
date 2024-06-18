@@ -63,6 +63,8 @@ class UserService extends BaseService
         $user->password = bcrypt($newPassWord);
         $user->save();
     }
+
+
 }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\constants\RoleOptions;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -47,23 +48,23 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
 
     public function isAdmin()
     {
-        return $this->roles()->where('name', 'admin')->exists();
+        return $this->roles()->where('name', RoleOptions::ADMIN)->exists();
     }
 
     public function isHr()
     {
-        return $this->roles()->where('name', 'hr')->exists();
+        return $this->roles()->where('name', RoleOptions::HR)->exists();
     }
 
     public function isInstructor()
     {
-        return $this->roles()->where('name', 'instructor')->exists();
+        return $this->roles()->where('name', RoleOptions::INSTRUCTOR)->exists();
     }
 
 
     public function isStudent()
     {
-        return $this->roles()->where('name', 'student')->exists();
+        return $this->roles()->where('name', RoleOptions::STUDENT)->exists();
     }
 
     public function student()
@@ -76,6 +77,16 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
         return Instructor::hydrate([$this->toArray()])->first();
     }
 
+    public function resolveUser()
+    {
+
+      return   match (true) {
+            $this->isInstructor() => Instructor::hydrate([$this->toArray()])->first(),
+            $this->isStudent() => Student::hydrate([$this->toArray()])->first(),
+            default => $this,
+        };
+
+    }
 
     public function authorize($permission, $resource)
     {

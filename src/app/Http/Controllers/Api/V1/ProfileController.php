@@ -22,14 +22,14 @@ class ProfileController extends BaseController
 
     public function show(Request $request)
     {
-        $user = (new CurrentUserService())::get();
-        $user = Student::find($user->id) ?? Instructor::find($user->id);
+        $user = auth()->user()->resolveUser();
+
         return $this->success(UserResource::make($user->load(['courses.instructor', 'courses.module'])), trans('messages.success.index'), 200);
     }
 
     public function update(UpdateProfileRequest $request)
     {
-        $user = (new CurrentUserService())::get();
+        $user = auth()->user()->resolveUser();
         $validatedData = $request->safe()->all();
         $this->userService->update($validatedData, $user);
         return $this->success(UserResource::make($user), trans('messages.success.index'), 200);
