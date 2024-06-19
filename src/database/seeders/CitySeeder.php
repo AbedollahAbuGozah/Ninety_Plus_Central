@@ -16,7 +16,7 @@ class CitySeeder extends Seeder
         DB::table('countries')->insert([
             ['name' => 'Palestine'],
         ]);
-        DB::table('cites')->insert([
+        DB::table('cities')->insert([
             ['name' => 'Tulkarem', 'country_id' => 1],
             ['name' => 'Nablus', 'country_id' => 1],
             ['name' => 'Ramallah', 'country_id' => 1],

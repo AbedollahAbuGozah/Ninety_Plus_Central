@@ -45,6 +45,7 @@ class UserResource extends BaseResource
             'phone' => $this->phone,
             'profile_image' => $this->when($profileImagePath, fn() => $profileImagePath),
             'roles' => $this->roles->pluck('name'),
+            'branch' => $this->whenLoaded('branch', fn() => $this->branch->select('id', 'name')),
 //            'total_earnings' => $this->when($this->isInstructor(), $this->resolveUser()->total_earnings),
 //            'today_earnings' => $this->when($this->isInstructor(), $this->resolveUser()->today_earnings),
 //            'number_of_sales' => $this->when($this->isInstructor(), $this->resolveUser()->number_of_sales),

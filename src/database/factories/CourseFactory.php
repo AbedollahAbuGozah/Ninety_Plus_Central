@@ -20,7 +20,7 @@ class CourseFactory extends Factory
     {
         $instructors = Instructor::query()->pluck('id')->toArray();
         $modules = Module::query()->pluck('id')->toArray();
-        return [
+        $ret = [
             'title' => fake()->title(),
             'instructor_id' => fake()->randomElement($instructors),
             'period' => fake()->randomElement(['first', 'second', 'third']),
@@ -34,5 +34,7 @@ class CourseFactory extends Factory
                 "ending_message" => fake()->text()
             ]
         ];
+        logger($ret);
+        return $ret;
     }
 }

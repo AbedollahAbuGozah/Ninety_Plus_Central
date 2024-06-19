@@ -24,7 +24,7 @@ class ProfileController extends BaseController
     {
         $user = auth()->user()->resolveUser();
 
-        return $this->success(UserResource::make($user->load(['courses.instructor', 'courses.module'])), trans('messages.success.index'), 200);
+        return $this->success(UserResource::make($user->profile()), trans('messages.success.index'), 200);
     }
 
     public function update(UpdateProfileRequest $request)
@@ -32,7 +32,7 @@ class ProfileController extends BaseController
         $user = auth()->user()->resolveUser();
         $validatedData = $request->safe()->all();
         $this->userService->update($validatedData, $user);
-        return $this->success(UserResource::make($user), trans('messages.success.index'), 200);
+        return $this->success(UserResource::make($user->profile()), trans('messages.success.index'), 200);
     }
 
     public function changePassword(ChangePasswordRequest $request, User $user)

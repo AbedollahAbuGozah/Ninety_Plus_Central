@@ -16,7 +16,7 @@ class Instructor extends User
 
     public function profile()
     {
-        return $this;
+        return $this->load(['courses.instructor', 'courses.module' ]);
     }
 
     public function getTotalEarningsAttribute()

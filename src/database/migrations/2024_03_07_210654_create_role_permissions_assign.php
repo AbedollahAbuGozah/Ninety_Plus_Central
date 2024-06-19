@@ -12,16 +12,13 @@ return new class extends Migration {
     {
         Schema::create('role_permissions_assign', function (Blueprint $table) {
             $table->id();
-            $table->string('resource_name');
-
-            $table->foreignId('role_id')
-                ->constrained('roles')
+            $table->foreignId('resource_id')
+                ->constrained('resources')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreign('resource_name')
-                ->references('name')
-                ->on('resources')
+            $table->foreignId('role_id')
+                ->constrained('roles')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
@@ -30,7 +27,7 @@ return new class extends Migration {
             $table->boolean('delete_access')->default(false);
             $table->boolean('add_access')->default(false);
             $table->boolean('manage_access')->default(false);
-           $table->unique(['resource_name', 'role_id']);
+            $table->unique(['resource_id', 'role_id']);
             \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamps();
 

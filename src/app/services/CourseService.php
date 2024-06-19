@@ -44,16 +44,9 @@ class CourseService extends BaseService
     public function postCreateOrUpdate($data, $course)
     {
         $courseProps = $course->properties;
-
-        if(request()->has('cover_image')){
-            $course->clearMediaCollection(Course::COURSE_COVER_IMAGE_MEDIA_COLLECTION);
-        }
-
-        if(request()->has('intro_video')){
-            $course->clearMediaCollection(Course::COURSE_INTRO_VIDEO_MEDIA_COLLECTION);
-        }
-
+        
         if (request()->hasFile('cover_image')) {
+            $course->clearMediaCollection(Course::COURSE_COVER_IMAGE_MEDIA_COLLECTION);
             $coverImage = $course->addMediaFromRequest('cover_image')
                 ->withCustomProperties(['visibility' => 'public'])
                 ->toMediaCollection(Course::COURSE_COVER_IMAGE_MEDIA_COLLECTION, 's3');
@@ -63,6 +56,7 @@ class CourseService extends BaseService
         }
 
         if (request()->hasFile('intro_video')) {
+            $course->clearMediaCollection(Course::COURSE_INTRO_VIDEO_MEDIA_COLLECTION);
             $introVideo = $course->addMediaFromRequest('intro_video')
                 ->toMediaCollection(Course::COURSE_INTRO_VIDEO_MEDIA_COLLECTION);
             Storage::disk('s3')->setVisibility($introVideo->getPath(), 'public');

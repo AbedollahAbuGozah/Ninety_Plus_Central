@@ -18,11 +18,13 @@ class CurrentUserService
 
     public function getPermissions()
     {
-        $user = auth()->user()->load(['roles.permissions']);
+        $user = auth()->user()->load(['roles.permissions.resource']);
 
         $permissions = $user->roles->flatMap(function ($role) {
             return $role->permissions;
-        })->unique('id')->groupBy('resource_name');
+        })->unique('id')->groupBy(function ($perm){
+            return $perm->resource->name;
+        });
 
         $consolidatedPermissions = $permissions->map(function ($perms) {
             $permission = $perms->reduce(function ($carry, $perm) {

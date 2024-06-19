@@ -13,7 +13,7 @@ class Student extends User
 
     public function profile()
     {
-        return $this;
+        return $this->load(['courses.instructor', 'courses.module' ]);
     }
 
     protected static function boot()

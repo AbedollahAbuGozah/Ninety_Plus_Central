@@ -79,7 +79,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
 
     public function resolveUser()
     {
-
       return   match (true) {
             $this->isInstructor() => Instructor::hydrate([$this->toArray()])->first(),
             $this->isStudent() => Student::hydrate([$this->toArray()])->first(),

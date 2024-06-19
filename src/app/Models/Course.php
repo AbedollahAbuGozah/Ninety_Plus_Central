@@ -16,6 +16,8 @@ class Course extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, HasComments, HasRates, Markable, Filterable;
 
+    protected $guarded = ['id'];
+
     public function __construct()
     {
         $this->filterable = [
@@ -24,8 +26,6 @@ class Course extends Model implements HasMedia
             'module_id',
         ];
     }
-
-    protected $guarded = ['id'];
 
     protected $casts = [
         'properties' => 'json',

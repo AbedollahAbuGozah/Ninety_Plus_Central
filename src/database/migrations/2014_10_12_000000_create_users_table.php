@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('about')->default('');
-            $table->foreignId('city_id')->constrained('cites');
+            $table->foreignId('city_id')->constrained('cities');
             \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->rememberToken();
             $table->timestamps();
