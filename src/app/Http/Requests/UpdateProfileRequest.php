@@ -18,7 +18,7 @@ class UpdateProfileRequest extends FormRequest
             'first_name' => 'sometimes|required|min:3|max:50',
             'last_name' => 'sometimes|required|min:3|max:50',
             'email' => 'sometimes|required|email|max:30',
-            'city_id' => 'sometimes|required|exists:cites,id',
+            'city_id' => 'sometimes|required|exists:cities,id',
             'birth_date' => 'sometimes|required',
             'gender' => 'sometimes|required|boolean',
             'profile_image' => 'sometimes|image',

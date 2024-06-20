@@ -14,7 +14,7 @@ class Country extends Model
         return $this->hasMany(Module::class);
     }
 
-    public function cites()
+    public function cities()
     {
         return $this->hasMany(City::class);
     }

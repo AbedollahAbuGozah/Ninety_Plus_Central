@@ -26,7 +26,7 @@ class GuestController extends BaseController
         foreach ($data['roles'] as $role) {
             $role['name'] = trans('general.roles.' . $role->name);
         }
-        $data['countries'] = Country::with(['cites' => function ($query) {
+        $data['countries'] = Country::with(['cities' => function ($query) {
             $query->select('id', 'country_id', 'name');
         }])->get();
 

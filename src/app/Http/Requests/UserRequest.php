@@ -25,7 +25,7 @@ class UserRequest extends BaseFormRequest
                 'email' => 'required|email|max:100|unique:users,email',
                 'role_id' => 'required|in:' . implode(',', Role::getAllowedRegister()->pluck('id')->flatten()->toArray()),
                 'branch_id' => 'required_if:role_id,' . $studentId . '|exists:branches,id',
-                'city_id' => 'required|exists:cites,id',
+                'city_id' => 'required|exists:cities,id',
                 'birth_date' => 'required',
                 'gender' => 'required|boolean',
                 'phone' => [
@@ -50,7 +50,7 @@ class UserRequest extends BaseFormRequest
                     'sometimes',
                     'exists:branches,id',
                 ],
-                'city_id' => 'sometimes|required|exists:cites,id',
+                'city_id' => 'sometimes|required|exists:cities,id',
                 'birth_date' => 'sometimes|required',
                 'gender' => 'sometimes|required|boolean',
                 'phone' => [
