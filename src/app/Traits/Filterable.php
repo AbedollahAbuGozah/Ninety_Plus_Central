@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Filterable
 {
-    protected array $filterable = [];
-
     public function scopeFilter(Builder $builder)
     {
+        if (!isset($this->filterable)) {
+            throw new \Exception('filterable array should added as property in the model');
+        }
         if (!request()->has('filter')) {
             return $builder;
         }

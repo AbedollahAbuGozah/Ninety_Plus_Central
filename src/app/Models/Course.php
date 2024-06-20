@@ -18,15 +18,11 @@ class Course extends Model implements HasMedia
 
     protected $guarded = ['id'];
 
-    public function __construct()
-    {
-        $this->filterable = [
-            'title',
-            'instructor_id',
-            'module_id',
-        ];
-    }
-
+    protected array $filterable = [
+        'title',
+        'instructor_id',
+        'module_id',
+    ];
     protected $casts = [
         'properties' => 'json',
     ];
