@@ -32,7 +32,7 @@ class PaymentSuccessListener
         $purchasable = $purchasableModelClass::find($purchasableId);
         $relation = NinetyPlusCentralFacade::generateRelationName($purchasable, 1);
         $user->{$relation}()->attach($purchasableId, [
-            'properties' => json_encode($event->paymentSession),
+            'properties' => json_encode(['invoice' => json_encode($event->paymentSession)]),
         ]);
         $user->notify(new SendPaymentSuccessNotification($purchasable, ucfirst(class_basename($purchasable))));
         $this->callPostPurchaseHook($purchasableModelClass, $purchasable, $user);

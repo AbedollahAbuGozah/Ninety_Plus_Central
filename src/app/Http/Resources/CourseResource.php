@@ -32,7 +32,6 @@ class CourseResource extends BaseResource
             'chapters' => $this->when(
                 $this->relationLoaded('chapters') && $this->chapters->isNotEmpty(),
                 fn() => ChapterResource::collection($this->chapters),
-                ChapterResource::collection($this->module->chapters)
             ),
 
             'cover_image' => $this->when(isset($this->properties['cover_image']), fn() => $this->properties['cover_image']),

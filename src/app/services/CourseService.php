@@ -44,7 +44,7 @@ class CourseService extends BaseService
     public function postCreateOrUpdate($data, $course)
     {
         $courseProps = $course->properties;
-        
+
         if (request()->hasFile('cover_image')) {
             $course->clearMediaCollection(Course::COURSE_COVER_IMAGE_MEDIA_COLLECTION);
             $coverImage = $course->addMediaFromRequest('cover_image')
@@ -68,16 +68,10 @@ class CourseService extends BaseService
         $course->save();
 
         if (request()->has('chapters')) {
-            $chapterIds = $data['chapters'];
-
-            $insertData = array_map(function ($chapterId) use ($course) {
-                return [
-                    'chapter_id' => $chapterId,
-                    'course_id' => $course->id,
-                ];
-            }, $chapterIds);
-
-            CourseChapter::insert($insertData);
+            $course->chapters()->sync($data['chapters']);
+        } else {
+            $chapters = $course->module->chapters->pluck('id')->toArray();
+            $course->chapters()->sync($chapters);
         }
 
     }

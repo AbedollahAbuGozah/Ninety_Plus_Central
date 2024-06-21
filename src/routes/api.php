@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\CommentController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\GuestController;
+use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\Markables\FavoriteController;
 use App\Http\Controllers\Api\V1\ModuleController;
 use App\Http\Controllers\Api\V1\PaymentController;
@@ -19,6 +20,7 @@ Route::group(['prefix' => 'v1/guest', 'controller' => GuestController::class], f
 });
 
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], function () {
+    Route::get('courses/invoices', [InvoiceController::class, 'index']);
 
     Route::apiResource('users', UserController::class);
     Route::apiResource('countries.modules', ModuleController::class)->shallow();
@@ -52,6 +54,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
 
     Route::apiResource('comments', CommentController::class)->except(['store', 'index']);
     Route::apiResource('rates', RateController::class)->except(['store', 'index']);
+
 });
 
 Route::group(['prefix' => 'v1/payment', 'controller' => PaymentController::class], function () {
