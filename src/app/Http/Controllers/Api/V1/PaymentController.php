@@ -29,7 +29,7 @@ class PaymentController extends BaseController
         $purchasable = $purchasableModelClass::findOrFail($purchasableId);
 
         $session = $this->stripeService->createOrder(
-            $purchasable->price * 100,
+            $purchasable,
             config('stripe.currency'),
             route('payment.status', ['purchasableType' => $purchasableModelClass, 'purchasableId' => $purchasableId]),
             route('payment.cancel'));

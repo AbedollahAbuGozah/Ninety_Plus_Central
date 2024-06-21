@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Events\PaymentSuccess;
 use App\Facades\NinetyPlusCentralFacade;
 use App\Mail\InvoiceMail;
-use App\Notifications\SendPaymentInvoiceNotification;
+use App\Notifications\SendPaymentSuccessNotification;
 use App\services\NinetyPlusCentral;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Action;
@@ -31,21 +31,18 @@ class PaymentSuccessListener
         $purchasableId = $event->purchasableId;
         $purchasable = $purchasableModelClass::find($purchasableId);
         $relation = NinetyPlusCentralFacade::generateRelationName($purchasable, 1);
-        logger($relation);
         $user->{$relation}()->attach($purchasableId, [
             'properties' => json_encode($event->paymentSession),
         ]);
-        $this->callPostPurchaseHook($purchasableModelClass, $purchasable);
-
-//        Mail::to($user->email)->sned(new InvoiceMail($event->invoiceData));
+        $user->notify(new SendPaymentSuccessNotification($purchasable, ucfirst(class_basename($purchasable))));
+        $this->callPostPurchaseHook($purchasableModelClass, $purchasable, $user);
     }
 
-    private function callPostPurchaseHook($purchasableModelClass, $purchasable)
+    private function callPostPurchaseHook($purchasableModelClass, $purchasable, $customer)
     {
         $methodName = 'postPurchase' . ucfirst(class_basename($purchasableModelClass));
-        logger($methodName);
         if (method_exists(NinetyPlusCentral::class, $methodName)) {
-            NinetyPlusCentralFacade::{$methodName}($purchasable);
+            NinetyPlusCentralFacade::{$methodName}($purchasable, $customer);
         }
     }
 

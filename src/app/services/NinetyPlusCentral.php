@@ -8,6 +8,7 @@ use App\constants\FavorableTypeOptions;
 use App\constants\PurchasableTypeOptions;
 use App\constants\RatableTypeOptions;
 use App\Models\Course;
+use App\Notifications\SendProductSoldNotification;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
 
@@ -82,16 +83,19 @@ class NinetyPlusCentral
         return !$plural ? $relation : Str::plural($relation);
     }
 
-    public function postPurchaseCourse(Course $course)
+    public function postPurchaseCourse(Course $course, $customer)
     {
         $instructor = $course->instructor;
-        $instructorProps = $instructor->properties ?? [];
+        $instructorProps = json_decode($instructor->properties, true) ?? [];
         $instructorProps['balance_info'] = array_merge($instructorProps['balance_info'] ?? [], [
             'balance' => ($instructorProps['balance_info']['balance'] ?? 0) + $course->price,
         ]);
 
-        $instructor->properties = $instructorProps;
+        $instructor->properties = json_encode($instructorProps);
+
         $instructor->save();
+
+        $instructor->notify(new SendProductSoldNotification($course, 'Course', $customer));
     }
 
 }
