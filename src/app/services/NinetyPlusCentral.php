@@ -5,8 +5,11 @@ namespace App\services;
 
 use App\constants\CommentableTypeOptions;
 use App\constants\FavorableTypeOptions;
+use App\constants\PurchasableTypeOptions;
 use App\constants\RatableTypeOptions;
+use App\Models\Course;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Str;
 
 class NinetyPlusCentral
 {
@@ -29,6 +32,13 @@ class NinetyPlusCentral
     {
         $modelConst = strtoupper($type);
         $ratableOptions = FavorableTypeOptions::options();
+        return $ratableOptions[$modelConst] ?? false;
+    }
+
+    public function getPurchasableModel($type)
+    {
+        $modelConst = strtoupper($type);
+        $ratableOptions = PurchasableTypeOptions::options();
         return $ratableOptions[$modelConst] ?? false;
     }
 
@@ -65,9 +75,23 @@ class NinetyPlusCentral
         return $nameSpace . class_basename($modelClass) . 'Resource';
     }
 
-    public static function getAwsPath($path)
+    public function generateRelationName($model, $plural = 0)
     {
-        return config('filesystem.AWS_URL') . $path;
+        $relation = Str::lower(class_basename($model));
+
+        return !$plural ? $relation : Str::plural($relation);
+    }
+
+    public function postPurchaseCourse(Course $course)
+    {
+        $instructor = $course->instructor;
+        $instructorProps = $instructor->properties ?? [];
+        $instructorProps['balance_info'] = array_merge($instructorProps['balance_info'] ?? [], [
+            'balance' => ($instructorProps['balance_info']['balance'] ?? 0) + $course->price,
+        ]);
+
+        $instructor->properties = $instructorProps;
+        $instructor->save();
     }
 
 }

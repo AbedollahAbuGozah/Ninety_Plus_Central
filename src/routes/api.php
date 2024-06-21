@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\GuestController;
 use App\Http\Controllers\Api\V1\Markables\FavoriteController;
 use App\Http\Controllers\Api\V1\ModuleController;
+use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RateController;
 use App\Http\Controllers\Api\V1\StudentController;
@@ -52,5 +53,12 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
     Route::apiResource('comments', CommentController::class)->except(['store', 'index']);
     Route::apiResource('rates', RateController::class)->except(['store', 'index']);
 });
+
+Route::group(['prefix' => 'v1/payment', 'controller' => PaymentController::class], function () {
+    Route::post('{purchasableType}/{purchasableId}/checkout', 'checkout');
+    Route::get('status', 'status')->name('payment.status');
+    Route::get('cancel', 'cancel')->name('payment.cancel');
+});
+
 
 Route::post('foo', \App\Http\Controllers\Api\V1\TestController::class);
