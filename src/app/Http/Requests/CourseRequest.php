@@ -43,6 +43,7 @@ class CourseRequest extends BaseFormRequest
                 'cover_image' => 'sometimes|image',
                 'intro_video' => 'sometimes|mimes:mp4,mov,ogg,qt',
                 'welcome_message' => 'sometimes|required|string',
+                'price' => 'required|numeric',
                 'ending_message' => 'sometimes|required|string'
             ];
         }
@@ -58,6 +59,7 @@ class CourseRequest extends BaseFormRequest
                     'array',
                     new CourseChapterRule($this->module_id)
                 ],
+                'price' => 'sometimes|required|numeric',
                 'chapters.*' => 'required|exists:chapters,id',
                 'description' => 'sometimes|required|string',
                 'cover_image' => 'sometimes|required|image',

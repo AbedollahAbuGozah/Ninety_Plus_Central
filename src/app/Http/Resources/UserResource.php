@@ -38,17 +38,12 @@ class UserResource extends BaseResource
             }),
 
             'email_verified' => (bool)$this->email_verified_at,
-//            'about' => $this->when($this->isInstructor(), fn() => $this->about),
-//            'rate' => $this->when($this->isInstructor(), NinetyPlusCentralFacade::calcRatableRate($this->instructor())),
             'gender' => $this->gender,
             'birth_date' => $this->birth_date,
             'phone' => $this->phone,
             'profile_image' => $this->when($profileImagePath, fn() => $profileImagePath),
             'roles' => $this->roles->pluck('name'),
-            'branch' => $this->whenLoaded('branch', fn() => $this->branch->select('id', 'name')),
-//            'total_earnings' => $this->when($this->isInstructor(), $this->resolveUser()->total_earnings),
-//            'today_earnings' => $this->when($this->isInstructor(), $this->resolveUser()->today_earnings),
-//            'number_of_sales' => $this->when($this->isInstructor(), $this->resolveUser()->number_of_sales),
+            'branch' => $this->whenLoaded('branch', fn() => $this->branch->select('id', 'name'), $this->brnach_id),
             'permissions' => $this->when(auth()->check(), fn() => ((new CurrentUserService())->getPermissions())),
         ];
         return array_merge($common, $this->instructorData());

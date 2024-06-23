@@ -8,6 +8,7 @@ use App\Models\UserRole;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -25,10 +26,15 @@ class UserService extends BaseService
 
     public function postCreateOrUpdate($data, Model $user)
     {
+        logger(__METHOD__);
+        logger($data);
+        logger(request());
         if (request()->hasFile('profile_image')) {
             $user->clearMediaCollection(User::PROFILE_IMAGE_MEDIA_COLLECTION);
-            $user->addMediaFromRequest('profile_image')
+            $profileImage = $user->addMediaFromRequest('profile_image')
                 ->toMediaCollection(User::PROFILE_IMAGE_MEDIA_COLLECTION);
+            Storage::disk('s3')->setVisibility($profileImage->getPath(), 'public');
+
         }
     }
 

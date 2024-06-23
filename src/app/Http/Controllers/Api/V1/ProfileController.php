@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
-use App\Models\Instructor;
-use App\Models\Student;
 use App\Models\User;
 use App\services\CurrentUserService;
 use App\services\UserService;
@@ -39,7 +37,7 @@ class ProfileController extends BaseController
     {
         $user = (new CurrentUserService())::get();
         $validatedData = $request->safe()->all();
-        $this->userService->resetPassword($user, $validatedData['password'], $validatedData['old_password']);
+        $this->userService->resetPassword($user, $validatedData['password']);
         return $this->success([], 'messages.success.change_password', 200);
     }
 }

@@ -27,14 +27,15 @@ class UserRequest extends BaseFormRequest
                 'branch_id' => 'required_if:role_id,' . $studentId . '|exists:branches,id',
                 'city_id' => 'required|exists:cities,id',
                 'birth_date' => 'required',
+                'profile_image' => 'sometimes|required|image',
                 'gender' => 'required|boolean',
                 'phone' => [
+                    'unique:users,phone',
                     'required',
                     new phoneNumberRule(),
                 ],
                 'password' => [
                     'required',
-                    'unique:users,phone',
                     'confirmed',
                     new PasswordRule(),
                 ],
@@ -50,9 +51,11 @@ class UserRequest extends BaseFormRequest
                     'sometimes',
                     'exists:branches,id',
                 ],
+                'profile_image' => 'sometimes|required|image',
                 'city_id' => 'sometimes|required|exists:cities,id',
                 'birth_date' => 'sometimes|required',
                 'gender' => 'sometimes|required|boolean',
+                'about' => 'sometimes|required',
                 'phone' => [
                     'sometimes',
                     'required',
