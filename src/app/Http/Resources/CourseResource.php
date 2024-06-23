@@ -40,6 +40,7 @@ class CourseResource extends BaseResource
             'welcome_message' => $this->when(isset($this->properties['welcome_message']), fn() => $this->properties['welcome_message']),
             'ending_message' => $this->when(isset($this->properties['ending_message']), fn() => $this->properties['ending_message']),
             'rate' => $this->whenLoaded('rates', fn() => NinetyPlusCentralFacade::calcRatableRate($this)),
+            'rates_count' => $this->whenLoaded('rates', $this->rates()->count()),
             'students_count' => $this->students_count ?? 0,
             'is_favorite' => $this->when(auth()->user()->isStudent(), fn() => Favorite::has($this->resource, auth()->user())),
             'status' => $this->status

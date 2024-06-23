@@ -46,6 +46,10 @@ class NinetyPlusCentral
 
     public function calcRatableRate($ratable)
     {
+        if($ratable->rates()->count() == 0){
+            return '-';
+        }
+
         $ratesAvg = $ratable->rates()->avg('rate_value');
         $this->roundRate($ratesAvg);
         return $ratesAvg;

@@ -36,7 +36,7 @@ class CourseController extends BaseController
 
     public function show(CourseRequest $request, Course $course)
     {
-        $course = $this->courseService->get($course, ['instructor', 'module', 'chapters']);
+        $course = $this->courseService->get($course, ['instructor', 'module', 'chapters', 'rates']);
         return $this->success(CourseResource::make($course), trans('messages.success.index'), 200);
     }
 
