@@ -8,6 +8,7 @@ use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use App\Models\Module;
 use App\services\CourseService;
+use AWS\CRT\HTTP\Request;
 
 class CourseController extends BaseController
 {
@@ -18,9 +19,16 @@ class CourseController extends BaseController
 
     }
 
+    public function indexAll(CourseRequest $request)
+    {
+        $courses = Course::query();
+        return $this->success(CourseResource::collection($courses, $request->boolean('paginate'), $request->get('page_size')), trans('messages.success.index'), 200);
+    }
+
     public function index(CourseRequest $request, Module $module)
     {
-        $courses = $module->courses()->with(['instructor', 'module', 'chapters', 'rates'])
+        $courses = $module->courses()
+            ->with(['instructor', 'module', 'chapters', 'rates'])
             ->filter()
             ->withCount('students');
 

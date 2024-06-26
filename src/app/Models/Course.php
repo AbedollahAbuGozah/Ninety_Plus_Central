@@ -7,6 +7,7 @@ use App\Traits\HasComments;
 use App\Traits\HasRates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Maize\Markable\Markable;
 use Maize\Markable\Models\Favorite;
 use Spatie\MediaLibrary\HasMedia;
@@ -15,6 +16,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Course extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, HasComments, HasRates, Markable, Filterable;
+    use SoftDeletes;
+
 
     protected $guarded = ['id'];
 
@@ -52,6 +55,14 @@ class Course extends Model implements HasMedia
     public function chapters()
     {
         return $this->belongsToMany(Chapter::class, 'course_chapters');
+    }
+
+    public function hasStudent(Student $student = null)
+    {
+
+        $student = $student ?? auth()->user()->resolveUser();
+
+        return $this->students()->where('users.id', $student->id)->exists();
     }
 
 }

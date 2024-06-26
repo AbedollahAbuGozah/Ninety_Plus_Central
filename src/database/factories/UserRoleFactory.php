@@ -16,9 +16,8 @@ class UserRoleFactory extends Factory
      */
     public function definition(): array
     {
-        $numbers = range(1, 10);
         return [
-            'user_id' => fake()->unique()->randomElement($numbers) ,
+            'user_id' => fake()->unique()->randomElement(range(2, 11)) ,
             'role_id' => rand(1, 4),
         ];
     }

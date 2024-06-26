@@ -46,6 +46,12 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
         return $this->first_name . ' ' . $this->last_name;
     }
 
+    public function getProfileImageAttribute()
+    {
+        logger(__METHOD__);
+        return $this->getFirstMediaUrl(User::PROFILE_IMAGE_MEDIA_COLLECTION);
+    }
+
     public function isAdmin()
     {
         return $this->roles()->where('name', RoleOptions::ADMIN)->exists();
@@ -79,7 +85,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
 
     public function resolveUser()
     {
-      return   match (true) {
+        return match (true) {
             $this->isInstructor() => Instructor::hydrate([$this->toArray()])->first(),
             $this->isStudent() => Student::hydrate([$this->toArray()])->first(),
             default => $this,

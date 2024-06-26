@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->integer('price')->default(0);
             $table->text('description');
             \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

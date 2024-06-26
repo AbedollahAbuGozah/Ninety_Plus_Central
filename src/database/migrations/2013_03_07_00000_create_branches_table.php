@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
+
             $table->string('name', 40);
+
             \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamps();
         });

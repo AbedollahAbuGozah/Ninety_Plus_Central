@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Facades\NinetyPlusCentralFacade;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Maize\Markable\Models\Favorite;
 
@@ -14,12 +15,15 @@ class CourseResource extends BaseResource
             'id' => $this->id,
             'title' => $this->title,
             'price' => $this->price,
+
             'instructor' => $this->whenLoaded('instructor', function () {
                 return [
                     'id' => $this->instructor_id,
-                    'name' => $this->instructor->first_name
+                    'name' => $this->instructor->full_name,
+                    'profile_image' =>  $this->instructor->profile_image,
                 ];
             }, $this->instructor_id),
+
             'students' => $this->whenLoaded('student', fn() => $this->student->select('id', 'name')),
             'module' => $this->whenLoaded('module', function () {
                 return [
@@ -43,6 +47,7 @@ class CourseResource extends BaseResource
             'rates_count' => $this->whenLoaded('rates', $this->rates()->count()),
             'students_count' => $this->students_count ?? 0,
             'is_favorite' => $this->when(auth()->user()->isStudent(), fn() => Favorite::has($this->resource, auth()->user())),
+            'is_joined' => $this->when(auth()->user()->isStudent(), fn() => $this->hasStudent()),
             'status' => $this->status
         ];
     }

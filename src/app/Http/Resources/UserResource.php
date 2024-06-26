@@ -16,7 +16,6 @@ class UserResource extends BaseResource
      */
     public function toArray(Request $request): array
     {
-        $profileImagePath = $this->getFirstMediaUrl(User::PROFILE_IMAGE_MEDIA_COLLECTION);
 
         $common = [
             'user_id' => $this->id,
@@ -41,9 +40,9 @@ class UserResource extends BaseResource
             'gender' => $this->gender,
             'birth_date' => $this->birth_date,
             'phone' => $this->phone,
-            'profile_image' => $this->when($profileImagePath, fn() => $profileImagePath),
+            'profile_image' => $this->resolveUser()->profile_image,
             'roles' => $this->roles->pluck('name'),
-            'branch' => $this->whenLoaded('branch', fn() => $this->branch->select('id', 'name'), $this->brnach_id),
+            'branch' => $this->whenLoaded('branch', fn() => $this->branch()->select('id', 'name')->get(), $this->branch_id),
             'permissions' => $this->when(auth()->check(), fn() => ((new CurrentUserService())->getPermissions())),
         ];
         return array_merge($common, $this->instructorData());

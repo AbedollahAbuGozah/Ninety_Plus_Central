@@ -30,7 +30,7 @@ class UserService extends BaseService
         logger($data);
         logger(request());
         if (request()->hasFile('profile_image')) {
-            $user->clearMediaCollection(User::PROFILE_IMAGE_MEDIA_COLLECTION);
+            $user->resolveUser()->clearMediaCollection(User::PROFILE_IMAGE_MEDIA_COLLECTION);
             $profileImage = $user->addMediaFromRequest('profile_image')
                 ->toMediaCollection(User::PROFILE_IMAGE_MEDIA_COLLECTION);
             Storage::disk('s3')->setVisibility($profileImage->getPath(), 'public');

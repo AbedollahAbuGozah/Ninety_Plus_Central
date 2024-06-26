@@ -13,12 +13,18 @@ class Student extends User
 
     public function profile()
     {
+        logger($this->branch);
         return $this->load(['courses.instructor', 'courses.module', 'branch']);
     }
 
     public function branch()
     {
-       return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function getIsJoinedAttribute(Course $course)
+    {
+        return $this->courses()->where('id', $course->id)->exists();
     }
 
     protected static function boot()

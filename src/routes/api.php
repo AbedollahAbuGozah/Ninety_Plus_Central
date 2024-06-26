@@ -25,6 +25,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
     Route::apiResource('users', UserController::class);
     Route::apiResource('countries.modules', ModuleController::class)->shallow();
     Route::apiResource('modules.courses', CourseController::class)->shallow();
+    Route::get('courses', [CourseController::class, 'indexAll']);
     Route::apiResource('courses.students', StudentController::class)->shallow()->only(['index', 'show']);
 
     Route::group(['prefix' => 'profiles', 'controller' => ProfileController::class], function () {

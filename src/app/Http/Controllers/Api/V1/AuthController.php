@@ -25,8 +25,11 @@ class AuthController extends BaseController
             return $this->error(trans('messages.error.login'), 404);
         }
 
+        $user = User::where('email', '=', $credentials['email'])->first();
+
+        $user = User::where('email', '=', $credentials['email'])->first();
         return $this->success([
-            'user' => UserResource::make(User::where('email', '=', $credentials['email'])->first()),
+            'user' => UserResource::make($user->resolveUser()->profile()),
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
