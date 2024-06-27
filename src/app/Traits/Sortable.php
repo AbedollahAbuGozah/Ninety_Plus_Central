@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Sortable
 {
+    protected $prefixProps = 'properties->';
+
     /**
      * @throws \Exception
      */
@@ -22,8 +24,7 @@ trait Sortable
         $applicableSorts = array_intersect($this->sortable, array_keys(array_merge($appliedSorts, ['properties->weekly_lectures'])));
 
         foreach ($applicableSorts as $sort) {
-            $value = explode(',', $appliedSorts[$sort]);
-            $builder->orderBy($sort, $value);
+            $builder->orderBy($this->needPrefix['weekly_lectures'] ?? $sort, $appliedSorts[$sort]);
         }
 
         return $builder;

@@ -26,13 +26,17 @@ class Course extends Model implements HasMedia
         'title',
         'instructor_id',
         'module_id',
+        'weekly_lectures',
     ];
 
     protected array $sortable = [
         'created_at',
-        'properties->weekly_lectures',
+        'weekly_lectures',
     ];
 
+    protected array $needPrefix = [
+        'weekly_lectures' => 'properties->weekly_lectures',
+    ];
     protected $casts = [
         'properties' => 'json',
     ];

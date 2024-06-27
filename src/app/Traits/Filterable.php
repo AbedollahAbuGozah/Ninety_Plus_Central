@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Filterable
 {
+
+    protected $prefixProps = 'properties->';
+
     public function scopeFilter(Builder $builder)
     {
         if (!isset($this->filterable)) {
@@ -20,9 +23,10 @@ trait Filterable
 
         foreach ($appliableFitlers as $filter) {
             $value = explode(',', $appliedFilters[$filter]);
-            $builder->whereIn($filter, $value);
+            $builder->whereIn($this->needPrefix['weekly_lectures'] ?? $filter, $value);
         }
 
         return $builder;
     }
+
 }
