@@ -16,7 +16,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Course extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, HasComments, HasRates, Markable, Sortable;
+    use HasFactory, InteractsWithMedia, HasComments, HasRates, Markable, Filterable, Sortable;
     use SoftDeletes;
 
 
