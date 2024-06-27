@@ -20,7 +20,7 @@ trait Sortable
 
         foreach ($appliableSorts as $sort) {
             $value = explode(',', $appliedSorts[$sort]);
-            $builder->whereIn($sort, $value);
+            $builder->orderBy($sort, $value);
         }
 
         return $builder;
