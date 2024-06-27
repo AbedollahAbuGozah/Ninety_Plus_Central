@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Filterable;
 use App\Traits\HasComments;
 use App\Traits\HasRates;
+use App\Traits\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,7 +16,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Course extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, HasComments, HasRates, Markable, Filterable;
+    use HasFactory, InteractsWithMedia, HasComments, HasRates, Markable, Sortable;
     use SoftDeletes;
 
 
@@ -26,6 +27,11 @@ class Course extends Model implements HasMedia
         'instructor_id',
         'module_id',
     ];
+
+    protected array $sortable = [
+        'created_at',
+    ];
+
     protected $casts = [
         'properties' => 'json',
     ];
