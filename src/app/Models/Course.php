@@ -30,6 +30,7 @@ class Course extends Model implements HasMedia
 
     protected array $sortable = [
         'created_at',
+        'properties->weekly_lectures',
     ];
 
     protected $casts = [

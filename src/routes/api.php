@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\V1\BranchController;
+use App\Http\Controllers\Api\V1\ChapterController;
 use App\Http\Controllers\Api\V1\CommentController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\GuestController;
@@ -27,6 +29,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
     Route::apiResource('modules.courses', CourseController::class)->shallow();
     Route::get('courses', [CourseController::class, 'indexAll']);
     Route::apiResource('courses.students', StudentController::class)->shallow()->only(['index', 'show']);
+    Route::apiResource('chapters', ChapterController::class);
+    Route::apiResource('branches', BranchController::class);
 
     Route::group(['prefix' => 'profiles', 'controller' => ProfileController::class], function () {
         Route::get('', 'show');

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Sortable
 {
+    /**
+     * @throws \Exception
+     */
     public function scopeSort(Builder $builder)
     {
         if (!isset($this->sortable)) {
@@ -16,9 +19,9 @@ trait Sortable
         }
 
         $appliedSorts = request('sort');
-        $appliableSorts = array_intersect($this->sortable, array_keys($appliedSorts));
+        $applicableSorts = array_intersect($this->sortable, array_keys(array_merge($appliedSorts, ['properties->weekly_lectures'])));
 
-        foreach ($appliableSorts as $sort) {
+        foreach ($applicableSorts as $sort) {
             $value = explode(',', $appliedSorts[$sort]);
             $builder->orderBy($sort, $value);
         }

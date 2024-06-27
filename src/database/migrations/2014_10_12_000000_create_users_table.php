@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->string('password');
             $table->string('about')->default('');
             $table->foreignId('city_id')->constrained('cities');
-            $table->foreignId('branch_id')->nullable()->constrained('branches');
+            $table->foreignId('branch_id')->nullable()->constrained('branches')->nullOnDelete();
             \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->rememberToken();
             $table->timestamps();
