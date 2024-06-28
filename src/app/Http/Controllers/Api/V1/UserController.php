@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\constants\RoleOptions;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Instructor;
+use App\Models\Student;
 use App\Models\User;
 use App\services\UserService;
 use App\Traits\HttpResponse;
@@ -18,7 +21,14 @@ class UserController extends BaseController
 
     public function index(UserRequest $request)
     {
-        $users = UserResource::collection(User::query()->paginate($request->get('per_page') ?? 10));
+
+        $users = match ($request->query('role')) {
+            RoleOptions::STUDENT => Student::query(),
+            RoleOptions::INSTRUCTOR => Instructor::query(),
+            default => User::query(),
+        };
+
+        $users = UserResource::collection($users->paginate($request->get('per_page') ?? 10));
         return $this->success($users, trans('messages.index.success'), 200);
     }
 
