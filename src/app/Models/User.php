@@ -51,7 +51,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
     public function getProfileImageAttribute()
     {
         logger(__METHOD__);
-        return $this->getFirstMediaUrl(User::PROFILE_IMAGE_MEDIA_COLLECTION);
+        return $this->getFirstMediaUrl(self::PROFILE_IMAGE_MEDIA_COLLECTION);
     }
 
     public function getBalanceAttribute()

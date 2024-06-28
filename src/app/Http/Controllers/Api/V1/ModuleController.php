@@ -12,7 +12,6 @@ use App\Traits\HttpResponse;
 
 class ModuleController extends BaseController
 {
-    use HttpResponse;
 
     public function __construct(protected ModuleService $moduleService)
     {

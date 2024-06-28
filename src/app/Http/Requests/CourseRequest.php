@@ -57,7 +57,7 @@ class CourseRequest extends BaseFormRequest
                     'sometimes',
                     'required',
                     'array',
-                    new CourseChapterRule($this->module_id)
+                    new CourseChapterRule($this->route('course')->module_id)
                 ],
                 'price' => 'sometimes|required|numeric',
                 'chapters.*' => 'required|exists:chapters,id',

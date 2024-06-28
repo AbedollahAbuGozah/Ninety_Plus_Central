@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\CommentController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\GuestController;
 use App\Http\Controllers\Api\V1\InvoiceController;
+use App\Http\Controllers\Api\V1\LectureController;
 use App\Http\Controllers\Api\V1\Markables\FavoriteController;
 use App\Http\Controllers\Api\V1\ModuleController;
 use App\Http\Controllers\Api\V1\PaymentController;
@@ -33,6 +34,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
     Route::apiResource('courses.students', StudentController::class)->shallow()->only(['index', 'show']);
     Route::apiResource('chapters', ChapterController::class);
     Route::apiResource('branches', BranchController::class);
+    Route::apiResource('lectures', LectureController::class);
 
     Route::group(['prefix' => 'profiles', 'controller' => ProfileController::class], function () {
         Route::get('', 'show');

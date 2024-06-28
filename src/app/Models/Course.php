@@ -76,4 +76,14 @@ class Course extends Model implements HasMedia
         return $this->students()->where('users.id', $student->id)->exists();
     }
 
+    public function lectures()
+    {
+        return $this->hasMany('lectures');
+    }
+
+    public function records()
+    {
+        return $this->hasManyThrough(Record::class, Lecture::class);
+    }
+
 }

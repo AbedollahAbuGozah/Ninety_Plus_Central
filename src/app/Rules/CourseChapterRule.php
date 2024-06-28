@@ -21,8 +21,9 @@ class CourseChapterRule implements ValidationRule
             ->distinct()
             ->get();
 
+
         if ($chapterModuleIds->count() > 1 || ($chapterModuleIds->first()->module_id != $this->courseModuleId)) {
-            $fail(':attribute should be belong to course module');
+            $fail(':attribute should be belong to chapters module');
         }
 
     }
