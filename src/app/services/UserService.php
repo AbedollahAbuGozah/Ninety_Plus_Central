@@ -2,14 +2,14 @@
 
 namespace App\services;
 
-use App\Models\Role;
+use App\Models\Lecture;
+use App\Models\Student;
 use App\Models\User;
 use App\Models\UserRole;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserService extends BaseService
@@ -70,6 +70,18 @@ class UserService extends BaseService
         $user->save();
     }
 
+    public function generateLectureToken(Lecture $lecture, Student $student)
+    {
+
+        $claims = [
+            'sub' => $student->id,
+            'user_id' => $student->id,
+            'exp' => Carbon::now()->addMinutes(60 * 5)->timestamp,
+            'type' => 'lecture_joined',
+        ];
+
+        return JWTAuth::customClaims($claims)->fromUser($student);
+    }
 
 }
 

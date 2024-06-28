@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Requests\LectureRequest;
 use App\Http\Resources\LectureResource;
 use App\Models\Course;
+use App\Models\Instructor;
 use App\Models\Lecture;
+use App\Models\Student;
 use App\services\LectureService;
+use Illuminate\Http\Request;
 
 class LectureController extends BaseController
 {
@@ -50,4 +53,28 @@ class LectureController extends BaseController
         $this->lectureService->delete($lecture);
         return $this->success([], 'messages.success.delete', 200);
     }
+
+    public function joinLiveLecture(Request $request, Lecture $lecture)
+    {
+        $token = $this->lectureService->joinStudent();
+        return $this->success([
+            'token_live_lecture' => $token,
+        ], trans('message.success.joine_live'), 200);
+    }
+
+    public function startLiveLecture(Request $request, Lecture $lecture,)
+    {
+        if ($lecture->status != 'draft') {
+            return $this->error('messages.error.startLive', 400);
+        }
+
+        $lecture->update(
+            [
+                'status' => 'active',
+            ]
+        );
+        return $this->success([], 'messages.success.startLive', 200);
+
+    }
+
 }

@@ -104,7 +104,7 @@ class NinetyPlusCentral
 
         $user->save();
 
-        // $instructor->notify(new SendProductSoldNotification($course, 'Course', $customer));
+         $instructor->notify(new SendProductSoldNotification($course, 'Course', $customer));
     }
 
     public function resolveMorph($modelClass, $modelId)

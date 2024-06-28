@@ -9,6 +9,7 @@ class Instructor extends User
 {
     use HasRates;
 
+
     public function courses()
     {
         return $this->hasMany(Course::class);

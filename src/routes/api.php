@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\BankAccountController;
 use App\Http\Controllers\Api\V1\BranchController;
 use App\Http\Controllers\Api\V1\ChapterController;
+use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\CommentController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\GuestController;
@@ -71,7 +72,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
         Route::get('',  'index');
     });
 
-
+    Route::post('lectures/{lecture}/start-live', [LectureController::class, 'startLiveLecture']);
+    Route::post('lectures/{lecture}/join-live', [LectureController::class, 'joinLiveLecture']);
+    Route::apiResource('cities', CityController::class);
 });
 
 Route::group(['prefix' => 'v1/payment', 'controller' => PaymentController::class], function () {

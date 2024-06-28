@@ -11,7 +11,6 @@ use Carbon\Carbon;
 class SendProductSoldNotification extends Notification implements ShouldQueue
 {
     use Queueable;
-
     protected $purchasable;
 
     /**

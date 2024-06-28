@@ -21,7 +21,7 @@ class CourseController extends BaseController
 
     public function indexAll(CourseRequest $request)
     {
-        $courses = Course::query()->filter()->sort();
+        $courses = Course::query()->with(['instructor', 'rates'])->filter()->sort();
         return $this->success(CourseResource::collection($courses, $request->boolean('paginate'), $request->get('page_size')), trans('messages.success.index'), 200);
     }
 

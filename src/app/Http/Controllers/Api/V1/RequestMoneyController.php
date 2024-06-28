@@ -13,8 +13,9 @@ class RequestMoneyController extends BaseController
 {
     public function requestMoney(Request $request)
     {
-
         $user = auth()->user();
+
+        logger(__METHOD__);
 
         if (!$user->balance) {
             return $this->error(trans('message.request_money.error'), 400);
