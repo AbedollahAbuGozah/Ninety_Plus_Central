@@ -18,8 +18,7 @@ class StripeService
 
     public function __construct(protected InvoiceService $invoiceService)
     {
-        Stripe::setApiKey(config('stripe.secret_key'));
-        //$this->provider = new StripeClient(config('stripe.secret_key'));
+        $this->provider = new StripeClient(config('stripe.secret_key'));
     }
 
     public function createOrder($purchasable, $currency, $returnUrl, $cancelUrl, $user = null)
