@@ -24,7 +24,7 @@ class UserController extends BaseController
 
         $users = match ($request->query('role')) {
             RoleOptions::STUDENT => Student::query(),
-            RoleOptions::INSTRUCTOR => Instructor::query(),
+            RoleOptions::INSTRUCTOR => Instructor::query()->with(['rates']),
             default => User::query(),
         };
 

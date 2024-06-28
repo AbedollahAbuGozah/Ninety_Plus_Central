@@ -42,6 +42,9 @@ class UserResource extends BaseResource
             'phone' => $this->phone,
             'profile_image' => $this->resolveUser()->profile_image,
             'roles' => $this->roles->pluck('name'),
+            'course_count' =>  $this->courses()->count(),
+            'created_at' => $this->created_at,
+            'total_paid' => $this->when($this->isStudent(), $this->courses()->sum('price')),
             'branch' => $this->whenLoaded('branch', fn() => $this->branch()->select('id', 'name')->get(), $this->branch_id),
             'permissions' => $this->when(auth()->check(), fn() => ((new CurrentUserService())->getPermissions())),
         ];
@@ -59,7 +62,7 @@ class UserResource extends BaseResource
             'today_earnings' => $this->resolveUser()->today_earnings,
             'number_of_sales' => $this->resolveUser()->number_of_sales,
             'about' => $this->about,
-            'balance' => rand(1 ,300),
+            'balance' => rand(1, 300),
             'withdraw_balance' => rand(1, 20000),
             'rate' => NinetyPlusCentralFacade::calcRatableRate($this->resolveUser()),
         ];
