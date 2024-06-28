@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Filterable;
 use App\Traits\HasComments;
 use App\Traits\HasRates;
+use App\Traits\Invoiceable;
 use App\Traits\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Course extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, HasComments, HasRates, Markable, Filterable, Sortable;
+    use HasFactory, InteractsWithMedia, HasComments, HasRates, Markable, Filterable, Sortable, Invoiceable;
     use SoftDeletes;
 
 

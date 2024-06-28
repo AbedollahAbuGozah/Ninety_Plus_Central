@@ -2,18 +2,23 @@
 
 namespace App\Services;
 
-use App\Models\User;
+use App\Models\BankAccount;
+use App\Models\Invoice;
 use Illuminate\Support\Facades\Log;
-use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Stripe\StripeClient;
+use Stripe\Stripe;
+use Stripe\Account;
+use Stripe\Token;
+use Stripe\Transfer;
 
 class StripeService
 {
     protected $provider;
     private $invoiceData;
 
-    public function __construct()
+    public function __construct(protected InvoiceService $invoiceService)
     {
+        Stripe::setApiKey(env('stripe.secret_key'));
         $this->provider = new StripeClient(config('stripe.secret_key'));
     }
 
@@ -48,60 +53,100 @@ class StripeService
         return $session;
     }
 
-    public function captureOrder($sessionId)
+    public function captureOrder($sessionId, $purchasable)
     {
         $session = $this->provider->checkout->sessions->retrieve($sessionId, [
             'expand' => ['payment_intent'],
         ]);
 
         if ($session && $session->payment_status === 'paid') {
-            logger('wow');
-           $session = $this->updateInvoiceData($session);
+            logger(__METHOD__);
+            logger(__LINE__);
+
+            $this->updateInvoiceData($session, $purchasable, $session->client_reference_id);
         }
-        logger('afert_session');
-        logger($session);
+
         return $session;
     }
 
     private function setInvoiceData($customer, $purchasable, $currency)
     {
-        $this->invoiceData =$invoiceData = [
-            'invoice_id' => uniqid('inv_'),
+        $invoiceData = [
             'date' => now()->toDateString(),
             'due_date' => now()->addDay()->toDateString(),
-            'customer' => [
-                'name' => $customer->full_name,
-                'email' => $customer->email,
-                'address' => $customer->address ?? '',
-            ],
-            'items' => [
-                [
-                    'description' => 'Course Purchase',
-                    'quantity' => 1,
-                    'unit_price' => $purchasable->price,
-                    'total_price' => $purchasable->price,
-                ],
-            ],
-            'total_amount' => $purchasable->price,
+            'amount' => $purchasable->price,
             'currency' => $currency,
             'tax' => 0,
             'payment_method' => '',
             'notes' => 'Thank you for your purchase!',
             'payment_status' => 'unpaid',
             'paid_date' => '',
+            'user_id' => $customer->id,
+            'description' => '',
+            'quantity' => 1,
+            'invoiceable_type' => get_class($purchasable),
+            'invoiceable_id' => $purchasable->id
         ];
+
+        $this->invoiceService->create($invoiceData, new Invoice());
     }
 
-    private function updateInvoiceData($session)
+    private function updateInvoiceData($session, $purchasable, $payerId)
     {
-        $invoiceData = json_decode($session->metadata['invoice_data'], true);
-
-        $invoiceData['payment_status'] = 'paid';
-        $invoiceData['paid_date'] = now()->toDateString();
-        $invoiceData['payment_method'] = $session->payment_method_types[0];
-
-        $session->metadata['invoice_data'] = json_encode($invoiceData);
-
-        return $session;
+        $purchasable->invoices()->where([
+            'user_id' => $payerId,
+        ])->update([
+            'payment_status' => 'paid',
+            'paid_date' => now()->toDateString(),
+            'payment_method' => $session->payment_method_types[0],
+        ]);
     }
+
+    public function createStripeAccount($user, $data)
+    {
+        $token = Token::create([
+            'bank_account' => [
+                'country' => $data['country'],
+                'currency' => config('stripe.currency'),
+                'account_holder_name' => $data['account_holder_name'],
+                'account_holder_type' => $data['account_holder_type'],
+                'routing_number' => $data['routing_number'],
+                'account_number' => $data['account_number'],
+            ],
+        ]);
+
+        $account = Account::create([
+            'type' => 'custom',
+            'country' => $data['country'],
+            'email' => $user->email,
+            'capabilities' => [
+                'transfers' => ['requested' => true],
+            ],
+        ]);
+
+        BankAccount::create([
+            'stripe_bank_account_id' => $token->id,
+            'account_holder_name' => $data['account_holder_name'],
+            'account_holder_type' => $data['account_holder_type'],
+            'bank_name' => $data['banck_name'],
+            'last4' => substr($data['account_number'], -4),
+        ]);
+
+        $account->external_accounts->create(['external_account' => $token->id]);
+    }
+
+    public function transfareMoey($user, $amount)
+    {
+        $bankAccount = $user->bankAccounts()->first();
+
+
+        $transfer = Transfer::create([
+            'amount' => $amount,
+            'currency' => config('stripe.currency'),
+            'destination' => $bankAccount->stripe_bank_account_id,
+        ]);
+
+        return $transfer;
+    }
+
 }

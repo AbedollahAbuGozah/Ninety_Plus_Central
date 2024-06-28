@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Sortable
 {
-    protected $prefixProps = 'properties->';
 
     /**
      * @throws \Exception

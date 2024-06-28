@@ -27,20 +27,18 @@ class PaymentSuccessListener
     public function handle(PaymentSuccess $event): void
     {
         $user = $event->user->resolveUser();
-        $purchasableModelClass = $event->purchasableType;
-        $purchasableId = $event->purchasableId;
-        $purchasable = $purchasableModelClass::find($purchasableId);
+        $purchasable = $event->purchasable;
         $relation = NinetyPlusCentralFacade::generateRelationName($purchasable, 1);
-        $user->{$relation}()->attach($purchasableId, [
-            'properties' => json_encode(['invoice' => json_encode($event->paymentSession)]),
-        ]);
+
+        $user->{$relation}()->attach($purchasable->id);
+
         $user->notify(new SendPaymentSuccessNotification($purchasable, ucfirst(class_basename($purchasable))));
-        $this->callPostPurchaseHook($purchasableModelClass, $purchasable, $user);
+        $this->callPostPurchaseHook($purchasable, $user);
     }
 
-    private function callPostPurchaseHook($purchasableModelClass, $purchasable, $customer)
+    private function callPostPurchaseHook($purchasable, $customer)
     {
-        $methodName = 'postPurchase' . ucfirst(class_basename($purchasableModelClass));
+        $methodName = 'postPurchase' . ucfirst(class_basename($purchasable));
         if (method_exists(NinetyPlusCentral::class, $methodName)) {
             NinetyPlusCentralFacade::{$methodName}($purchasable, $customer);
         }

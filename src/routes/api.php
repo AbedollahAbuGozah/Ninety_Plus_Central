@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\BankAccountController;
 use App\Http\Controllers\Api\V1\BranchController;
 use App\Http\Controllers\Api\V1\ChapterController;
 use App\Http\Controllers\Api\V1\CommentController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Api\V1\ModuleController;
 use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RateController;
+use App\Http\Controllers\Api\V1\RequestMoneyController;
 use App\Http\Controllers\Api\V1\StudentController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +26,8 @@ Route::group(['prefix' => 'v1/guest', 'controller' => GuestController::class], f
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], function () {
     Route::get('courses/invoices', [InvoiceController::class, 'index']);
 
+    Route::post('money-requests', [RequestMoneyController::class, 'requestMoney']);
+    Route::get('money-requests', [RequestMoneyController::class, 'index']);
     Route::apiResource('users', UserController::class);
     Route::apiResource('countries.modules', ModuleController::class)->shallow();
     Route::apiResource('modules.courses', CourseController::class)->shallow();
@@ -59,6 +63,11 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
 
     Route::apiResource('comments', CommentController::class)->except(['store', 'index']);
     Route::apiResource('rates', RateController::class)->except(['store', 'index']);
+    Route::get('users/{user}/invoices', [InvoiceController::class, 'index']);
+
+    Route::post('/bank-account', [BankAccountcontroller::class, 'store']);
+    Route::post('/transfer', [PaymentController::class, 'transferToUser']);
+
 
 });
 

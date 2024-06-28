@@ -19,20 +19,20 @@ class ChapterController extends BaseController
 
     public function index(ChapterRequest $request, Module $module)
     {
-        $chapters = Chapter::query();
+        $chapters = Chapter::query()->with(['module']);
         return $this->success(ChapterResource::collection($chapters, $request->boolean('paginate'), $request->get('page_size')), trans('messages.success.index'), 200);
     }
 
     public function store(ChapterRequest $request, Module $module)
     {
         $validatedData = $request->safe()->all();
-        $chapter = $this->chapterService->create($validatedData, new Chapter(), []);
+        $chapter = $this->chapterService->create($validatedData, new Chapter(), ['module']);
         return $this->success(ChapterResource::make($chapter), trans('messages.success.store'), 200);
     }
 
     public function show(ChapterRequest $request, Chapter $chapter)
     {
-        $chapter = $this->chapterService->get($chapter, []);
+        $chapter = $this->chapterService->get($chapter, ['module']);
         return $this->success(ChapterResource::make($chapter), trans('messages.success.index'), 200);
     }
 

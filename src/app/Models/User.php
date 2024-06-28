@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Stripe\BankAccount;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMedia
@@ -27,6 +28,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'properties' => 'json',
     ];
 
     const PROFILE_IMAGE_MEDIA_COLLECTION = 'profile_image';
@@ -51,6 +53,17 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
         logger(__METHOD__);
         return $this->getFirstMediaUrl(User::PROFILE_IMAGE_MEDIA_COLLECTION);
     }
+
+    public function getBalanceAttribute()
+    {
+        return $this->properties['balance_info']['balance'] ?? 0;
+    }
+
+    public function getWithDrawBalanceAttribute()
+    {
+        return $this->properties['balance_info']['with_draw_balance'] ?? 0;
+    }
+
 
     public function isAdmin()
     {
@@ -81,6 +94,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
     public function instructor()
     {
         return Instructor::hydrate([$this->toArray()])->first();
+    }
+
+    public function invoices()
+    {
+        return $this->belongsToMany(Invoice::class);
     }
 
     public function resolveUser()
@@ -114,5 +132,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
         return $this->belongsToMany(Role::class, 'role_user', 'user_id');
     }
 
-
+    public function bankAccount()
+    {
+        return $this->hasOne(BankAccount::class);
+    }
 }

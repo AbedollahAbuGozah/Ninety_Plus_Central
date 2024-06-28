@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Events\PaymentSuccess;
 use App\Facades\NinetyPlusCentralFacade;
 use App\Http\Controllers\Api\V1\BaseController;
+use App\Http\Requests\TransferMoneyRequest;
+use App\Models\Instructor;
 use App\Models\User;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
@@ -32,7 +34,8 @@ class PaymentController extends BaseController
             $purchasable,
             config('stripe.currency'),
             route('payment.status', ['purchasableType' => $purchasableModelClass, 'purchasableId' => $purchasableId]),
-            route('payment.cancel'));
+            route('payment.cancel')
+        );
 
         if (isset($session['id']) && $session['id'] != null) {
             return $this->success(['approval_url' => $session->url], 'Payment Success', 200);
@@ -43,12 +46,16 @@ class PaymentController extends BaseController
     }
 
     public function status(Request $request)
+
     {
-        $session = $this->stripeService->captureOrder($request->query('session_id'));
+        $purchasable = NinetyPlusCentralFacade::resolveMorph($request->query('purchasableType'), $request->query('purchasableId'));
+
+        $session = $this->stripeService->captureOrder($request->query('session_id'), $purchasable);
+
 
         if ($session && $session->payment_status == 'paid') {
             $clientUser = User::find($session->client_reference_id);
-            PaymentSuccess::dispatch($clientUser, $request->query('purchasableType'), $request->query('purchasableId'), $session);
+            PaymentSuccess::dispatch($clientUser, $purchasable);
             return $this->success([], 'Payment success', 200);
         } else {
             return $this->error('Payment failed', 400);
@@ -59,5 +66,16 @@ class PaymentController extends BaseController
     {
         return $this->success([], 'You have canceled the transaction.', 200);
 
+    }
+
+    public function transferMoneyToUser(TransferMoneyRequest $request, Instructor $user)
+    {
+        if (!$user->balance) {
+            return $this->error(trans('message.transfer.error'), 400);
+        }
+
+        $transfer = $this->stripeService->transfareMoey($user, $user->balance);
+
+        return $this->success($transfer, trans('message.success.error'), 200);
     }
 }
