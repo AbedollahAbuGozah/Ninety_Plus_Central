@@ -18,7 +18,7 @@ class StripeService
 
     public function __construct(protected InvoiceService $invoiceService)
     {
-        Stripe::setApiKey(env('stripe.secret_key'));
+        Stripe::setApiKey(config('stripe.secret_key'));
         $this->provider = new StripeClient(config('stripe.secret_key'));
     }
 
@@ -104,25 +104,27 @@ class StripeService
 
     public function createStripeAccount($user, $data)
     {
-        $token = Token::create([
-            'bank_account' => [
-                'country' => $data['country'],
-                'currency' => config('stripe.currency'),
-                'account_holder_name' => $data['account_holder_name'],
-                'account_holder_type' => $data['account_holder_type'],
-                'routing_number' => $data['routing_number'],
-                'account_number' => $data['account_number'],
-            ],
-        ]);
-
         $account = Account::create([
             'type' => 'custom',
-            'country' => $data['country'],
+            'country' => $data['country'] ?? 'US',
             'email' => $user->email,
             'capabilities' => [
                 'transfers' => ['requested' => true],
             ],
         ]);
+
+
+        $token = Token::create([
+            'bank_account' => [
+                'country' => $data['country'] ?? 'US',
+                'currency' => config('stripe.currency'),
+                'account_holder_name' => $data['account_holder_name'],
+                'account_holder_type' => $data['account_holder_type'] ?? 'individual',
+                'routing_number' => $data['routing_number'],
+                'account_number' => $data['account_number'],
+            ],
+        ]);
+
 
         BankAccount::create([
             'stripe_bank_account_id' => $token->id,

@@ -26,8 +26,6 @@ Route::group(['prefix' => 'v1/guest', 'controller' => GuestController::class], f
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], function () {
     Route::get('courses/invoices', [InvoiceController::class, 'index']);
 
-    Route::post('money-requests', [RequestMoneyController::class, 'requestMoney']);
-    Route::get('money-requests', [RequestMoneyController::class, 'index']);
     Route::apiResource('users', UserController::class);
     Route::apiResource('countries.modules', ModuleController::class)->shallow();
     Route::apiResource('modules.courses', CourseController::class)->shallow();
@@ -65,8 +63,11 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
     Route::apiResource('rates', RateController::class)->except(['store', 'index']);
     Route::get('users/{user}/invoices', [InvoiceController::class, 'index']);
 
-    Route::post('/bank-account', [BankAccountcontroller::class, 'store']);
-    Route::post('/transfer', [PaymentController::class, 'transferToUser']);
+    Route::post('bank-account', [BankAccountcontroller::class, 'store']);
+    Route::group(['prefix' => 'money-requests', 'controller' => RequestMoneyController::class], function () {
+        Route::post('', 'requestMoney');
+        Route::get('',  'index');
+    });
 
 
 });
@@ -75,6 +76,7 @@ Route::group(['prefix' => 'v1/payment', 'controller' => PaymentController::class
     Route::post('{purchasableType}/{purchasableId}/checkout', 'checkout');
     Route::get('status', 'status')->name('payment.status');
     Route::get('cancel', 'cancel')->name('payment.cancel');
+    Route::post('/transfer','transferToUser');
 });
 
 

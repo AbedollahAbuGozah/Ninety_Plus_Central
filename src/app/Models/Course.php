@@ -71,7 +71,6 @@ class Course extends Model implements HasMedia
 
     public function hasStudent(Student $student = null)
     {
-
         $student = $student ?? auth()->user()->resolveUser();
 
         return $this->students()->where('users.id', $student->id)->exists();
