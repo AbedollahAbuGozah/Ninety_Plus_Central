@@ -9,6 +9,7 @@ use App\constants\PurchasableTypeOptions;
 use App\constants\RatableTypeOptions;
 use App\Models\Course;
 use App\Models\CourseStudent;
+use App\Models\User;
 use App\Notifications\SendProductSoldNotification;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
@@ -92,17 +93,18 @@ class NinetyPlusCentral
     {
 
         $instructor = $course->instructor;
-        $instructorProps = json_decode($instructor->properties, true) ?? [];
+        $user = User::find($instructor->id);
+        $instructorProps = $user->properties;
+
         $instructorProps['balance_info'] = array_merge($instructorProps['balance_info'] ?? [], [
             'balance' => ($instructorProps['balance_info']['balance'] ?? 0) + $course->price,
         ]);
 
+        $user->properties = $instructorProps;
 
-        $instructor->properties = json_encode($instructorProps);
+        $user->save();
 
-        $instructor->save();
-
-        $instructor->notify(new SendProductSoldNotification($course, 'Course', $customer));
+        // $instructor->notify(new SendProductSoldNotification($course, 'Course', $customer));
     }
 
     public function resolveMorph($modelClass, $modelId)
