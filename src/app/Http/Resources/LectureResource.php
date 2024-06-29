@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Lecture;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,6 +21,12 @@ class LectureResource extends BaseResource
             'description' => $this->description,
             'course' => $this->whenLoaded('course', fn() => $this->course()->select(['id', 'title as name'])->get(), $this->course_id),
             'chapter' => $this->whenLoaded('chapter', fn() => $this->chapter()->select(['id', 'title as name'])->get(), $this->chapter_id),
+
+//            'record_link' => $this->when($this->status == 'over', fn() => Storage::disk('s3')->temporaryUrl(
+//                $this->getFirstMediaPath(Lecture::LECTURE_RECORD_COLLECTION),
+//                now()->addMinutes(60*3)
+//            )),
+
             'starts_at' => $this->starts_at,
             'status' => $this->status,
         ];

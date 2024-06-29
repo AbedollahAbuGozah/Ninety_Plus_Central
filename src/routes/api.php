@@ -74,6 +74,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
 
     Route::post('lectures/{lecture}/start-live', [LectureController::class, 'startLiveLecture']);
     Route::post('lectures/{lecture}/join-live', [LectureController::class, 'joinLiveLecture']);
+    Route::post('lectures/{lecture}/upload-record', [LectureController::class, 'uploadRecord']);
     Route::apiResource('cities', CityController::class);
 });
 

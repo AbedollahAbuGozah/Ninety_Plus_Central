@@ -10,6 +10,7 @@ use App\Models\Lecture;
 use App\Models\Student;
 use App\services\LectureService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class LectureController extends BaseController
 {
@@ -61,6 +62,7 @@ class LectureController extends BaseController
             'token' => $token,
         ], trans('message.success.join_live'), 200);
     }
+
     public function startLiveLecture(Request $request, Lecture $lecture)
     {
 
@@ -75,9 +77,15 @@ class LectureController extends BaseController
         );
 
 
-
         return $this->success([], 'messages.success.startLive', 200);
 
+    }
+
+    public function uploadRecord(Request $request, Lecture $lecture)
+    {
+        $lectureRecord = $lecture->addMediaFromRequest('record')
+            ->withCustomProperties(['visibility' => 'public'])
+            ->toMediaCollection(Lecture::LECTURE_RECORD_COLLECTION);
     }
 
 }
