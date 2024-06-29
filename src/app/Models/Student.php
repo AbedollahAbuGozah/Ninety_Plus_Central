@@ -14,7 +14,7 @@ class Student extends User
     public function profile()
     {
 
-        return $this->load(['courses.instructor', 'courses.module', 'branch']);
+        return $this->load(['courses.instructor', 'courses.module', 'branch', 'course.chapters']);
     }
 
     public function branch()
