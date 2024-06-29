@@ -56,12 +56,11 @@ class LectureController extends BaseController
 
     public function joinLiveLecture(Request $request, Lecture $lecture)
     {
-        $token = $this->lectureService->joinStudent($lecture, auth()->id);
+        $token = $this->lectureService->joinLiveLecture($lecture, auth()->user()->resolveUser());
         return $this->success([
-            'token_live_lecture' => $token,
-        ], trans('message.success.joine_live'), 200);
+            'token' => $token,
+        ], trans('message.success.join_live'), 200);
     }
-
     public function startLiveLecture(Request $request, Lecture $lecture)
     {
 
@@ -71,9 +70,11 @@ class LectureController extends BaseController
 
         $lecture->update(
             [
-                'status' => 'active',
+                'status' => 'live',
             ]
         );
+
+
 
         return $this->success([], 'messages.success.startLive', 200);
 
