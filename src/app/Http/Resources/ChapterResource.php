@@ -13,7 +13,7 @@ class ChapterResource extends BaseResource
             'id' => $this->id,
             'title' => $this->title,
             'module' => $this->whenLoaded('module', fn() => $this->module()->select('id', 'name')->get(), $this->module_id),
-            'lectures' => $this->lectures(),
+            'lectures' => LectureResource::collection($this->lectures)
         ];
     }
 }

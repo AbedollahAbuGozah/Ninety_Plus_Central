@@ -16,17 +16,10 @@ class Chapter extends Model
         return $this->belongsTo(Module::class);
     }
 
+
     public function lectures()
     {
-        return [
-            "title" => fake()->text(),
-            "record" => fake()->url(),
-            "comments" => [
-                "id" => 1,
-                "user_id" => 1,
-                "lecture_id" => 1,
-                "text" => "fuck imam"
-            ]
-        ];
+        return $this->hasMany(Lecture::class);
     }
+
 }
