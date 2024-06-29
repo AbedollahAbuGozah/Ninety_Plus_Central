@@ -33,13 +33,13 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware('redirect.to.frontend')
-                ->prefix('api/v1')
-                ->group(function () {
-                    Route::get('payment/status');
-                    Route::get('payment/cancel');
-                    Route::get('auth/email/verify/{id}/{hash}');
-                });
+//            Route::middleware('redirect.to.frontend')
+//                ->prefix('api/v1')
+//                ->group(function () {
+//                    Route::get('payment/status');
+//                    Route::get('payment/cancel');
+//                    Route::get('auth/email/verify/{id}/{hash}');
+//                });
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
