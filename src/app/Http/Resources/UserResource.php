@@ -42,9 +42,9 @@ class UserResource extends BaseResource
             'phone' => $this->phone,
             'profile_image' => $this->resolveUser()->profile_image,
             'roles' => $this->roles()->pluck('name'),
-            'course_count' =>  $this->courses()->count(),
+            'course_count' =>  $this->resolveUser()->courses()->count(),
             'created_at' => $this->created_at,
-            'total_paid' => $this->when($this->isStudent(), $this->courses()->sum('price')),
+            'total_paid' => $this->when($this->isStudent(), $this->resolveUser()->courses()->sum('price')),
             'branch' => $this->whenLoaded('branch', fn() => $this->branch()->select('id', 'name')->get(), $this->branch_id),
             'permissions' => $this->when(auth()->check(), fn() => ((new CurrentUserService())->getPermissions())),
         ];

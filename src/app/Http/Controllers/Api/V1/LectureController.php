@@ -83,7 +83,6 @@ class LectureController extends BaseController
 
     public function uploadRecord(Request $request, Lecture $lecture)
     {
-
         $lectureRecord = $lecture->addMediaFromRequest('record')
             ->withCustomProperties(['visibility' => 'public'])
             ->toMediaCollection(Lecture::LECTURE_RECORD_COLLECTION);

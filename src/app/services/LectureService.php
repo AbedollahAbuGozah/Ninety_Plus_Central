@@ -14,9 +14,9 @@ class LectureService extends BaseService
     {
     }
 
-    public function joinLiveLecture(Lecture $lecture, Student $student)
+    public function joinLiveLecture(Lecture $lecture, User $user)
     {
-        return $this->streamService->generateToken($student->id);
+        return $this->streamService->generateToken($user->id);
 
     }
 
