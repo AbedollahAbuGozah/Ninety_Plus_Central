@@ -17,7 +17,7 @@ class Instructor extends User
 
     public function profile()
     {
-        return $this->load(['courses.instructor', 'courses.module', 'course.chapters']);
+        return $this->load(['courses.instructor', 'courses.module', 'courses.chapters']);
     }
 
     public function invoices()
