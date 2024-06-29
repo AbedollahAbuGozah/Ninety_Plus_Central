@@ -43,7 +43,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -57,6 +57,8 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+
+    'front_end_domain' => env('FRONT_END_DOMAIN', 'http://localhost:3000/'),
 
     'asset_url' => env('ASSET_URL'),
 
@@ -183,7 +185,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-            'NinetyPlus' => NinetyPlusCentralFacade::class
+        'NinetyPlus' => NinetyPlusCentralFacade::class
     ])->toArray(),
 
 ];

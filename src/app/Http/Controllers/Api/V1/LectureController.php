@@ -56,14 +56,15 @@ class LectureController extends BaseController
 
     public function joinLiveLecture(Request $request, Lecture $lecture)
     {
-        $token = $this->lectureService->joinStudent();
+        $token = $this->lectureService->joinStudent($lecture, auth()->id);
         return $this->success([
             'token_live_lecture' => $token,
         ], trans('message.success.joine_live'), 200);
     }
 
-    public function startLiveLecture(Request $request, Lecture $lecture,)
+    public function startLiveLecture(Request $request, Lecture $lecture)
     {
+
         if ($lecture->status != 'draft') {
             return $this->error('messages.error.startLive', 400);
         }
@@ -73,6 +74,7 @@ class LectureController extends BaseController
                 'status' => 'active',
             ]
         );
+
         return $this->success([], 'messages.success.startLive', 200);
 
     }
