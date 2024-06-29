@@ -17,8 +17,17 @@ class Instructor extends User
 
     public function profile()
     {
-        return $this->load(['courses.instructor', 'courses.module' ]);
+        return $this->load(['courses.instructor', 'courses.module']);
     }
+
+    public function invoices()
+    {
+        return Invoice::whereHas('invoiceable', function ($query) {
+            $query->where('instructor_id', $this->id);
+        })->get();
+    }
+
+
 
     public function getTotalEarningsAttribute()
     {

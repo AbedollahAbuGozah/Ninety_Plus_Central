@@ -98,17 +98,24 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
 
     public function invoices()
     {
-        return $this->belongsToMany(Invoice::class);
+        return $this->hasMany(Invoice::class, 'user_id');
     }
 
     public function resolveUser()
     {
-        return match (true) {
-            $this->isInstructor() => Instructor::hydrate([$this->toArray()])->first(),
-            $this->isStudent() => Student::hydrate([$this->toArray()])->first(),
+        $userData = $this->toArray();
+
+        unset($userData['properties']);
+
+        $user = match (true) {
+            $this->isInstructor() => Instructor::hydrate([$userData])->first(),
+            $this->isStudent() => Student::hydrate([$userData])->first(),
             default => $this,
         };
 
+     $user->properties = $this->properties;
+
+     return $user;
     }
 
     public function authorize($permission, $resource)

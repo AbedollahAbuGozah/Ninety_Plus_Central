@@ -41,7 +41,7 @@ class UserResource extends BaseResource
             'birth_date' => $this->birth_date,
             'phone' => $this->phone,
             'profile_image' => $this->resolveUser()->profile_image,
-            'roles' => $this->roles->pluck('name'),
+            'roles' => $this->roles()->pluck('name'),
             'course_count' =>  $this->courses()->count(),
             'created_at' => $this->created_at,
             'total_paid' => $this->when($this->isStudent(), $this->courses()->sum('price')),
