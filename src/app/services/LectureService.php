@@ -6,6 +6,7 @@ namespace App\services;
 use App\Models\Instructor;
 use App\Models\Lecture;
 use App\Models\Student;
+use App\Models\User;
 
 class LectureService extends BaseService
 {
@@ -22,7 +23,7 @@ class LectureService extends BaseService
 
     public function startLiveLecture(Lecture $lecture, Instructor $user)
     {
-        $lecture->status = 'active';
+        $lecture->status = 'live';
     }
 }
 
