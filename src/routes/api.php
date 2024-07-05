@@ -15,7 +15,6 @@ use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RateController;
 use App\Http\Controllers\Api\V1\RequestMoneyController;
 use App\Http\Controllers\Api\V1\StudentController;
-use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/auth.php';
@@ -26,13 +25,10 @@ Route::group(['prefix' => 'v1/guest', 'controller' => GuestController::class], f
 });
 
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], function () {
-    Route::apiResource('users', UserController::class);
-    Route::apiResource('countries.modules', ModuleController::class)->shallow();
     Route::apiResource('modules.courses', CourseController::class)->shallow();
     Route::apiResource('chapters', ChapterController::class);
     Route::apiResource('branches', BranchController::class);
     Route::apiResource('lectures', LectureController::class);
-    Route::apiResource('cities', CityController::class);
     Route::apiResource('courses.students', StudentController::class)->shallow()->only(['index', 'show']);
     Route::get('users/{user}/invoices', [InvoiceController::class, 'index']);
 

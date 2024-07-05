@@ -84,6 +84,19 @@ class DatabaseSeeder extends Seeder
             'email' => 'imam@instructor.com',
         ]);
 
+        $adminId = DB::table('users')->insertGetId([
+            'first_name' => 'ninety',
+            'last_name' => 'plus',
+            'city_id' => 1,
+            'phone' => '0595663348',
+            'birth_date' => '2002-05-31',
+            'gender' => 1,
+            'about' => 'bla bla blaaaaaaaaa',
+            'password' => Hash::make('1233211'),
+            'email' => 'ninetyPlus@admin.com',
+        ]);
+
+
         DB::table('role_user')->insert([
             [
                 'user_id' => $studentId,
@@ -92,6 +105,10 @@ class DatabaseSeeder extends Seeder
             [
                 'user_id' => $instructorId,
                 'role_id' => Role::where('name', RoleOptions::INSTRUCTOR)->first()->id,
+            ],
+            [
+                'user_id' => $adminId,
+                'role_id' => Role::where('name', RoleOptions::ADMIN)->first()->id,
             ]
         ]);
 

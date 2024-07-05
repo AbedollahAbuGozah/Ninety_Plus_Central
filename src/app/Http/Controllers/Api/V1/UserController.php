@@ -35,9 +35,7 @@ class UserController extends BaseController
     public function store(UserRequest $request)
     {
         $validatedData = $request->safe()->all();
-        DB::beginTransaction();
         $user = $this->userService->create($validatedData, new User());
-        DB::commit();
         return $this->success(UserResource::make($user), trans('messages.create.success'), 201);
     }
 
@@ -50,10 +48,8 @@ class UserController extends BaseController
     {
         $validatedData = $request->safe()->all();
 
-        DB::beginTransaction();
         $user = $this->userService->update($validatedData, $user);
         $this->userService->resetPassword($user, $validatedData['password'], $validatedData['old_password']);
-        DB::commit();
 
         return $this->success(UserResource::make($user), trans('messages.success.update'), 200);
     }
