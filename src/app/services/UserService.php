@@ -57,9 +57,9 @@ class UserService extends BaseService
         return JWTAuth::customClaims($claims)->fromUser($user);
     }
 
-    public function resetPassword(User $user, $newPassWord, $oldPassword = null)
+    public function resetPassword(User $user, $newPassWord, $currentPassword = null)
     {
-        if ($oldPassword && !Hash::check($oldPassword, $user->password)) {
+        if ($currentPassword && !Hash::check($currentPassword, $user->password)) {
             throw new \Dotenv\Exception\ValidationException('Incorrect old password');
         }
         $user->password = bcrypt($newPassWord);

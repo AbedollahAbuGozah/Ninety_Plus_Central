@@ -3,14 +3,12 @@
 use App\Http\Controllers\Api\V1\BankAccountController;
 use App\Http\Controllers\Api\V1\BranchController;
 use App\Http\Controllers\Api\V1\ChapterController;
-use App\Http\Controllers\Api\V1\CityController;
 use App\Http\Controllers\Api\V1\CommentController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\GuestController;
 use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\LectureController;
 use App\Http\Controllers\Api\V1\Markables\FavoriteController;
-use App\Http\Controllers\Api\V1\ModuleController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RateController;
 use App\Http\Controllers\Api\V1\RequestMoneyController;
@@ -19,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/payment.php';
+require __DIR__ . '/admin.php';
 
 Route::group(['prefix' => 'v1/guest', 'controller' => GuestController::class], function () {
     Route::get('registration-data', 'getRegistrationData');

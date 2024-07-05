@@ -46,7 +46,7 @@ class UserController extends BaseController
         $validatedData = $request->safe()->all();
 
         $user = $this->userService->update($validatedData, $user);
-        $this->userService->resetPassword($user, $validatedData['password'], $validatedData['old_password']);
+
 
         return $this->success(UserResource::make($user), trans('messages.success.update'), 200);
     }

@@ -68,10 +68,6 @@ class UserRequest extends BaseFormRequest
                     'required',
                     new phoneNumberRule(),//TODO
                 ],
-                'password' => [
-                    'confirmed',
-                    new PasswordRule(),
-                ],
                 'current_password' => [
                     'required_with:password',
                     function ($attribute, $value, $fail) {
@@ -79,6 +75,10 @@ class UserRequest extends BaseFormRequest
                             $fail('The current password is incorrect.');
                         }
                     },
+                ],
+                'password' => [
+                    'confirmed',
+                    new PasswordRule(),
                 ],
             ];
         }
