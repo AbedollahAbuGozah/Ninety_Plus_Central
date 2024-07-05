@@ -17,7 +17,9 @@ class VerifyEmailController extends BaseController
         if (!URL::hasValidSignature($request) or !sha1($user->getEmailForVerification()) == $hash) {
             return $this->error('Invalid or expired verification link.', 500);
         }
+
         $user->markEmailAsVerified();
+
         $token = auth('api')->login($user);
 
         return $this->success([

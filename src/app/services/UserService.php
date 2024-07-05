@@ -26,15 +26,11 @@ class UserService extends BaseService
 
     public function postCreateOrUpdate($data, Model $user)
     {
-        logger(__METHOD__);
-        logger($data);
-        logger(request());
         if (request()->hasFile('profile_image')) {
             $user->resolveUser()->clearMediaCollection(User::PROFILE_IMAGE_MEDIA_COLLECTION);
             $profileImage = $user->addMediaFromRequest('profile_image')
                 ->toMediaCollection(User::PROFILE_IMAGE_MEDIA_COLLECTION);
             Storage::disk('s3')->setVisibility($profileImage->getPath(), 'public');
-
         }
     }
 
@@ -50,7 +46,7 @@ class UserService extends BaseService
 
     public static function generatePasswordResetJwtToken($user = null)
     {
-        $user = $user ?? CurrentUserService::get();
+        $user = $user ?? (new CurrentUserService())->get();
 
         $claims = [
             'sub' => $user->id,
