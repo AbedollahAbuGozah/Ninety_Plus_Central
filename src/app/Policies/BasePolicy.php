@@ -5,7 +5,8 @@ namespace App\Policies;
 
 class BasePolicy
 {
-    protected $resource ;
+    protected static $resource;
+
     /**
      * Create a new policy instance.
      */
@@ -13,5 +14,19 @@ class BasePolicy
     {
 
     }
+
+    public static function check($user, $permission)
+    {
+        return $user->roles()
+            ->whereHas('permissions', function ($query) use ($permission) {
+                $query->where([
+                    $permission => true,
+                ])->whereHas('resource', function ($query) {
+                    $query->where('name', self::$resource);
+                });
+            })
+            ->exists();
+    }
+
 
 }

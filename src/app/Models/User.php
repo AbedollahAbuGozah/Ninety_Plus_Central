@@ -118,15 +118,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, HasMe
      return $user;
     }
 
-    public function authorize($permission, $resource)
-    {
-        return $this->roles()->whereHas('permissions', function ($query) use ($resource, $permission) {
-            $query->where([
-                'resource_name' => $resource,
-                $permission => true,
-            ]);
-        })->exists();
-    }
 
     public function generatePasswordResetCode()
     {
