@@ -6,7 +6,6 @@ use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\services\UserService;
-use Illuminate\Support\Facades\DB;
 
 class RegisterUserController extends BaseController
 {

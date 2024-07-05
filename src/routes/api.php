@@ -11,7 +11,6 @@ use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\LectureController;
 use App\Http\Controllers\Api\V1\Markables\FavoriteController;
 use App\Http\Controllers\Api\V1\ModuleController;
-use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RateController;
 use App\Http\Controllers\Api\V1\RequestMoneyController;
@@ -20,22 +19,22 @@ use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/auth.php';
+require __DIR__ . '/payment.php';
 
 Route::group(['prefix' => 'v1/guest', 'controller' => GuestController::class], function () {
     Route::get('registration-data', 'getRegistrationData');
 });
 
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], function () {
-    Route::get('courses/invoices', [InvoiceController::class, 'index']);
-
     Route::apiResource('users', UserController::class);
     Route::apiResource('countries.modules', ModuleController::class)->shallow();
     Route::apiResource('modules.courses', CourseController::class)->shallow();
-    Route::get('courses', [CourseController::class, 'indexAll']);
-    Route::apiResource('courses.students', StudentController::class)->shallow()->only(['index', 'show']);
     Route::apiResource('chapters', ChapterController::class);
     Route::apiResource('branches', BranchController::class);
     Route::apiResource('lectures', LectureController::class);
+    Route::apiResource('cities', CityController::class);
+    Route::apiResource('courses.students', StudentController::class)->shallow()->only(['index', 'show']);
+    Route::get('users/{user}/invoices', [InvoiceController::class, 'index']);
 
     Route::group(['prefix' => 'profiles', 'controller' => ProfileController::class], function () {
         Route::get('', 'show');
@@ -52,6 +51,12 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
         });
     });
 
+    Route::group(['prefix' => 'lectures/{lecture}', 'controller' => LectureController::class], function (){
+        Route::post('start-live', 'startLiveLecture');
+        Route::post('join-live', 'joinLiveLecture');
+        Route::post('upload-record', 'uploadRecord');
+    });
+
     Route::group(['prefix' => 'comments/{commentableType}/{commentableId}', 'controller' => CommentController::class], function () {
         Route::post('', 'store');
         Route::get('', 'index');
@@ -62,28 +67,21 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
         Route::get('', 'index');
     });
 
-    Route::apiResource('comments', CommentController::class)->except(['store', 'index']);
-    Route::apiResource('rates', RateController::class)->except(['store', 'index']);
-    Route::get('users/{user}/invoices', [InvoiceController::class, 'index']);
-
-    Route::post('bank-account', [BankAccountcontroller::class, 'store']);
     Route::group(['prefix' => 'money-requests', 'controller' => RequestMoneyController::class], function () {
         Route::post('', 'requestMoney');
         Route::get('',  'index');
     });
 
-    Route::post('lectures/{lecture}/start-live', [LectureController::class, 'startLiveLecture']);
-    Route::post('lectures/{lecture}/join-live', [LectureController::class, 'joinLiveLecture']);
-    Route::post('lectures/{lecture}/upload-record', [LectureController::class, 'uploadRecord']);
-    Route::apiResource('cities', CityController::class);
+
+    Route::get('courses', [CourseController::class, 'indexAll']);
+
+    Route::get('courses/invoices', [InvoiceController::class, 'index']);
+    Route::post('bank-account', [BankAccountcontroller::class, 'store']);
+//    Route::apiResource('comments', CommentController::class)->except(['store', 'index']);
+//    Route::apiResource('rates', RateController::class)->except(['store', 'index']);
 });
 
-Route::group(['prefix' => 'v1/payment', 'controller' => PaymentController::class], function () {
-    Route::post('{purchasableType}/{purchasableId}/checkout', 'checkout');
-    Route::get('status', 'status')->name('payment.status');
-    Route::get('cancel', 'cancel')->name('payment.cancel');
-    Route::post('/transfer','transferToUser');
-});
+
 
 
 Route::post('foo', \App\Http\Controllers\Api\V1\TestController::class);

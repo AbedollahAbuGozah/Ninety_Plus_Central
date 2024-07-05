@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name', 40);
+            $table->boolean('can_register')->default(false);
             \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamps();
         });
