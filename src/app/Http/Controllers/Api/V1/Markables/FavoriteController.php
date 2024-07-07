@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V1\Markables;
 use App\Facades\NinetyPlusCentralFacade;
 use App\Http\Controllers\Api\V1\BaseController;
 use Illuminate\Http\Request;
-use Maize\Markable\Mark;
 use Maize\Markable\Models\Favorite;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 

@@ -1,14 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\V1\BankAccountController;
-use App\Http\Controllers\Api\V1\BranchController;
-use App\Http\Controllers\Api\V1\ChapterController;
 use App\Http\Controllers\Api\V1\CommentController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\GuestController;
 use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\LectureController;
 use App\Http\Controllers\Api\V1\Markables\FavoriteController;
+use App\Http\Controllers\Api\V1\MarkController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RateController;
 use App\Http\Controllers\Api\V1\RequestMoneyController;
@@ -38,10 +37,21 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
     Route::group(['prefix' => 'favorites/{favorableType}', 'controller' => FavoriteController::class], function () {
         Route::get('', 'index');
 
-        Route::prefix('{favorableId}')->group(function () {
-            Route::post('', 'markAsFavorite');
-            Route::delete('', 'unMarkAsFavourite');
-        });
+        Route::prefix('{favorableId}')
+            ->controller(FavoriteController::class)
+            ->group(function () {
+                Route::post('', 'markAsFavorite');
+                Route::delete('', 'unMarkAsFavourite');
+            });
+    });
+
+    Route::post('marks/{markType}/{markableType}/{markableId}', [MarkController::class, 'mark']);
+
+    Route::group(['prefix' => 'marks/{markType}/{markableType}/', 'controller' => MarkController::class], function () {
+        Route::get('', 'index');
+        Route::post('{markableId}', 'mark');
+        Route::delete('{markableId}', 'unMark');
+
     });
 
     Route::group(['prefix' => 'lectures/{lecture}', 'controller' => LectureController::class], function () {
