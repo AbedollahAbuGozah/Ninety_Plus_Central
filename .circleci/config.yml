@@ -25,7 +25,8 @@ jobs:
               g++ \
               make \
               autoconf \
-              pkgconf
+              pkgconf \
+              openssh
 
       - run:
           name: Install PHP Extensions
@@ -131,10 +132,13 @@ jobs:
       - checkout
 
       - run:
-          name: Install Docker Compose
+          name: Install System Dependencies
           command: |
             set -ex
-            apk add --no-cache docker-compose
+            apk update
+            apk add --no-cache \
+              docker-compose \
+              openssh
 
       - run:
           name: Build Docker Image
