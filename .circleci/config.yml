@@ -3,7 +3,7 @@ version: 2.1
 executors:
   docker-executor:
     docker:
-      - image: php:8.2-fpm-alpine
+      - image: circleci/php:8.2-fpm-node
     working_directory: ~/repo
 
 jobs:
@@ -12,42 +12,17 @@ jobs:
     steps:
       - checkout
 
-      # Install dependencies and Composer
+      # Build Docker Image
       - run:
-          name: Install System Dependencies
+          name: Build Docker Image
           command: |
-            apk update
-            apk add --no-cache \
-              bash \
-              git \
-              curl \
-              gcc \
-              g++ \
-              make
-
-      - run:
-          name: Install PHP Extensions
-          command: |
-            apk add --no-cache \
-              libjpeg-turbo-dev \
-              libpng-dev \
-              freetype-dev
-            docker-php-ext-configure gd --with-freetype --with-jpeg
-            docker-php-ext-install -j$(nproc) gd pdo pdo_mysql exif
-            docker-php-ext-enable exif
-
-      - run:
-          name: Install Composer
-          command: |
-            curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-            cd src
-            composer install --prefer-dist --no-interaction --optimize-autoloader --no-dev
+            docker build -t my-app -f php.dockerfile .
 
       # Run Laravel tests
       - run:
           name: Run Laravel Tests
           command: |
-            cd src
+            docker run --rm -v $(pwd)/src:/var/www -w /var/www my-app bash -c "
             cp .env.example .env
             # Write the provided .env content
             echo 'APP_NAME=Laravel' >> .env
