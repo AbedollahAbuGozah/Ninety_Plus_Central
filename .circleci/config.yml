@@ -170,16 +170,21 @@ jobs:
             scp -o "StrictHostKeyChecking=no" composer.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -r -o "StrictHostKeyChecking=no" nginx ubuntu@${SSH_HOST}:~/repo/
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
+              set -ex
               cd ~/repo &&
               if ! docker network ls | grep -q your_network_name; then
                 docker network create your_network_name;
               fi &&
               docker-compose -f docker-compose.prod.yaml pull &&
               docker-compose -f docker-compose.prod.yaml up -d &&
-              docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force &&
-              docker-compose -f docker-compose.prod.yaml exec -T php php artisan config:cache &&
-              docker-compose -f docker-compose.prod.yaml exec -T php php artisan route:cache &&
-              docker-compose -f docker-compose.prod.yaml exec -T php php artisan view:cache'
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force ||
+              { echo "Migration failed"; exit 1; } &&
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan config:cache ||
+              { echo "Config cache failed"; exit 1; } &&
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan route:cache ||
+              { echo "Route cache failed"; exit 1; } &&
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan view:cache ||
+              { echo "View cache failed"; exit 1; }'
 
 workflows:
   version: 2
