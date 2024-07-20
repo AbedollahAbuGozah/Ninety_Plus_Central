@@ -10,12 +10,18 @@ RUN sed -i "s/group = www-data/group = ${PHPGROUP}/g" /usr/local/etc/php-fpm.d/w
 
 RUN mkdir -p /var/www/html/public
 
-RUN apk add --no-cache \
+# Install system dependencies and PHP extensions
+RUN apk update && apk add --no-cache \
     libjpeg-turbo-dev \
     libpng-dev \
     freetype-dev \
     autoconf \
     pkgconf \
+    g++ \
+    make \
+    bash \
+    curl \
+    git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install -j$(nproc) pdo pdo_mysql exif \
