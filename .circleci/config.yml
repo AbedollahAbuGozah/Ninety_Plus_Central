@@ -21,6 +21,8 @@ jobs:
             docker-php-ext-install gd
             docker-php-ext-install pdo pdo_mysql exif
             docker-php-ext-enable exif
+            apk add --no-cache curl py3-pip
+            pip install docker-compose
             curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
             cd src
             composer install --prefer-dist --no-interaction --optimize-autoloader --no-dev
@@ -96,17 +98,10 @@ jobs:
             echo 'STREAM_API_SECRET=uut3bgrw5v5aq94eavw8za9dtn7c4vjuyb64bq2amjb3naybdxttht927e6tv6y7' >> .env
             echo 'STREAM_APP_ID=1319248' >> .env
 
-            # Output the environment variables for debugging
-            echo "DB_CONNECTION=mysql"
-            echo "DB_HOST=${DB_HOST}"
-            echo "DB_PORT=${DB_PORT}"
-            echo "DB_DATABASE=${DB_DATABASE}"
-            echo "DB_USERNAME=${DB_USERNAME}"
-            echo "DB_PASSWORD=${DB_PASSWORD}"
-
             php artisan config:clear
             php artisan config:cache
             php artisan migrate --force
+            php artisan test
 
   deploy:
     executor: docker-executor
@@ -117,8 +112,14 @@ jobs:
       - checkout
 
       - run:
+          name: Install Docker Compose
+          command: |
+            apk add --no-cache py3-pip
+            pip install docker-compose
+
+      - run:
           name: Build Docker Image
-          command: docker-compose -f ./docker-compose.prod.yml build
+          command: docker-compose -f docker-compose.prod.yml build
 
       - run:
           name: Push Docker Images
@@ -134,11 +135,11 @@ jobs:
           name: Deploy Application
           command: |
             echo 'docker-compose -f /path/to/your/docker-compose.prod.yml pull
-            docker-compose -f ./docker-compose.prod.yml up -d
-            docker-compose -f ./docker-compose.prod.yml exec php php artisan migrate --force
-            docker-compose -f ./docker-compose.prod.yml exec php php artisan config:cache
-            docker-compose -f ./docker-compose.prod.yml exec php php artisan route:cache
-            docker-compose -f ./docker-compose.prod.yml exec php php artisan view:cache' | ssh -o StrictHostKeyChecking=no ubuntu@$SSH_HOST
+            docker-compose -f /path/to/your/docker-compose.prod.yml up -d
+            docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan migrate --force
+            docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan config:cache
+            docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan route:cache
+            docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan view:cache' | ssh -o StrictHostKeyChecking=no ubuntu@$SSH_HOST
 
 workflows:
   version: 2
