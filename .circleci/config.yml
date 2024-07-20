@@ -22,12 +22,14 @@ jobs:
             sudo docker-php-ext-install gd
             sudo docker-php-ext-install pdo pdo_mysql exif
             sudo docker-php-ext-enable exif
+            cd src
             composer install --prefer-dist --no-interaction --optimize-autoloader --no-dev
 
       # Run Laravel tests
       - run:
           name: Run Laravel Tests
           command: |
+            cd src
             cp .env.example .env
             php artisan key:generate
             php artisan migrate --force
