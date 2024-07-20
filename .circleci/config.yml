@@ -16,13 +16,18 @@ jobs:
       - run:
           name: Install Dependencies and Composer
           command: |
+            apk update
             apk add --no-cache \
               libjpeg-turbo-dev \
               libpng-dev \
               freetype-dev \
               bash \
               git \
-              curl
+              curl \
+              tar \
+              gcc \
+              g++ \
+              make
             docker-php-ext-configure gd --with-freetype --with-jpeg
             docker-php-ext-install gd
             docker-php-ext-install pdo pdo_mysql exif
