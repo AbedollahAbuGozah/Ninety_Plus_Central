@@ -14,21 +14,31 @@ jobs:
 
       # Install dependencies and Composer
       - run:
-          name: Install Dependencies and Composer
+          name: Install System Dependencies
           command: |
             apk update
             apk add --no-cache \
-              libjpeg-turbo-dev \
-              libpng-dev \
-              freetype-dev \
               bash \
               git \
               curl \
               gcc \
               g++ \
               make
+
+      - run:
+          name: Install PHP Extensions
+          command: |
+            apk add --no-cache \
+              libjpeg-turbo-dev \
+              libpng-dev \
+              freetype-dev
             docker-php-ext-configure gd --with-freetype --with-jpeg
             docker-php-ext-install -j$(nproc) gd pdo pdo_mysql exif
+            docker-php-ext-enable exif
+
+      - run:
+          name: Install Composer
+          command: |
             curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
             cd src
             composer install --prefer-dist --no-interaction --optimize-autoloader --no-dev
