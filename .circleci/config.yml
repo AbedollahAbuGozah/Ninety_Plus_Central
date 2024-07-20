@@ -25,15 +25,16 @@ jobs:
               g++ \
               make \
               autoconf \
-              pkgconf \
-              libjpeg-turbo-dev \
-              libpng-dev \
-              freetype-dev
+              pkgconf
 
       - run:
           name: Install PHP Extensions
           command: |
             set -ex
+            apk add --no-cache \
+              libjpeg-turbo-dev \
+              libpng-dev \
+              freetype-dev
             docker-php-ext-configure gd --with-freetype --with-jpeg
             docker-php-ext-install -j$(nproc) gd pdo pdo_mysql exif
             docker-php-ext-enable exif
@@ -133,7 +134,7 @@ jobs:
           name: Install Docker Compose
           command: |
             set -ex
-            apk add --no-cache docker-compose
+            apk add --no-cache docker-compose openssh
 
       - run:
           name: Build Docker Image
