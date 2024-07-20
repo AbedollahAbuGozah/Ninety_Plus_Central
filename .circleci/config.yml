@@ -116,11 +116,14 @@ jobs:
 
       - run:
           name: Build Docker Image
-          command: docker-compose -f ./docker-compose.prod.yml build
+          command: |
+            cd ~/repo
+            docker-compose -f docker-compose.prod.yml build
 
       - run:
           name: Push Docker Images
           command: |
+            cd ~/repo
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
             docker-compose -f docker-compose.prod.yml push
 
@@ -131,12 +134,13 @@ jobs:
       - run:
           name: Deploy Application
           command: |
-            echo 'docker-compose -f /path/to/your/docker-compose.prod.yml pull
-            docker-compose -f /path/to/your/docker-compose.prod.yml up -d
-            docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan migrate --force
-            docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan config:cache
-            docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan route:cache
-            docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan view:cache' | ssh -o StrictHostKeyChecking=no ubuntu@$SSH_HOST
+            cd ~/repo
+            echo 'docker-compose -f docker-compose.prod.yml pull
+            docker-compose -f docker-compose.prod.yml up -d
+            docker-compose -f docker-compose.prod.yml exec php php artisan migrate --force
+            docker-compose -f docker-compose.prod.yml exec php php artisan config:cache
+            docker-compose -f docker-compose.prod.yml exec php php artisan route:cache
+            docker-compose -f docker-compose.prod.yml exec php php artisan view:cache' | ssh -o StrictHostKeyChecking=no ubuntu@$SSH_HOST
 
 workflows:
   version: 2
