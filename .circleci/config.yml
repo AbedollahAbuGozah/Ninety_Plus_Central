@@ -166,7 +166,7 @@ jobs:
             set -ex
             cd ~/repo
             scp -o "StrictHostKeyChecking=no" docker-compose.prod.yaml ubuntu@${SSH_HOST}:~/repo/
-            ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} <<'EOF'
+            ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} << 'EOF'
               cd ~/repo
               docker network create your_network_name || true
               docker-compose -f docker-compose.prod.yaml pull
