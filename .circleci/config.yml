@@ -18,10 +18,10 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y libjpeg-dev libpng-dev libfreetype6-dev
-            docker-php-ext-configure gd --with-freetype --with-jpeg
-            docker-php-ext-install gd
-            docker-php-ext-install pdo pdo_mysql exif
-            docker-php-ext-enable exif
+            sudo docker-php-ext-configure gd --with-freetype --with-jpeg
+            sudo docker-php-ext-install gd
+            sudo docker-php-ext-install pdo pdo_mysql exif
+            sudo docker-php-ext-enable exif
             composer install --prefer-dist --no-interaction --optimize-autoloader --no-dev
 
       # Run Laravel tests
