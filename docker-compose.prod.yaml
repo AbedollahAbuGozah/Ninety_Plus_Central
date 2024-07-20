@@ -11,6 +11,8 @@ services:
       - ./src:/var/www/html
     depends_on:
       - php
+    networks:
+      - app_network
 
   php:
     build:
@@ -34,6 +36,8 @@ services:
       && chmod -R 775 /var/www/html/storage 
       && php artisan optimize
       && php-fpm -y /usr/local/etc/php-fpm.conf -R"
+    networks:
+      - app_network
 
   composer:
     build:
@@ -42,8 +46,10 @@ services:
     volumes:
       - ./src:/var/www/html
     working_dir: /var/www/html
+    networks:
+      - app_network
 
 networks:
-  default:
+  app_network:
     external:
       name: your_network_name
