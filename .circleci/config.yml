@@ -3,7 +3,7 @@ version: 2.1
 executors:
   docker-executor:
     docker:
-      - image: php:8.1-cli
+      - image: circleci/php:8.1-cli
     working_directory: ~/repo
 
 jobs:
@@ -17,20 +17,11 @@ jobs:
           name: Install PHP dependencies
           command: |
             sudo apt-get update
-            sudo apt-get install -y libjpeg-dev libpng-dev libfreetype6-dev libonig-dev libzip-dev unzip
+            sudo apt-get install -y libjpeg-dev libpng-dev libfreetype6-dev
             sudo docker-php-ext-configure gd --with-freetype --with-jpeg
-            sudo docker-php-ext-install -j$(nproc) gd mbstring zip pdo pdo_mysql exif
+            sudo docker-php-ext-install gd
+            sudo docker-php-ext-install pdo pdo_mysql exif
             sudo docker-php-ext-enable exif
-
-      # Install Composer
-      - run:
-          name: Install Composer
-          command: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-      # Install project dependencies
-      - run:
-          name: Install Composer dependencies
-          command: |
             cd src
             composer install --prefer-dist --no-interaction --optimize-autoloader --no-dev
 
