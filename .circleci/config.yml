@@ -12,16 +12,21 @@ jobs:
     steps:
       - checkout
 
-      # Install PHP dependencies and Composer
+      # Install dependencies and Composer
       - run:
-          name: Install PHP dependencies and Composer
+          name: Install Dependencies and Composer
           command: |
-            apk add --no-cache libjpeg-turbo-dev libpng-dev freetype-dev
+            apk add --no-cache \
+              libjpeg-turbo-dev \
+              libpng-dev \
+              freetype-dev \
+              bash \
+              git \
+              curl
             docker-php-ext-configure gd --with-freetype --with-jpeg
             docker-php-ext-install gd
             docker-php-ext-install pdo pdo_mysql exif
             docker-php-ext-enable exif
-            apk add --no-cache curl
             curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
             cd src
             composer install --prefer-dist --no-interaction --optimize-autoloader --no-dev
@@ -118,6 +123,7 @@ jobs:
           name: Build Docker Image
           command: |
             cd ~/repo
+            ls -la
             docker-compose -f docker-compose.prod.yaml build
 
       - run:
@@ -125,7 +131,7 @@ jobs:
           command: |
             cd ~/repo
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-            docker-compose -f docker-compose.prod.yml push
+            docker-compose -f docker-compose.prod.yaml push
 
       - add_ssh_keys:
           fingerprints:
@@ -135,7 +141,7 @@ jobs:
           name: Deploy Application
           command: |
             cd ~/repo
-            echo 'docker-compose -f docker-compose.prod.yml pull
+            echo 'docker-compose -f docker-compose.prod.yaml pull
             docker-compose -f docker-compose.prod.yaml up -d
             docker-compose -f docker-compose.prod.yaml exec php php artisan migrate --force
             docker-compose -f docker-compose.prod.yaml exec php php artisan config:cache
