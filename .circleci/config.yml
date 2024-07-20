@@ -165,13 +165,17 @@ jobs:
           command: |
             set -ex
             cd ~/repo
-            echo 'docker network create your_network_name || true
-            docker-compose -f docker-compose.prod.yaml pull
-            docker-compose -f docker-compose.prod.yaml up -d
-            docker-compose -f docker-compose.prod.yaml exec php php artisan migrate --force
-            docker-compose -f docker-compose.prod.yaml exec php php artisan config:cache
-            docker-compose -f docker-compose.prod.yaml exec php php artisan route:cache
-            docker-compose -f docker-compose.prod.yaml exec php php artisan view:cache' | ssh -o StrictHostKeyChecking=no ubuntu@$SSH_HOST
+            scp -o "StrictHostKeyChecking=no" docker-compose.prod.yaml ubuntu@${SSH_HOST}:~/repo/
+            ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} <<'EOF'
+              cd ~/repo
+              docker network create your_network_name || true
+              docker-compose -f docker-compose.prod.yaml pull
+              docker-compose -f docker-compose.prod.yaml up -d
+              docker-compose -f docker-compose.prod.yaml exec php php artisan migrate --force
+              docker-compose -f docker-compose.prod.yaml exec php php artisan config:cache
+              docker-compose -f docker-compose.prod.yaml exec php php artisan route:cache
+              docker-compose -f docker-compose.prod.yaml exec php php artisan view:cache
+            EOF
 
 workflows:
   version: 2
