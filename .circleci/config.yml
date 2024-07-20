@@ -28,18 +28,6 @@ jobs:
               pkgconf
 
       - run:
-          name: Install PHP Extensions
-          command: |
-            set -ex
-            apk add --no-cache \
-              libjpeg-turbo-dev \
-              libpng-dev \
-              freetype-dev
-            docker-php-ext-configure gd --with-freetype --with-jpeg
-            docker-php-ext-install -j$(nproc) gd pdo pdo_mysql exif
-            docker-php-ext-enable exif
-
-      - run:
           name: Install Composer
           command: |
             set -ex
