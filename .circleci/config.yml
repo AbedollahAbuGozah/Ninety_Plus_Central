@@ -51,10 +51,14 @@ jobs:
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
             docker-compose -f docker-compose.prod.yml push
 
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:1r+0RI8mIHtGT9P+b/LWVjSJufWbk/mh+dFb2M/uRWQ"
+
       - run:
           name: Deploy Application
           command: |
-            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
+            ssh -o StrictHostKeyChecking=no ubuntu@$SSH_HOST << 'EOF'
               docker-compose -f /path/to/your/docker-compose.prod.yml pull
               docker-compose -f /path/to/your/docker-compose.prod.yml up -d
               docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan migrate --force
