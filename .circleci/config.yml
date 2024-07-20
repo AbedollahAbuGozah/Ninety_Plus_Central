@@ -41,11 +41,11 @@ jobs:
             echo 'LOG_DEPRECATIONS_CHANNEL=null' >> .env
             echo 'LOG_LEVEL=debug' >> .env
             echo 'DB_CONNECTION=mysql' >> .env
-            echo 'DB_HOST=${DB_HOST}' >> .env
-            echo 'DB_PORT=${DB_PORT}' >> .env
-            echo 'DB_DATABASE=${DB_DATABASE}' >> .env
-            echo 'DB_USERNAME=${DB_USERNAME}' >> .env
-            echo 'DB_PASSWORD=${DB_PASSWORD}' >> .env
+            echo 'DB_HOST=pord-ninetyplus-central.czuosieys0pm.us-east-1.rds.amazonaws.com' >> .env
+            echo 'DB_PORT=3306' >> .env
+            echo 'DB_DATABASE=prod-ninetyplus-central' >> .env
+            echo 'DB_USERNAME=admin' >> .env
+            echo 'DB_PASSWORD=1VB0r26k>3FL0AaWZi{Xz>|wFh(m' >> .env
             echo 'PAYPAL_MODE=sandbox' >> .env
             echo 'PAYPAL_SANDBOX_CLIENT_ID=AWpgymUdV9FHxhzgLJitG13h8Np5SQZh4_6Z33gKli9Vdp6QpK3dWX25s8_qtDs5prVSNcGvaKeFWCco' >> .env
             echo 'PAYPAL_SANDBOX_CLIENT_SECRET=EJT8MWvVjmQAALgprh7o4giob7SZ42GIyjZF5v8F3ipbQLQ6N_gfX-uDfbrFY_7N2ryxhDHL2vysE632' >> .env
