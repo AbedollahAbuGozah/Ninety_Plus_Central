@@ -10,13 +10,14 @@ RUN sed -i "s/group = www-data/group = ${PHPGROUP}/g" /usr/local/etc/php-fpm.d/w
 
 RUN mkdir -p /var/www/html/public
 
-#RUN apk add --no-cache \
-#    libjpeg-turbo-dev \
-#    libpng-dev \
-#    freetype-dev \
-#    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-#    && docker-php-ext-install gd \
-#    && docker-php-ext-install pdo pdo_mysql exif \
-#    && docker-php-ext-enable exif
+# Commented out the lines for installing extensions
+# RUN apk add --no-cache \
+#     libjpeg-turbo-dev \
+#     libpng-dev \
+#     freetype-dev \
+#     && docker-php-ext-configure gd --with-freetype --with-jpeg \
+#     && docker-php-ext-install gd \
+#     && docker-php-ext-install pdo pdo_mysql exif \
+#     && docker-php-ext-enable exif
 
 CMD ["php-fpm", "-y", "/usr/local/etc/php-fpm.conf", "-R"]

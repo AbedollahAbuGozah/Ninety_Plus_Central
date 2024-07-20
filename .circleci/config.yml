@@ -25,19 +25,7 @@ jobs:
               g++ \
               make \
               autoconf \
-              pkgconf \
-              libjpeg-turbo-dev \
-              libpng-dev \
-              freetype-dev
-
-      - run:
-          name: Install PHP Extensions
-          command: |
-            set -ex
-            docker-php-ext-configure gd --with-freetype --with-jpeg
-            docker-php-ext-install -j$(nproc) gd
-            docker-php-ext-install -j$(nproc) pdo pdo_mysql exif
-            docker-php-ext-enable exif
+              pkgconf
 
       - run:
           name: Install Composer
@@ -142,7 +130,7 @@ jobs:
             set -ex
             cd ~/repo
             ls -la
-            docker-compose -f docker-compose.prod.yaml build --no-cache
+            NO_CACHE=1 docker-compose -f docker-compose.prod.yaml build --no-cache
 
       - run:
           name: Push Docker Images
