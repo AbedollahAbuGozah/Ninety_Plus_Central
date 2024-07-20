@@ -41,7 +41,7 @@ jobs:
             echo 'LOG_DEPRECATIONS_CHANNEL=null' >> .env
             echo 'LOG_LEVEL=debug' >> .env
             echo 'DB_CONNECTION=mysql' >> .env
-            echo 'DB_HOST=pord-ninetyplus-central.czuosieys0pm.us-east-1.rds.amazonaws.com' >> .env
+            echo 'DB_HOST=prod-ninetyplus-central.czuosieys0pm.us-east-1.rds.amazonaws.com' >> .env
             echo 'DB_PORT=3306' >> .env
             echo 'DB_DATABASE=prod-ninetyplus-central' >> .env
             echo 'DB_USERNAME=admin' >> .env
@@ -95,6 +95,14 @@ jobs:
             echo 'STREAM_API_KEY=whsuc3edb47g' >> .env
             echo 'STREAM_API_SECRET=uut3bgrw5v5aq94eavw8za9dtn7c4vjuyb64bq2amjb3naybdxttht927e6tv6y7' >> .env
             echo 'STREAM_APP_ID=1319248' >> .env
+
+            # Output the environment variables for debugging
+            echo "DB_CONNECTION=mysql"
+            echo "DB_HOST=prod-ninetyplus-central.czuosieys0pm.us-east-1.rds.amazonaws.com"
+            echo "DB_PORT=3306"
+            echo "DB_DATABASE=prod-ninetyplus-central"
+            echo "DB_USERNAME=admin"
+            echo "DB_PASSWORD=1VB0r26k>3FL0AaWZi{Xz>|wFh(m"
 
             php artisan config:clear
             php artisan config:cache
