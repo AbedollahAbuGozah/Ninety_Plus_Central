@@ -32,7 +32,7 @@ jobs:
             cd src
             cp .env.example .env
             # Ensure environment variables are available
-            echo "DB_CONNECTION=${DB_CONNECTION}" >> .env
+            echo "DB_CONNECTION=mysql" >> .env
             echo "DB_HOST=${DB_HOST}" >> .env
             echo "DB_PORT=${DB_PORT}" >> .env
             echo "DB_DATABASE=${DB_DATABASE}" >> .env
