@@ -98,10 +98,9 @@ jobs:
 
             # Output the environment variables for debugging
             echo "DB_CONNECTION=mysql"
-#            echo "DB_HOST=prod-ninetyplus-central.czuosieys0pm.us-east-1.rds.amazonaws.com"
-            pord-ninetyplus-central.czuosieys0pm.us-east-1.rds.amazonaws.com
+            echo "DB_HOST=pord-ninetyplus-central.czuosieys0pm.us-east-1.rds.amazonaws.com"
             echo "DB_PORT=3306"
-            echo "DB_DATABASE=prod-ninetyplus-central"
+            echo "DB_DATABASE=pord-ninetyplus-central"
             echo "DB_USERNAME=admin"
             echo "DB_PASSWORD=1VB0r26k>3FL0AaWZi{Xz>|wFh(m"
 
