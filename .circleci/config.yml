@@ -24,14 +24,11 @@ jobs:
               bash \
               git \
               curl \
-              tar \
               gcc \
               g++ \
               make
             docker-php-ext-configure gd --with-freetype --with-jpeg
-            docker-php-ext-install gd
-            docker-php-ext-install pdo pdo_mysql exif
-            docker-php-ext-enable exif
+            docker-php-ext-install -j$(nproc) gd pdo pdo_mysql exif
             curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
             cd src
             composer install --prefer-dist --no-interaction --optimize-autoloader --no-dev
