@@ -15,6 +15,7 @@ jobs:
       - run:
           name: Install System Dependencies
           command: |
+            set -ex
             apk update
             apk add --no-cache \
               bash \
@@ -29,6 +30,7 @@ jobs:
       - run:
           name: Install PHP Extensions
           command: |
+            set -ex
             apk add --no-cache \
               libjpeg-turbo-dev \
               libpng-dev \
@@ -40,6 +42,7 @@ jobs:
       - run:
           name: Install Composer
           command: |
+            set -ex
             curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
             cd src
             composer install --prefer-dist --no-interaction --optimize-autoloader --no-dev
@@ -47,6 +50,7 @@ jobs:
       - run:
           name: Run Laravel Tests
           command: |
+            set -ex
             cd src
             cp .env.example .env
             # Write the provided .env content
@@ -129,11 +133,13 @@ jobs:
       - run:
           name: Install Docker Compose
           command: |
+            set -ex
             apk add --no-cache docker-compose
 
       - run:
           name: Build Docker Image
           command: |
+            set -ex
             cd ~/repo
             ls -la
             docker-compose -f docker-compose.prod.yaml build
@@ -141,6 +147,7 @@ jobs:
       - run:
           name: Push Docker Images
           command: |
+            set -ex
             cd ~/repo
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
             docker-compose -f docker-compose.prod.yaml push
@@ -152,6 +159,7 @@ jobs:
       - run:
           name: Deploy Application
           command: |
+            set -ex
             cd ~/repo
             echo 'docker-compose -f docker-compose.prod.yaml pull
             docker-compose -f docker-compose.prod.yaml up -d
