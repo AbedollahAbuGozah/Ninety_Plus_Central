@@ -142,7 +142,7 @@ jobs:
             set -ex
             cd ~/repo
             ls -la
-            docker-compose -f docker-compose.prod.yaml build
+            docker-compose -f docker-compose.prod.yaml build --no-cache
 
       - run:
           name: Push Docker Images
