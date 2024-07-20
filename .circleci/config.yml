@@ -12,9 +12,9 @@ jobs:
     steps:
       - checkout
 
-      # Install PHP dependencies
+      # Install PHP dependencies and Composer
       - run:
-          name: Install PHP dependencies
+          name: Install PHP dependencies and Composer
           command: |
             apt-get update
             apt-get install -y libjpeg-dev libpng-dev libfreetype6-dev
@@ -22,6 +22,7 @@ jobs:
             docker-php-ext-install gd
             docker-php-ext-install pdo pdo_mysql exif
             docker-php-ext-enable exif
+            curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
             cd src
             composer install --prefer-dist --no-interaction --optimize-autoloader --no-dev
 
