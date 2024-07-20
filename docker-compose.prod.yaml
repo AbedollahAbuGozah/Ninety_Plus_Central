@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: php.dockerfile
       args:
-        - NO_CACHE=${NO_CACHE}  # Add a build argument to control cache
+        - NO_CACHE=1  # Add a build argument to control cache
     environment:
       DB_CONNECTION: mysql
       DB_HOST: ${DB_HOST}
