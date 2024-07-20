@@ -171,7 +171,9 @@ jobs:
             scp -r -o "StrictHostKeyChecking=no" nginx ubuntu@${SSH_HOST}:~/repo/
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
               cd ~/repo &&
-              docker network create your_network_name || true &&
+              if ! docker network ls | grep -q your_network_name; then
+                docker network create your_network_name;
+              fi &&
               docker-compose -f docker-compose.prod.yaml pull &&
               docker-compose -f docker-compose.prod.yaml up -d &&
               docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force &&
