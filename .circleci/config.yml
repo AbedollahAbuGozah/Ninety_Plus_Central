@@ -1,0 +1,73 @@
+version: 2.1
+
+executors:
+  docker-executor:
+    docker:
+      - image: circleci/php:8.0-cli
+    working_directory: ~/repo
+
+jobs:
+  build:
+    executor: docker-executor
+    steps:
+      - checkout
+
+      # Install PHP dependencies
+      - run:
+          name: Install PHP dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y libjpeg-dev libpng-dev freetype-dev
+            docker-php-ext-configure gd --with-freetype --with-jpeg
+            docker-php-ext-install gd
+            docker-php-ext-install pdo pdo_mysql exif
+            docker-php-ext-enable exif
+            composer install --prefer-dist --no-interaction --optimize-autoloader --no-dev
+
+      # Run Laravel tests
+      - run:
+          name: Run Laravel Tests
+          command: |
+            cp .env.example .env
+            php artisan key:generate
+            php artisan migrate --force
+            php artisan test
+
+  deploy:
+    executor: docker-executor
+    steps:
+      - setup_remote_docker:
+          version: 20.10.7
+
+      - checkout
+
+      - run:
+          name: Build Docker Image
+          command: docker-compose -f docker-compose.prod.yml build
+
+      - run:
+          name: Push Docker Images
+          command: |
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+            docker-compose -f docker-compose.prod.yml push
+
+      - run:
+          name: Deploy Application
+          command: |
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
+              docker-compose -f /path/to/your/docker-compose.prod.yml pull
+              docker-compose -f /path/to/your/docker-compose.prod.yml up -d
+              docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan migrate --force
+              docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan config:cache
+              docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan route:cache
+              docker-compose -f /path/to/your/docker-compose.prod.yml exec php php artisan view:cache
+            EOF
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
