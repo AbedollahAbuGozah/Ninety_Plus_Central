@@ -116,7 +116,7 @@ jobs:
 
       - run:
           name: Build Docker Image
-          command: docker-compose -f docker-compose.prod.yml build
+          command: docker-compose -f ./docker-compose.prod.yml build
 
       - run:
           name: Push Docker Images
