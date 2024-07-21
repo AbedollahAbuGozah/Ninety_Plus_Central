@@ -3,7 +3,7 @@ version: 2.1
 executors:
   docker-executor:
     docker:
-      - image: php:8-fpm-alpine
+      - image: circleci/php:8.0-fpm-node
     working_directory: ~/repo
 
 jobs:
@@ -19,23 +19,24 @@ jobs:
             if [ ! -d "src" ]; then
               echo "src directory does not exist. Please ensure it exists and contains your Laravel project files."
               exit 1
-            fi
 
       - run:
           name: Install System Dependencies
           command: |
             set -ex
-            apk update
-            apk add --no-cache \
+            sudo apt-get update
+            sudo apt-get install -y \
               bash \
               git \
-              curl \
-              gcc \
-              g++ \
-              make \
-              autoconf \
-              pkgconf \
-              openssh
+              curl
+
+      - run:
+          name: Install Docker Compose
+          command: |
+            set -ex
+            sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            docker-compose --version
 
       - run:
           name: Build Docker Image
@@ -56,10 +57,10 @@ jobs:
           name: Install System Dependencies
           command: |
             set -ex
-            apk update
-            apk add --no-cache \
+            sudo apt-get update
+            sudo apt-get install -y \
               docker-compose \
-              openssh
+              openssh-client
 
       - run:
           name: Build Docker Image
