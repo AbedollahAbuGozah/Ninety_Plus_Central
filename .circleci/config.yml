@@ -174,7 +174,8 @@ jobs:
               echo "DB_PORT=${DB_PORT}" >> ~/repo/.env &&
               echo "DB_DATABASE=${DB_DATABASE}" >> ~/repo/.env &&
               echo "DB_USERNAME=${DB_USERNAME}" >> ~/repo/.env &&
-              echo "DB_PASSWORD=${DB_PASSWORD}" >> ~/repo/.env
+              echo "DB_PASSWORD=${DB_PASSWORD}" >> ~/repo/.env &&
+              cat ~/repo/.env
             '
             scp -o "StrictHostKeyChecking=no" docker-compose.prod.yaml ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" php.prod.dockerfile ubuntu@${SSH_HOST}:~/repo/
