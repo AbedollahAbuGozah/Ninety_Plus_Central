@@ -36,14 +36,13 @@ jobs:
             set -ex
             curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
-            export PATH=$PATH:/usr/local/bin
-            docker-compose --version
+            /usr/local/bin/docker-compose --version
       - run:
           name: Build Docker Image
           command: |
             set -ex
             cd ~/repo
-            docker-compose -f docker-compose.prod.yaml build --no-cache
+            /usr/local/bin/docker-compose -f docker-compose.prod.yaml build --no-cache
 
   deploy:
     executor: docker-executor
@@ -64,14 +63,14 @@ jobs:
           command: |
             set -ex
             cd ~/repo
-            docker-compose -f docker-compose.prod.yaml build --no-cache
+            /usr/local/bin/docker-compose -f docker-compose.prod.yaml build --no-cache
       - run:
           name: Push Docker Images
           command: |
             set -ex
             cd ~/repo
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-            docker-compose -f docker-compose.prod.yaml push
+            /usr/local/bin/docker-compose -f docker-compose.prod.yaml push
       - add_ssh_keys:
           fingerprints:
             - "SHA256:1r+0RI8mIHtGT9P+b/LWVjSJufWbk/mh+dFb2M/uRWQ"
@@ -93,14 +92,14 @@ jobs:
               if ! docker network ls | grep -q your_network_name; then
                 docker network create your_network_name;
               fi &&
-              docker-compose -f docker-compose.prod.yaml pull &&
-              docker-compose -f docker-compose.prod.yaml up -d &&
-              docker-compose -f docker-compose.prod.yaml exec -T php bash -c "cd /var/www/html && composer install --prefer-dist --no-interaction --optimize-autoloader" &&
-              docker-compose -f docker-compose.prod.yaml exec -T php ls -la /var/www/html &&
-              docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force || (docker-compose -f docker-compose.prod.yaml logs php && exit 1) &&
-              docker-compose -f docker-compose.prod.yaml exec -T php php artisan config:cache || (docker-compose -f docker-compose.prod.yaml logs php && exit 1) &&
-              docker-compose -f docker-compose.prod.yaml exec -T php php artisan route:cache || (docker-compose -f docker-compose.prod.yaml logs php && exit 1) &&
-              docker-compose -f docker-compose.prod.yaml exec -T php php artisan view:cache || (docker-compose -f docker-compose.prod.yaml logs php && exit 1)'
+              /usr/local/bin/docker-compose -f docker-compose.prod.yaml pull &&
+              /usr/local/bin/docker-compose -f docker-compose.prod.yaml up -d &&
+              /usr/local/bin/docker-compose -f docker-compose.prod.yaml exec -T php bash -c "cd /var/www/html && composer install --prefer-dist --no-interaction --optimize-autoloader" &&
+              /usr/local/bin/docker-compose -f docker-compose.prod.yaml exec -T php ls -la /var/www/html &&
+              /usr/local/bin/docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force || (/usr/local/bin/docker-compose -f docker-compose.prod.yaml logs php && exit 1) &&
+              /usr/local/bin/docker-compose -f docker-compose.prod.yaml exec -T php php artisan config:cache || (/usr/local/bin/docker-compose -f docker-compose.prod.yaml logs php && exit 1) &&
+              /usr/local/bin/docker-compose -f docker-compose.prod.yaml exec -T php php artisan route:cache || (/usr/local/bin/docker-compose -f docker-compose.prod.yaml logs php && exit 1) &&
+              /usr/local/bin/docker-compose -f docker-compose.prod.yaml exec -T php php artisan view:cache || (/usr/local/bin/docker-compose -f docker-compose.prod.yaml logs php && exit 1)'
 
 workflows:
   version: 2
