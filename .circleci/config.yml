@@ -34,9 +34,18 @@ jobs:
           name: Install Docker Compose
           command: |
             set -ex
-            curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            ARCH=$(uname -m)
+            if [ "$ARCH" = "x86_64" ]; then
+              curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
+            elif [ "$ARCH" = "aarch64" ]; then
+              curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-aarch64" -o /usr/local/bin/docker-compose
+            else
+              echo "Unsupported architecture: $ARCH"
+              exit 1
+            fi
             chmod +x /usr/local/bin/docker-compose
-            /usr/local/bin/docker-compose --version
+            export PATH=$PATH:/usr/local/bin
+            docker-compose --version
       - run:
           name: Build Docker Image
           command: |
