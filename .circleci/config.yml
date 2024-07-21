@@ -37,8 +37,8 @@ jobs:
               libpng-dev \
               freetype-dev
             docker-php-ext-configure gd --with-freetype --with-jpeg
-            docker-php-ext-install -j$(nproc) gd pdo pdo_mysql exif mbstring
-            docker-php-ext-enable exif mbstring
+            docker-php-ext-install -j$(nproc) gd pdo pdo_mysql exif
+            docker-php-ext-enable exif
 
       - run:
           name: Install Composer
