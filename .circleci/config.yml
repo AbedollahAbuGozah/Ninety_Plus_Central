@@ -177,8 +177,8 @@ jobs:
             scp -o "StrictHostKeyChecking=no" php.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" nginx.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" composer.dockerfile ubuntu@${SSH_HOST}:~/repo/
-            ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} 'mkdir -p ~/repo/src' &&
-            scp -r -o "StrictHostKeyChecking=no" src/* ubuntu@${SSH_HOST}:~/repo/src &&
+            ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} 'sudo mkdir -p /home/ubuntu/repo/src && sudo chown -R ubuntu:ubuntu /home/ubuntu/repo' &&
+            scp -r -o "StrictHostKeyChecking=no" src/* ubuntu@${SSH_HOST}:/home/ubuntu/repo/src &&
             scp -r -o "StrictHostKeyChecking=no" nginx ubuntu@${SSH_HOST}:~/repo/
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
               set -ex
@@ -192,7 +192,7 @@ jobs:
               docker-compose -f docker-compose.prod.yaml exec -T artisan migrate --force || (docker-compose -f docker-compose.prod.yaml logs artisan && exit 1) &&
               docker-compose -f docker-compose.prod.yaml exec -T artisan config:cache || (docker-compose -f docker-compose.prod.yaml logs artisan && exit 1) &&
               docker-compose -f docker-compose.prod.yaml exec -T artisan route:cache || (docker-compose -f docker-compose.prod.yaml logs artisan && exit 1) &&
-              docker-compose -f docker-compose.prod.yaml exec -T artisan view:cache || (docker-compose -f docker-compose.prod.yaml logs artisan and exit 1)'
+              docker-compose -f docker-compose.prod.yaml exec -T artisan view:cache || (docker-compose -f docker-compose.prod.yaml logs artisan && exit 1)'
 
 workflows:
   version: 2
