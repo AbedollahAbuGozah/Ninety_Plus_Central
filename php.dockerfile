@@ -23,9 +23,9 @@ RUN apk update && apk add --no-cache \
 RUN rm -rf /var/cache/apk/*
 
 # Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql mbstring exif \
-    && docker-php-ext-enable exif
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    docker-php-ext-install -j$(nproc) gd pdo pdo_mysql mbstring exif && \
+    docker-php-ext-enable exif
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -33,8 +33,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy application code
 COPY src/ /var/www/html/
 
-# Copy the rest of the application code
-COPY . /var/www/html
+# Change permissions for the copied files
+RUN chown -R www-data:www-data /var/www/html
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
