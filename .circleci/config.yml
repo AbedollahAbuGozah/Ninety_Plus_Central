@@ -168,7 +168,8 @@ jobs:
             scp -o "StrictHostKeyChecking=no" php.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" nginx.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" composer.dockerfile ubuntu@${SSH_HOST}:~/repo/
-            scp -r -o "StrictHostKeyChecking=no" src ubuntu@${SSH_HOST}:~/repo/
+            ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} 'mkdir -p ~/repo/src' &&
+            scp -r -o "StrictHostKeyChecking=no" src ubuntu@${SSH_HOST}:~/repo/src &&
             scp -r -o "StrictHostKeyChecking=no" nginx ubuntu@${SSH_HOST}:~/repo/
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
               set -ex
