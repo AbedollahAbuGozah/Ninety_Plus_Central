@@ -25,8 +25,8 @@ jobs:
           name: Install System Dependencies
           command: |
             set -ex
-            sudo apt-get update
-            sudo apt-get install -y \
+            apk update
+            apk add --no-cache \
               bash \
               git \
               curl
@@ -34,8 +34,8 @@ jobs:
           name: Install Docker Compose
           command: |
             set -ex
-            sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
+            curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            chmod +x /usr/local/bin/docker-compose
             docker-compose --version
       - run:
           name: Build Docker Image
@@ -54,8 +54,8 @@ jobs:
           name: Install System Dependencies
           command: |
             set -ex
-            sudo apt-get update
-            sudo apt-get install -y \
+            apk update
+            apk add --no-cache \
               docker-compose \
               openssh-client
       - run:
@@ -83,7 +83,7 @@ jobs:
             scp -o "StrictHostKeyChecking=no" php.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" nginx.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" composer.dockerfile ubuntu@${SSH_HOST}:~/repo/
-            ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} 'sudo mkdir -p /home/ubuntu/repo/src && sudo chown -R ubuntu:ubuntu /home/ubuntu/repo' &&
+            ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} 'mkdir -p /home/ubuntu/repo/src && chown -R ubuntu:ubuntu /home/ubuntu/repo' &&
             scp -r -o "StrictHostKeyChecking=no" src/* ubuntu@${SSH_HOST}:/home/ubuntu/repo/src &&
             scp -r -o "StrictHostKeyChecking=no" nginx ubuntu@${SSH_HOST}:~/repo/
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
