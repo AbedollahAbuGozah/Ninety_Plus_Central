@@ -49,6 +49,19 @@ services:
     networks:
       - app_network
 
+  artisan:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    depends_on:
+      - php
+    entrypoint: ["php", "/var/www/html/artisan"]
+    networks:
+      - app_network
+
 networks:
   app_network:
     external:
