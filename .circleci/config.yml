@@ -164,6 +164,12 @@ jobs:
           command: |
             set -ex
             cd ~/repo
+            ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
+              set -ex
+              mkdir -p ~/repo &&
+              sudo chown -R $USER:$USER ~/repo &&
+              sudo chmod -R 775 ~/repo
+            '
             scp -o "StrictHostKeyChecking=no" docker-compose.prod.yaml ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" php.prod.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" nginx.dockerfile ubuntu@${SSH_HOST}:~/repo/
@@ -173,11 +179,8 @@ jobs:
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
               set -ex
               cd ~/repo &&
-              # Ensure correct permissions on necessary directories
-              sudo chown -R $USER:$USER /home/ubuntu/repo/src/bootstrap/cache &&
-              sudo chown -R $USER:$USER /home/ubuntu/repo/src/storage &&
-              sudo chmod -R 775 /home/ubuntu/repo/src/bootstrap/cache &&
-              sudo chmod -R 775 /home/ubuntu/repo/src/storage &&
+              sudo chown -R $USER:$USER ~/repo/src/bootstrap/cache ~/repo/src/storage &&
+              sudo chmod -R 775 ~/repo/src/bootstrap/cache ~/repo/src/storage &&
               if ! docker network ls | grep -q your_network_name; then
                 docker network create your_network_name;
               fi &&
