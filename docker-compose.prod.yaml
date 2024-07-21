@@ -31,9 +31,10 @@ services:
       - ./src:/var/www/html
     command: >
       /bin/sh -c "
-      mkdir -p /var/www/html/storage/logs /var/www/html/bootstrap/cache
-      && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-      && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+      mkdir -p /var/www/html/storage/logs 
+      && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache 
+      && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache 
+      && composer install --prefer-dist --no-interaction --optimize-autoloader
       && php artisan optimize
       && php-fpm -y /usr/local/etc/php-fpm.conf -R"
     networks:
@@ -46,19 +47,6 @@ services:
     volumes:
       - ./src:/var/www/html
     working_dir: /var/www/html
-    networks:
-      - app_network
-
-  artisan:
-    build:
-      context: .
-      dockerfile: php.dockerfile
-    volumes:
-      - ./src:/var/www/html
-    working_dir: /var/www/html
-    depends_on:
-      - php
-    entrypoint: ["/bin/sh", "-c", "ls -la /var/www/html && php /var/www/html/artisan"]
     networks:
       - app_network
 
