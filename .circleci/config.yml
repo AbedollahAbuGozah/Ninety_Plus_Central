@@ -19,6 +19,7 @@ jobs:
             if [ ! -d "src" ]; then
               echo "src directory does not exist. Please ensure it exists and contains your Laravel project files."
               exit 1
+            fi
 
       - run:
           name: Install System Dependencies
