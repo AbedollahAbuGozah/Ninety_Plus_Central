@@ -10,8 +10,9 @@ jobs:
   build:
     executor: docker-executor
     steps:
+      - setup_remote_docker:
+          version: 20.10.7
       - checkout
-
       - run:
           name: Ensure Local Directory Structure
           command: |
@@ -20,7 +21,6 @@ jobs:
               echo "src directory does not exist. Please ensure it exists and contains your Laravel project files."
               exit 1
             fi
-
       - run:
           name: Install System Dependencies
           command: |
@@ -30,7 +30,6 @@ jobs:
               bash \
               git \
               curl
-
       - run:
           name: Install Docker Compose
           command: |
@@ -38,7 +37,6 @@ jobs:
             sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
             docker-compose --version
-
       - run:
           name: Build Docker Image
           command: |
@@ -51,9 +49,7 @@ jobs:
     steps:
       - setup_remote_docker:
           version: 20.10.7
-
       - checkout
-
       - run:
           name: Install System Dependencies
           command: |
@@ -62,14 +58,12 @@ jobs:
             sudo apt-get install -y \
               docker-compose \
               openssh-client
-
       - run:
           name: Build Docker Image
           command: |
             set -ex
             cd ~/repo
             docker-compose -f docker-compose.prod.yaml build --no-cache
-
       - run:
           name: Push Docker Images
           command: |
@@ -77,11 +71,9 @@ jobs:
             cd ~/repo
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
             docker-compose -f docker-compose.prod.yaml push
-
       - add_ssh_keys:
           fingerprints:
             - "SHA256:1r+0RI8mIHtGT9P+b/LWVjSJufWbk/mh+dFb2M/uRWQ"
-
       - run:
           name: Deploy Application
           command: |
