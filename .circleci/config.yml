@@ -168,6 +168,7 @@ jobs:
             scp -o "StrictHostKeyChecking=no" php.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" nginx.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" composer.dockerfile ubuntu@${SSH_HOST}:~/repo/
+            scp -r -o "StrictHostKeyChecking=no" src ubuntu@${SSH_HOST}:~/repo/
             scp -r -o "StrictHostKeyChecking=no" nginx ubuntu@${SSH_HOST}:~/repo/
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
               set -ex
@@ -177,13 +178,14 @@ jobs:
               fi &&
               docker-compose -f docker-compose.prod.yaml pull &&
               docker-compose -f docker-compose.prod.yaml up -d &&
-              docker-compose -f docker-compose.prod.yaml exec -T  php artisan migrate --force ||
+              docker-compose -f docker-compose.prod.yaml exec -T php composer install --no-dev --optimize-autoloader &&
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force ||
               { echo "Migration failed"; exit 1; } &&
-              docker-compose -f docker-compose.prod.yaml exec -T  php artisan config:cache ||
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan config:cache ||
               { echo "Config cache failed"; exit 1; } &&
-              docker-compose -f docker-compose.prod.yaml exec -T  php artisan route:cache ||
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan route:cache ||
               { echo "Route cache failed"; exit 1; } &&
-              docker-compose -f docker-compose.prod.yaml exec -T  php artisan view:cache ||
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan view:cache ||
               { echo "View cache failed"; exit 1; }'
 
 workflows:
