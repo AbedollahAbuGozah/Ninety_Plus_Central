@@ -154,20 +154,7 @@ jobs:
           command: |
             set -ex
             cd ~/repo
-            ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
-              set -ex
-              mkdir -p ~/repo &&
-              sudo chown -R $USER:$USER ~/repo &&
-              sudo chmod -R 775 ~/repo &&
-              echo "DB_CONNECTION=mysql" >> ~/repo/.env &&
-              echo "DB_HOST=${DB_HOST}" >> ~/repo/.env &&
-              echo "DB_PORT=${DB_PORT}" >> ~/repo/.env &&
-              echo "DB_DATABASE=${DB_DATABASE}" >> ~/repo/.env &&
-              echo "DB_USERNAME=${DB_USERNAME}" >> ~/repo/.env &&
-              echo "DB_PASSWORD=${DB_PASSWORD}" >> ~/repo/.env &&
-              echo "MAIL_FROM_NAME=\"Your Application Name\"" >> ~/repo/.env &&
-              cat ~/repo/.env
-            '
+            scp -o "StrictHostKeyChecking=no" .env.prod ubuntu@${SSH_HOST}:~/repo/.env
             scp -o "StrictHostKeyChecking=no" docker-compose.prod.yaml ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" php.prod.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" nginx.dockerfile ubuntu@${SSH_HOST}:~/repo/
@@ -177,12 +164,6 @@ jobs:
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
               set -ex
               cd ~/repo &&
-              export DB_CONNECTION=mysql &&
-              export DB_HOST=${DB_HOST} &&
-              export DB_PORT=${DB_PORT} &&
-              export DB_DATABASE=${DB_DATABASE} &&
-              export DB_USERNAME=${DB_USERNAME} &&
-              export DB_PASSWORD=${DB_PASSWORD} &&
               if ! docker network ls | grep -q your_network_name; then
                 docker network create your_network_name;
               fi &&
