@@ -83,7 +83,7 @@ jobs:
             echo "MAIL_PASSWORD=f364e9cdb4efb6" >> .env
             echo "MAIL_ENCRYPTION=tls" >> .env
             echo "MAIL_FROM_ADDRESS=hello@example.com" >> .env
-            echo "MAIL_FROM_NAME=Your Application Name" >> .env
+            echo "MAIL_FROM_NAME=\"Your Application Name\"" >> .env
             echo "AWS_ACCESS_KEY_ID=your_aws_access_key_id" >> .env
             echo "AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key" >> .env
             echo "AWS_DEFAULT_REGION=us-east-1" >> .env
@@ -165,6 +165,7 @@ jobs:
               echo "DB_DATABASE=${DB_DATABASE}" >> ~/repo/.env &&
               echo "DB_USERNAME=${DB_USERNAME}" >> ~/repo/.env &&
               echo "DB_PASSWORD=${DB_PASSWORD}" >> ~/repo/.env &&
+              echo "MAIL_FROM_NAME=\"Your Application Name\"" >> ~/repo/.env &&
               cat ~/repo/.env
             '
             scp -o "StrictHostKeyChecking=no" docker-compose.prod.yaml ubuntu@${SSH_HOST}:~/repo/
