@@ -1,41 +1,24 @@
-# Use the official PHP image as a base image
 FROM php:8-fpm-alpine
 
-# Set working directory
-WORKDIR /var/www/html
+ENV PHPGROUP=laravel
+ENV PHPUSER=laravel
 
-# Install system dependencies
-RUN apk update && apk add --no-cache \
-    bash \
-    git \
-    curl \
+RUN adduser -g ${PHPGROUP} -s /bin/sh -D ${PHPUSER}
+
+RUN sed -i "s/user = www-data/user = ${PHPUSER}/g" /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i "s/group = www-data/group = ${PHPGROUP}/g" /usr/local/etc/php-fpm.d/www.conf
+
+RUN mkdir -p /var/www/html/public
+
+RUN mkdir -p /var/www/html/public
+
+RUN apk add --no-cache \
     libjpeg-turbo-dev \
     libpng-dev \
     freetype-dev \
-    libwebp-dev \
-    zlib-dev \
-    libxpm-dev \
-    oniguruma-dev \
-    libxml2-dev \
-    exiftool
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd \
+    && docker-php-ext-install pdo pdo_mysql exif \
+    && docker-php-ext-enable exif
 
-# Clear cache
-RUN rm -rf /var/cache/apk/*
-
-# Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install -j$(nproc) gd pdo pdo_mysql mbstring exif && \
-    docker-php-ext-enable exif
-
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Copy application code
-COPY src/ /var/www/html/
-
-# Change permissions for the copied files
-RUN chown -R www-data:www-data /var/www/html
-
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+CMD ["php-fpm", "-y", "/usr/local/etc/php-fpm.conf", "-R"]
