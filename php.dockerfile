@@ -10,4 +10,6 @@ RUN sed -i "s/group = www-data/group = ${PHPGROUP}/g" /usr/local/etc/php-fpm.d/w
 
 RUN mkdir -p /var/www/html/public /var/www/html/storage/logs /var/www/html/bootstrap/cache
 
+WORKDIR /var/www/html
+
 CMD ["php-fpm", "-y", "/usr/local/etc/php-fpm.conf", "-R"]
