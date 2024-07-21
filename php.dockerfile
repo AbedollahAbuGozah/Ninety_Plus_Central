@@ -1,44 +1,41 @@
-# First stage: Composer installation
-FROM composer:latest AS composer
-
-# Set the working directory
-WORKDIR /app
-
-# Copy the composer files
-COPY src/composer.json src/composer.lock ./
-
-# Install dependencies
-RUN composer install --prefer-dist --no-interaction --optimize-autoloader
-
-# Second stage: PHP-FPM with necessary extensions
+# Use the official PHP image as a base image
 FROM php:8-fpm-alpine
 
-# Install necessary system packages
+# Set working directory
+WORKDIR /var/www/html
+
+# Install system dependencies
 RUN apk update && apk add --no-cache \
     bash \
     git \
     curl \
     libjpeg-turbo-dev \
     libpng-dev \
-    freetype-dev
+    freetype-dev \
+    libwebp-dev \
+    zlib-dev \
+    libxpm-dev \
+    oniguruma-dev \
+    libxml2-dev \
+    exiftool
 
-# Configure and install PHP extensions
+# Clear cache
+RUN rm -rf /var/cache/apk/*
+
+# Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql exif \
+    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql mbstring exif \
     && docker-php-ext-enable exif
 
-# Set the working directory
-WORKDIR /var/www/html
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy the application files
-COPY src /var/www/html
+# Copy application code
+COPY src/ /var/www/html/
 
-# Copy the Composer dependencies from the first stage
-COPY --from=composer /app/vendor /var/www/html/vendor
-COPY --from=composer /app/composer.lock /var/www/html/composer.lock
+# Copy the rest of the application code
+COPY . /var/www/html
 
-# Set permissions for Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-
+# Expose port 9000 and start php-fpm server
+EXPOSE 9000
 CMD ["php-fpm"]
