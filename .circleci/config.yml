@@ -188,7 +188,7 @@ jobs:
               fi &&
               docker-compose -f docker-compose.prod.yaml pull &&
               docker-compose -f docker-compose.prod.yaml up -d &&
-              docker-compose -f docker-compose.prod.yaml exec -T php composer install --prefer-dist --no-interaction --optimize-autoloader &&
+              docker-compose -f docker-compose.prod.yaml exec -T php bash -c "cd /var/www/html && composer install --prefer-dist --no-interaction --optimize-autoloader" &&
               docker-compose -f docker-compose.prod.yaml exec -T php ls -la /var/www/html &&
               docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force || (docker-compose -f docker-compose.prod.yaml logs php && exit 1) &&
               docker-compose -f docker-compose.prod.yaml exec -T php php artisan config:cache || (docker-compose -f docker-compose.prod.yaml logs php && exit 1) &&
