@@ -1,15 +1,17 @@
 FROM php:8-fpm-alpine
 
-ENV PHPGROUP=laravel
-ENV PHPUSER=laravel
 
-RUN adduser -g ${PHPGROUP} -s /bin/sh -D ${PHPUSER}
-
-RUN sed -i "s/user = www-data/user = ${PHPUSER}/g" /usr/local/etc/php-fpm.d/www.conf
-RUN sed -i "s/group = www-data/group = ${PHPGROUP}/g" /usr/local/etc/php-fpm.d/www.conf
-
-RUN mkdir -p /var/www/html/public /var/www/html/storage/logs /var/www/html/bootstrap/cache
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www/html
 
-CMD ["php-fpm", "-y", "/usr/local/etc/php-fpm.conf", "-R"]
+COPY . /var/www/html
+
+RUN composer install --prefer-dist --no-interaction --optimize-autoloader
+
+# Set permissions for Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+CMD ["php-fpm"]
