@@ -10,5 +10,17 @@ RUN sed -i "s/group = www-data/group = ${PHPGROUP}/g" /usr/local/etc/php-fpm.d/w
 
 RUN mkdir -p /var/www/html/public
 
+# Install necessary PHP extensions
+RUN apk add --no-cache \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    freetype-dev \
+    mysql-client \
+    oniguruma-dev
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install -j$(nproc) gd pdo pdo_mysql exif mbstring
+
+RUN docker-php-ext-enable exif mbstring
 
 CMD ["php-fpm", "-y", "/usr/local/etc/php-fpm.conf", "-R"]
