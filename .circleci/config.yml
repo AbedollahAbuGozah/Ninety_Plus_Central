@@ -13,6 +13,16 @@ jobs:
       - checkout
 
       - run:
+          name: Ensure Local Directory Structure
+          command: |
+            set -ex
+            mkdir -p src
+            if [ ! -d "src" ]; then
+              echo "src directory does not exist. Please ensure it exists and contains your Laravel project files."
+              exit 1
+            fi
+
+      - run:
           name: Install System Dependencies
           command: |
             set -ex
