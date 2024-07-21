@@ -177,14 +177,10 @@ jobs:
               fi &&
               docker-compose -f docker-compose.prod.yaml pull &&
               docker-compose -f docker-compose.prod.yaml up -d &&
-              docker-compose -f docker-compose.prod.yaml exec -T  php artisan migrate --force ||
-              { echo "Migration failed"; exit 1; } &&
-              docker-compose -f docker-compose.prod.yaml exec -T  php artisan config:cache ||
-              { echo "Config cache failed"; exit 1; } &&
-              docker-compose -f docker-compose.prod.yaml exec -T  php artisan route:cache ||
-              { echo "Route cache failed"; exit 1; } &&
-              docker-compose -f docker-compose.prod.yaml exec -T  php artisan view:cache ||
-              { echo "View cache failed"; exit 1; }'
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force || (docker-compose -f docker-compose.prod.yaml logs php && exit 1) &&
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan config:cache || (docker-compose -f docker-compose.prod.yaml logs php && exit 1) &&
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan route:cache || (docker-compose -f docker-compose.prod.yaml logs php && exit 1) &&
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan view:cache || (docker-compose -f docker-compose.prod.yaml logs php && exit 1)'
 
 workflows:
   version: 2
