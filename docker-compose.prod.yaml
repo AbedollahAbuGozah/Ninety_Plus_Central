@@ -1,6 +1,37 @@
 version: '3.8'
 
 services:
+  composer:
+    build:
+      context: .
+      dockerfile: composer.dockerfile
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    entrypoint: ["/bin/sh", "-c", "composer install --no-dev --optimize-autoloader"]
+    networks:
+      - app_network
+
+  php:
+    build:
+      context: .
+      dockerfile: php.prod.dockerfile
+      args:
+        - NO_CACHE=1
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - composer
+    command: >
+      /bin/sh -c "
+      mkdir -p /var/www/html/storage/logs 
+      && chown -R www-data:www-data /var/www/html/storage 
+      && chmod -R 775 /var/www/html/storage 
+      && php artisan optimize
+      && php-fpm -y /usr/local/etc/php-fpm.conf -R"
+    networks:
+      - app_network
+
   nginx:
     build:
       context: .
@@ -11,35 +42,6 @@ services:
       - ./src:/var/www/html
     depends_on:
       - php
-    networks:
-      - app_network
-
-  php:
-    build:
-      context: .
-      dockerfile: php.prod.dockerfile
-      args:
-        - NO_CACHE=1
-
-    volumes:
-      - ./src:/var/www/html
-    command: >
-      /bin/sh -c "
-      mkdir -p /var/www/html/storage/logs 
-      && chown -R laravel:laravel /var/www/html/storage 
-      && chmod -R 775 /var/www/html/storage 
-      && php artisan optimize
-      && php-fpm -y /usr/local/etc/php-fpm.conf -R"
-    networks:
-      - app_network
-
-  composer:
-    build:
-      context: .
-      dockerfile: composer.dockerfile
-    volumes:
-      - ./src:/var/www/html
-    working_dir: /var/www/html
     networks:
       - app_network
 
