@@ -57,7 +57,6 @@ jobs:
               fi &&
               docker-compose -f docker-compose.prod.yaml pull &&
               docker-compose -f docker-compose.prod.yaml up -d &&
-              docker-compose -f docker-compose.prod.yaml exec -T php composer install --no-dev --optimize-autoloader &&
               docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force ||
               { echo "Migration failed"; exit 1; } &&
               docker-compose -f docker-compose.prod.yaml exec -T php php artisan config:cache ||
