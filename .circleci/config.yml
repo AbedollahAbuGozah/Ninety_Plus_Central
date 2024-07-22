@@ -156,7 +156,7 @@ jobs:
             cd ~/repo
             # Ensure the .env.production file is copied correctly
             scp -r -o "StrictHostKeyChecking=no" src ubuntu@${SSH_HOST}:~/repo/
-            scp -o "StrictHostKeyChecking=no" src/.env.production ubuntu@${SSH_HOST}:~/repo/.env
+            scp -o "StrictHostKeyChecking=no" src/.env.production ubuntu@${SSH_HOST}:~/repo/src/.env
             scp -o "StrictHostKeyChecking=no" docker-compose.prod.yaml ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" php.prod.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" nginx.dockerfile ubuntu@${SSH_HOST}:~/repo/
