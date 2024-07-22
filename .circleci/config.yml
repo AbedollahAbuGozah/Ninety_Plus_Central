@@ -47,7 +47,6 @@ jobs:
             scp -o "StrictHostKeyChecking=no" php.prod.dockerfile ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload php.prod.dockerfile"; exit 1; }
             scp -o "StrictHostKeyChecking=no" nginx.dockerfile ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload nginx.dockerfile"; exit 1; }
             scp -o "StrictHostKeyChecking=no" composer.dockerfile ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload composer.dockerfile"; exit 1; }
-            scp -o "StrictHostKeyChecking=no" entrypoint.sh ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload entrypoint.sh"; exit 1; }
             scp -r -o "StrictHostKeyChecking=no" nginx ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload nginx directory"; exit 1; }
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
               set -ex
