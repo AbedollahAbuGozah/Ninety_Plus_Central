@@ -54,7 +54,7 @@ jobs:
               cd ~/repo &&
               if ! docker network ls | grep -q your_network_name; then
                 docker network create your_network_name;
-              fi &&
+              fi && 
               docker-compose -f docker-compose.prod.yaml pull &&
               docker-compose -f docker-compose.prod.yaml up -d &&
               docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force ||
