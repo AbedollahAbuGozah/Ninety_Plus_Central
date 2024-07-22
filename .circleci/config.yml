@@ -174,8 +174,10 @@ jobs:
               docker-compose -f docker-compose.prod.yaml exec -T php env &&
               # Debugging: Check database connectivity
               docker-compose -f docker-compose.prod.yaml exec -T php sh -c "php -r '\''\$link = mysqli_connect(\$_ENV[\"DB_HOST\"], \$_ENV[\"DB_USERNAME\"], \$_ENV[\"DB_PASSWORD\"], \$_ENV[\"DB_DATABASE\"]); if (!\$link) { echo \"Error: Unable to connect to MySQL.\" . PHP_EOL; echo \"Debugging errno: \" . mysqli_connect_errno() . PHP_EOL; echo \"Debugging error: \" . mysqli_connect_error() . PHP_EOL; exit; } echo \"Success: A proper connection to MySQL was made!\" . PHP_EOL; mysqli_close(\$link);'\''" &&
-              docker-compose -f docker-compose.prod.yaml exec -T php composer install --no-dev --optimize-autoloader &&
-              docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force ||
+              # Running composer install with verbose output
+              docker-compose -f docker-compose.prod.yaml exec -T php composer install --no-dev --optimize-autoloader -vvv &&
+              # Running migration with verbose output
+              docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force -vvv ||
               { echo "Migration failed"; exit 1; } &&
               docker-compose -f docker-compose.prod.yaml exec -T php php artisan config:cache ||
               { echo "Config cache failed"; exit 1; } &&
