@@ -29,18 +29,25 @@ jobs:
               openssh
 
       - run:
+          name: Ensure target directory exists and has correct permissions
+          command: |
+            ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
+              mkdir -p ~/repo &&
+              chmod -R 755 ~/repo'
+
+      - run:
           name: Deploy Application
           command: |
             set -ex
             cd ~/repo
-            scp -r -o "StrictHostKeyChecking=no" src ubuntu@${SSH_HOST}:~/repo/
-            scp -o "StrictHostKeyChecking=no" src/.env.production ubuntu@${SSH_HOST}:~/repo/src/.env
-            scp -o "StrictHostKeyChecking=no" docker-compose.prod.yaml ubuntu@${SSH_HOST}:~/repo/
-            scp -o "StrictHostKeyChecking=no" php.prod.dockerfile ubuntu@${SSH_HOST}:~/repo/
-            scp -o "StrictHostKeyChecking=no" nginx.dockerfile ubuntu@${SSH_HOST}:~/repo/
-            scp -o "StrictHostKeyChecking=no" composer.dockerfile ubuntu@${SSH_HOST}:~/repo/
-            scp -o "StrictHostKeyChecking=no" entrypoint.sh ubuntu@${SSH_HOST}:~/repo/
-            scp -r -o "StrictHostKeyChecking=no" nginx ubuntu@${SSH_HOST}:~/repo/
+            scp -r -o "StrictHostKeyChecking=no" src ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload src directory"; exit 1; }
+            scp -o "StrictHostKeyChecking=no" src/.env.production ubuntu@${SSH_HOST}:~/repo/src/.env || { echo "Failed to upload .env file"; exit 1; }
+            scp -o "StrictHostKeyChecking=no" docker-compose.prod.yaml ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload docker-compose.prod.yaml"; exit 1; }
+            scp -o "StrictHostKeyChecking=no" php.prod.dockerfile ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload php.prod.dockerfile"; exit 1; }
+            scp -o "StrictHostKeyChecking=no" nginx.dockerfile ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload nginx.dockerfile"; exit 1; }
+            scp -o "StrictHostKeyChecking=no" composer.dockerfile ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload composer.dockerfile"; exit 1; }
+            scp -o "StrictHostKeyChecking=no" entrypoint.sh ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload entrypoint.sh"; exit 1; }
+            scp -r -o "StrictHostKeyChecking=no" nginx ubuntu@${SSH_HOST}:~/repo/ || { echo "Failed to upload nginx directory"; exit 1; }
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
               set -ex
               cd ~/repo &&
