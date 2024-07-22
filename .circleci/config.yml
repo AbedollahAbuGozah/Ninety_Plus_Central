@@ -160,6 +160,7 @@ jobs:
             scp -o "StrictHostKeyChecking=no" php.prod.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" nginx.dockerfile ubuntu@${SSH_HOST}:~/repo/
             scp -o "StrictHostKeyChecking=no" composer.dockerfile ubuntu@${SSH_HOST}:~/repo/
+            scp -o "StrictHostKeyChecking=no" entrypoint.ssh ubuntu@${SSH_HOST}:~/repo/
             scp -r -o "StrictHostKeyChecking=no" src ubuntu@${SSH_HOST}:~/repo/
             scp -r -o "StrictHostKeyChecking=no" nginx ubuntu@${SSH_HOST}:~/repo/
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
