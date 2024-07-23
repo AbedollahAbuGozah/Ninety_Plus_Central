@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Role;
 use App\Rules\PasswordRule;
-use App\Rules\phoneNumberRule;
+use App\Rules\PhoneNumberRule;
 
 class UserRequest extends BaseFormRequest
 {
@@ -32,7 +32,7 @@ class UserRequest extends BaseFormRequest
                 'phone' => [
                     'unique:users,phone',
                     'required',
-                    new phoneNumberRule(),
+                    new PhoneNumberRule(),
                 ],
                 'password' => [
                     'required',
@@ -59,7 +59,7 @@ class UserRequest extends BaseFormRequest
                 'phone' => [
                     'sometimes',
                     'required',
-                    new phoneNumberRule(),//TODO
+                    new PhoneNumberRule(),//TODO
                 ],
             ];
         }

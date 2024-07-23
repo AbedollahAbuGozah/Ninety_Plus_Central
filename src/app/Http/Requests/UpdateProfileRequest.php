@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\phoneNumberRule;
+use App\Rules\PhoneNumberRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProfileRequest extends FormRequest
@@ -26,7 +26,7 @@ class UpdateProfileRequest extends FormRequest
             'phone' => [
                 'sometimes',
                 'required',
-                new phoneNumberRule(),//TODO
+                new PhoneNumberRule(),//TODO
             ],
         ];
     }
