@@ -24,8 +24,8 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
     static $except = [
-        'Illuminate\Validation\ValidationException',
-        'Illuminate\Auth\AuthenticationException',
+//        'Illuminate\Validation\ValidationException',
+//        'Illuminate\Auth\AuthenticationException',
     ];
 
     public function register(): void
@@ -81,7 +81,7 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof MethodNotAllowedHttpException) {
             return 405;
         } else {
-            return 500;
+            return 422;
         }
     }
 }
