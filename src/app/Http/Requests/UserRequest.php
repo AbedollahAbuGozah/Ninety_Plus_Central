@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Role;
 use App\Rules\PasswordRule;
 use App\Rules\PhoneNumberRule;
+use Illuminate\Support\Facades\Hash;
 
 class UserRequest extends BaseFormRequest
 {
@@ -40,6 +41,12 @@ class UserRequest extends BaseFormRequest
                     new PasswordRule(),
                 ],
             ];
+
+            //this check added for admin so admin can create user from any role and if it's not authenticated it will be registered by the allowed rule
+
+            if (!auth()->check()) {
+                $rules['role_id'] .= '|in:' . implode(',', Role::getAllowedRegister()->pluck('id')->toArray());
+            }
         }
 
         if ($this->isUpdate()) {
@@ -60,6 +67,18 @@ class UserRequest extends BaseFormRequest
                     'sometimes',
                     'required',
                     new PhoneNumberRule(),//TODO
+                ],
+                'current_password' => [
+                    'required_with:password',
+                    function ($attribute, $value, $fail) {
+                        if (!Hash::check($value, $this->user()->password)) {
+                            $fail('The current password is incorrect.');
+                        }
+                    },
+                ],
+                'password' => [
+                    'confirmed',
+                    new PasswordRule(),
                 ],
             ];
         }

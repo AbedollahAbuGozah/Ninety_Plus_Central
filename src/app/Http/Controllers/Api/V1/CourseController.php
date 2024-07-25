@@ -62,9 +62,12 @@ class CourseController extends BaseController
         return $this->success([], trans('messages.success.delete'), 200);
     }
 
-    public function changeCourseStatus(ChangeCourseStatusRequest $request, Course $course)
+    public function changeStatus(ChangeCourseStatusRequest $request, Course $course)
     {
-        $validatedData['request'] = $request->safe()->all();
+        /*
+         * active course can not canceled if it already has joined student
+         */
+        $validatedData = $request->safe()->all();
         $this->courseService->changeStatus($course, $validatedData);
         return $this->success($course, 'messages.success.updated', 200);
     }

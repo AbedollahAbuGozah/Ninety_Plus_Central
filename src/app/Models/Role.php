@@ -19,7 +19,7 @@ class Role extends Model
 
     public static function getAllowedRegister()
     {
-        return Role::whereIn('name', [RoleOptions::INSTRUCTOR, RoleOptions::STUDENT]);
+        return Role::where('can_register', true);
     }
 
     public function permissions()

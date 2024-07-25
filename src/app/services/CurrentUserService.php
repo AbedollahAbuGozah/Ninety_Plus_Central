@@ -6,7 +6,7 @@ use App\Http\Resources\PermissionRescourse;
 
 class CurrentUserService
 {
-    public static function logout()
+    public  function logout()
     {
         auth()->logout();
     }
@@ -22,7 +22,7 @@ class CurrentUserService
 
         $permissions = $user->roles->flatMap(function ($role) {
             return $role->permissions;
-        })->unique('id')->groupBy(function ($perm){
+        })->groupBy(function ($perm){
             return $perm->resource->name;
         });
 

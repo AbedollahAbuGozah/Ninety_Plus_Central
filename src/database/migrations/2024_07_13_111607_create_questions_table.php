@@ -11,11 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 40);
-            $table->boolean('can_register')->default(false);
+            $table->text('text');
+            $table->foreignId('chapter_id')->constrained('chapters');
+            $table->integer('expectation_time')->nullable();
+            $table->enum('label', ['easy', 'medium', 'hard']);
+            $table->integer('weight')->nullable();
+            $table->text('hint')->nullable();
+            $table->string('type');
             \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
+
             $table->timestamps();
         });
     }
@@ -25,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('questions');
     }
 };

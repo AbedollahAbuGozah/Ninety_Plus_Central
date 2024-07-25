@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Maize\Markable\Markable;
+use Maize\Markable\Models\Bookmark;
 use Maize\Markable\Models\Favorite;
+use Maize\Markable\Models\Reaction;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -44,6 +46,8 @@ class Course extends Model implements HasMedia
 
     protected static $marks = [
         Favorite::class,
+        Reaction::class,
+        Bookmark::class,
     ];
 
     const COURSE_COVER_IMAGE_MEDIA_COLLECTION = 'course_cover_image';

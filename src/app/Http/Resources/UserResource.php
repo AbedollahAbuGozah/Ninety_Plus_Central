@@ -36,16 +36,16 @@ class UserResource extends BaseResource
                 });
             }),
 
-            'email_verified' => (bool)$this->email_verified_at,
+            'email_verified' => !!$this->email_verified_at,
             'gender' => $this->gender,
             'birth_date' => $this->birth_date,
             'phone' => $this->phone,
             'profile_image' => $this->resolveUser()->profile_image,
             'roles' => $this->roles()->pluck('name'),
-            'course_count' =>  $this->resolveUser()->courses()->count(),
+            'course_count' => $this->whenLoaded('courses', fn() => $this->resolveUser()->courses()->count()),
             'created_at' => $this->created_at,
-            'total_paid' => $this->when($this->isStudent(), $this->resolveUser()->courses()->sum('price')),
-            'branch' => $this->whenLoaded('branch', fn() => $this->branch()->select('id', 'name')->get(), $this->branch_id),
+            'total_paid' => $this->when($this->isStudent(), fn() => $this->resolveUser()->courses()->sum('price')),
+            'branch' => $this->whenLoaded('branch', fn() => $this->branch()->select('id', 'name')->get()),
             'permissions' => $this->when(auth()->check(), fn() => ((new CurrentUserService())->getPermissions())),
         ];
         return array_merge($common, $this->instructorData());

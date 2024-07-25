@@ -15,7 +15,7 @@ class ChangeCourseStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|in' . implode(',', CourseStatusOptions::options())
+            'status' => "required|in:" . CourseStatusOptions::ACTIVE . ',' . CourseStatusOptions::CANCELED,
         ];
     }
 }

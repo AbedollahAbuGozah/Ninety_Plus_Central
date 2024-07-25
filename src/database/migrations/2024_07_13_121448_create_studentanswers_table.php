@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('student_answers', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 40);
-            $table->boolean('can_register')->default(false);
-            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
+            $table->foreignId('student_id')->constrained('users');
+            $table->foreignId('question_id')->constrained('question');
+            $table->foreignId('answer_id')->constrained('answer_options');
+            $table->unique(['student_id', 'question_id', 'answer_id']);
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('studentanswers');
     }
 };

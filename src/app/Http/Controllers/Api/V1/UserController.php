@@ -9,9 +9,6 @@ use App\Models\Instructor;
 use App\Models\Student;
 use App\Models\User;
 use App\services\UserService;
-use App\Traits\HttpResponse;
-use Illuminate\Support\Facades\DB;
-
 class UserController extends BaseController
 {
     public function __construct(protected UserService $userService)
@@ -21,23 +18,21 @@ class UserController extends BaseController
 
     public function index(UserRequest $request)
     {
-
         $users = match ($request->query('role')) {
             RoleOptions::STUDENT => Student::query(),
             RoleOptions::INSTRUCTOR => Instructor::query()->with(['rates']),
             default => User::query(),
         };
 
-        $users = UserResource::collection($users->paginate($request->get('per_page') ?? 10));
+        $users = UserResource::collection($users, $request->boolean('paginate'), $request->get('page_size'));
+
         return $this->success($users, trans('messages.index.success'), 200);
     }
 
     public function store(UserRequest $request)
     {
         $validatedData = $request->safe()->all();
-        DB::beginTransaction();
         $user = $this->userService->create($validatedData, new User());
-        DB::commit();
         return $this->success(UserResource::make($user), trans('messages.create.success'), 201);
     }
 
@@ -50,10 +45,8 @@ class UserController extends BaseController
     {
         $validatedData = $request->safe()->all();
 
-        DB::beginTransaction();
         $user = $this->userService->update($validatedData, $user);
-        $this->userService->resetPassword($user, $validatedData['password'], $validatedData['old_password']);
-        DB::commit();
+
 
         return $this->success(UserResource::make($user), trans('messages.success.update'), 200);
     }

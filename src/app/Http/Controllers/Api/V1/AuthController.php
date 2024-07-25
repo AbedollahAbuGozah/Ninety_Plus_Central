@@ -12,7 +12,7 @@ class AuthController extends BaseController
 {
     use HttpResponse;
 
-    public function __construct()
+    public function __construct(protected CurrentUserService $currentUserService)
     {
         $this->middleware('auth:api', ['except' => ['login']]);
     }
@@ -27,9 +27,8 @@ class AuthController extends BaseController
 
         $user = User::where('email', '=', $credentials['email'])->first();
 
-        $user = User::where('email', '=', $credentials['email'])->first();
         return $this->success([
-            'user' => UserResource::make($user->resolveUser()->profile()),
+            'user' => UserResource::make($user),
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
@@ -38,7 +37,7 @@ class AuthController extends BaseController
 
     public function me()
     {
-        return $this->success(UserResource::make((new CurrentUserService())::get()), 'message.me.success', 200);
+        return $this->success(UserResource::make($this->currentUserService->get()), 'message.me.success', 200);
     }
 
     protected function respondWithToken($token)
@@ -52,7 +51,7 @@ class AuthController extends BaseController
 
     public function logout()
     {
-        (new CurrentUserService())::logout();
+       $this->currentUserService->logout();
         return $this->success([], trans('messages.success.logout'), 200);
     }
 

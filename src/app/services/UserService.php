@@ -26,15 +26,11 @@ class UserService extends BaseService
 
     public function postCreateOrUpdate($data, Model $user)
     {
-        logger(__METHOD__);
-        logger($data);
-        logger(request());
         if (request()->hasFile('profile_image')) {
             $user->resolveUser()->clearMediaCollection(User::PROFILE_IMAGE_MEDIA_COLLECTION);
             $profileImage = $user->addMediaFromRequest('profile_image')
                 ->toMediaCollection(User::PROFILE_IMAGE_MEDIA_COLLECTION);
             Storage::disk('s3')->setVisibility($profileImage->getPath(), 'public');
-
         }
     }
 
@@ -50,7 +46,7 @@ class UserService extends BaseService
 
     public static function generatePasswordResetJwtToken($user = null)
     {
-        $user = $user ?? CurrentUserService::get();
+        $user = $user ?? (new CurrentUserService())->get();
 
         $claims = [
             'sub' => $user->id,
@@ -61,9 +57,9 @@ class UserService extends BaseService
         return JWTAuth::customClaims($claims)->fromUser($user);
     }
 
-    public function resetPassword(User $user, $newPassWord, $oldPassword = null)
+    public function resetPassword(User $user, $newPassWord, $currentPassword = null)
     {
-        if ($oldPassword && !Hash::check($oldPassword, $user->password)) {
+        if ($currentPassword && !Hash::check($currentPassword, $user->password)) {
             throw new \Dotenv\Exception\ValidationException('Incorrect old password');
         }
         $user->password = bcrypt($newPassWord);

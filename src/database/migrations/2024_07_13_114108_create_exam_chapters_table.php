@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('exam_chapters', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 40);
-            $table->boolean('can_register')->default(false);
+            $table->foreignId('chapter_id')->constrained('chapters');
+            $table->foreignId('exam_id')->constrained('exams');
+            $table->unique(['exam_id', 'chapter_id']);
             \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
+
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('exam_chapters');
     }
 };

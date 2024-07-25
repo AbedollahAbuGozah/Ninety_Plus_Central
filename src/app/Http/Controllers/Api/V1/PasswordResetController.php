@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\GetPasswordResetCodeRequest;
-use App\Http\Requests\ResetPasswordReqeust;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\VerifyPasswordResetCode;
 use App\Jobs\ExpirePasswordResetCodeJob;
 use App\Models\PasswordResetCode;
@@ -27,6 +27,7 @@ class PasswordResetController extends BaseController
         $user->notify(new SendResetPasswordCodeNotification($passwordReset->code));
 
         ExpirePasswordResetCodeJob::dispatch($passwordReset)->delay(Carbon::now()->addMinutes(5));
+
         return $this->success([], trans('messages.send_code.success'), 200);
     }
 
@@ -38,6 +39,7 @@ class PasswordResetController extends BaseController
             return $this->error(trans('messages.error.code_verification'), 403);
         }
         $user = User::where('email', $validatedData['email'])->firstOrFail();
+
         return $this->success([
             'token' => UserService::generatePasswordResetJwtToken($user),
             'expire_in' => 20,
@@ -46,14 +48,17 @@ class PasswordResetController extends BaseController
 
     }
 
-    public function resetPassword(ResetPasswordReqeust $request)
+    public function resetPassword(ResetPasswordRequest $request)
     {
-        $validatedData = $request->safe()->all();
-        $decoded = JWTAuth::parseToken()->authenticate();
+        //TODO:check teh token type to be password_reset
 
-        if ($user = User::find($decoded['sub'])) {
+        $validatedData = $request->safe()->all();
+
+        if ($user  = JWTAuth::parseToken()->authenticate()) {
             (new UserService())->resetPassword($user, $validatedData['password']);
+            JWTAuth::invalidate(JWTAuth::getToken());
             return $this->success([], trans('messages.success.reset'), 200);
+
         }
 
         return $this->error('The Token Is Invalid', 401);
