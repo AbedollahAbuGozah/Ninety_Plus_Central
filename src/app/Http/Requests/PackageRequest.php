@@ -35,7 +35,7 @@ class PackageRequest extends BaseFormRequest
                 'discount' => 'sometimes|required|numeric|min:1|max:100',
                 'discount_expires_at' => 'required_with:discount|date',
                 'module_id' => 'required|exists:modules,id',
-                'cover_image' => 'sometimes|required|image',
+                'cover_image' => 'sometimes|required|mimes:jpeg,png,jpg,gif,svg,webp',
                 'gifted_points' => 'required|integer'
             ];
         }
@@ -52,7 +52,7 @@ class PackageRequest extends BaseFormRequest
                 'discount' => 'sometimes|required|numeric|min:1|max:100',
                 'discount_expires_at' => 'required_with:discount|date',
                 'module_id' => 'sometimes|exists:modules,id',
-                'cover_image' => 'sometimes|required|image',
+                'cover_image' => 'sometimes|required|mimes:jpeg,png,jpg,gif,svg,webp',
                 'gifted_points' => 'sometimes|required|integer'
             ];
         }
