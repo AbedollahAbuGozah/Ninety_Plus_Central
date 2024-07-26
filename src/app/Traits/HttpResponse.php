@@ -4,11 +4,11 @@ namespace App\Traits;
 
 trait HttpResponse
 {
-    public function success($data, $message, $code)
+    public function success($data, $message, $code, $key = 'data')
     {
         return response()->json([
             'status' => 'requests was success',
-            'data' => $data,
+            $key => $data,
             'message' => $message,
         ], $code);
     }

@@ -8,10 +8,10 @@ use App\constants\FavorableTypeOptions;
 use App\constants\PurchasableTypeOptions;
 use App\constants\RatableTypeOptions;
 use App\Models\Course;
-use App\Models\CourseStudent;
 use App\Models\User;
 use App\Notifications\SendProductSoldNotification;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class NinetyPlusCentral
@@ -104,12 +104,21 @@ class NinetyPlusCentral
 
         $user->save();
 
-         $instructor->notify(new SendProductSoldNotification($course, 'Course', $customer));
+        $instructor->notify(new SendProductSoldNotification($course, 'Course', $customer));
     }
 
     public function resolveMorph($modelClass, $modelId)
     {
         return $modelClass::find($modelId);
+    }
+
+    public function reformatForSync(array &$pivots)
+    {
+      $syncableArray = collect($pivots)->mapWithKeys(function ($pivot) {
+            return [$pivot['id'] => Arr::except($pivot, ['id'])];
+        })->toArray();
+
+      return $syncableArray;
     }
 
 }

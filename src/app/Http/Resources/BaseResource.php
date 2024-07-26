@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BaseResource extends JsonResource
 {
@@ -33,7 +32,6 @@ class BaseResource extends JsonResource
 
     private static function collectionWithSavePagination($resource, $page_size)
     {
-        logger('needd');
         return $resource->paginate($page_size)
             ->through(function ($item) {
                 return self::make($item);

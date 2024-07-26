@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('student_answers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained('users');
-            $table->foreignId('question_id')->constrained('question');
+            $table->foreignId('question_id')->constrained('questions');
             $table->foreignId('answer_id')->constrained('answer_options');
             $table->unique(['student_id', 'question_id', 'answer_id']);
+            \App\Facades\NinetyPlusCentralFacade::addPropsColumn($table);
             $table->timestamps();
         });
     }
