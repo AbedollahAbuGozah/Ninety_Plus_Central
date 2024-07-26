@@ -14,10 +14,10 @@ class BaseService
         $data = $this->preCreateOrUpdate($data, $model);
         $data = $this->preCreate($data, $model);
         $createdModel = $model->create($data);
-        $createdModel->refresh();
         $createdModel->load($relationsNeedToLoad);
         $this->postCreate($data, $createdModel);
         $this->postCreateOrUpdate($data, $createdModel);
+        $createdModel->refresh();
         DB::commit();
         return $createdModel;
     }

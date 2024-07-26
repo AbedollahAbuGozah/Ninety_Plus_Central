@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Filterable;
+use App\Traits\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
@@ -10,7 +11,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Package extends Model implements HasMedia
 {
-    use HasFactory, Filterable, InteractsWithMedia;
+    use HasFactory, Filterable, Sortable, InteractsWithMedia;
 
     const PACKAGE_COVER_IMAGE_MEDIA_COLLECTION = 'package_cover_image';
 
@@ -19,6 +20,11 @@ class Package extends Model implements HasMedia
     protected $casts = [
         'properties' => 'json',
     ];
+
+    protected array $sortable = [
+        'created_at',
+    ];
+
 
     protected array $filterable = [
         'name',

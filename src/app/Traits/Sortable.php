@@ -20,10 +20,9 @@ trait Sortable
         }
 
         $appliedSorts = request('sort');
-        $applicableSorts = array_intersect($this->sortable, array_keys(array_merge($appliedSorts, ['properties->weekly_lectures'])));
-
+        $applicableSorts = array_intersect($this->sortable, array_keys($appliedSorts));
         foreach ($applicableSorts as $sort) {
-            $builder->orderBy($this->needPrefix['weekly_lectures'] ?? $sort, $appliedSorts[$sort]);
+            $builder->orderBy($sort, $appliedSorts[$sort]);
         }
 
         return $builder;

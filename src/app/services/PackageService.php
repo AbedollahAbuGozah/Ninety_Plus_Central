@@ -27,14 +27,14 @@ class PackageService extends BaseService
         $package->save();
     }
 
-    private function attachChaptersToPackage($chapters, Model $pacakge): void
+    private function attachChaptersToPackage($chapters, Model $package): void
     {
         if (empty($chapters)) {
             return;
         }
 
         $chapters = NinetyPlus::reformatForSync($chapters);
-        $pacakge->chapters()->sync($chapters);
+        $package->chapters()->sync($chapters);
     }
 
     /**

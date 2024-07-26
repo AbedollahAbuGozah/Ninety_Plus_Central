@@ -18,7 +18,7 @@ class PackageController extends BaseController
 
     public function index(PackageRequest $request, Module $module)
     {
-        $packages = Package::query()->filter();
+        $packages = Package::query()->with(['module'])->filter()->sort();
         return $this->success(PackageResource::collection($packages, $request->boolean('paginate'), $request->get('page_size')), trans('messages.success.index'), 200);
     }
 
@@ -26,7 +26,7 @@ class PackageController extends BaseController
     {
         $validatedData = $request->safe()->all();
         $package = $this->packageService->create($validatedData, new Package(), ['module', 'chapters']);
-        return $this->success(PackageResource::make($package), trans('messages.success.store'), 200);
+        return $this->success(PackageResource::make($package), trans('messages.success.store'), 201);
     }
 
     public function show(PackageRequest $request, Package $package)
