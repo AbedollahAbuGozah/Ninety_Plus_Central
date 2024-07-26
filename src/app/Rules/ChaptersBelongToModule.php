@@ -6,9 +6,9 @@ use App\Models\Chapter;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class CourseChapterRule implements ValidationRule
+class ChaptersBelongToModule implements ValidationRule
 {
-    public function __construct(protected $courseModuleId)
+    public function __construct(protected $relatedModuleId)
     {
 
     }
@@ -22,9 +22,20 @@ class CourseChapterRule implements ValidationRule
             ->get();
 
 
-        if ($chapterModuleIds->count() > 1 || ($chapterModuleIds->first()->module_id != $this->courseModuleId)) {
+        if ($chapterModuleIds->count() > 1 || ($chapterModuleIds->first()->module_id != $this->relatedModuleId)) {
             $fail(':attribute should be belong to chapters module');
         }
 
     }
+
+    private function extractChapterIds($value): array
+    {
+        if (!is_array($value[0])) {
+            return $value;
+        }
+
+        return array_column($value, 'id');
+    }
+
+
 }

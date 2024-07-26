@@ -14,8 +14,11 @@ class PackageResource extends BaseResource
             'price' => $this->price,
             'description' => $this->description,
             'module' => $this->whenLoaded('module', fn() => $this->module->only('id', 'name'), $this->id),
-            'chapters' => $this->whenLoaded('chapters', fn() => $this->chapters->map(fn($chapter) => $chapter->only('id', 'title'))),
-            'discount' => $this->when($this->discount, $this->discount),
+            'chapters' => $this->whenLoaded('chapters', fn() => $this->chapters->map(fn($chapter) => [
+                'id' => $chapter->id,
+                'title' => $chapter->title,
+                'exams_count' => $chapter->pivot->exams_count,
+            ])),            'discount' => $this->when($this->discount, $this->discount),
             'cover_image' => $this->cover_image,
             'gifted_points' => $this->gifted_points,
             'discount_expires_at' => $this->when($this->discount, $this->discount_expires_at),

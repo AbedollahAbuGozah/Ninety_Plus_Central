@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 
+use App\Rules\ChaptersBelongToModule;
 
 class PackageRequest extends BaseFormRequest
 {
@@ -30,7 +31,11 @@ class PackageRequest extends BaseFormRequest
                 'price' => 'required|numeric',
                 'chapters' => 'required|array',
                 'chapters.*' => 'required|array',
-                'chapters.*.id' => 'required|exists:chapters,id',
+                'chapters.*.id' => [
+                    'required',
+                    'exists:chapters,id',
+//                    new ChaptersBelongToModule($this->module_id)
+                ],
                 'chapters.*.exams_count' => 'sometimes|required|integer',
                 'discount' => 'sometimes|required|numeric|min:1|max:100',
                 'discount_expires_at' => 'required_with:discount|date',
@@ -47,7 +52,12 @@ class PackageRequest extends BaseFormRequest
                 'price' => 'sometimes|required|numeric',
                 'chapters' => 'sometimes|required|array',
                 'chapters.*' => 'sometimes|required|array',
-                'chapters.*.id' => 'sometimes|required|exists:chapters,id',
+                'chapters.*.id' => [
+                    'sometimes',
+                    'required',
+                    'exists:chapters,id',
+//                    new ChaptersBelongToModule($this->module_id)
+                ],
                 'chapters.*.exams_count' => 'sometimes|required|integer',
                 'discount' => 'sometimes|required|numeric|min:1|max:100',
                 'discount_expires_at' => 'required_with:discount|date',

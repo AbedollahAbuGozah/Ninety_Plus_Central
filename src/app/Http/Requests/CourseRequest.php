@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 
-use App\Rules\CourseChapterRule;
+use App\Rules\ChaptersBelongToModule;
 
 class CourseRequest extends BaseFormRequest
 {
@@ -35,7 +35,7 @@ class CourseRequest extends BaseFormRequest
                     'sometimes',
                     'required',
                     'array',
-                    new CourseChapterRule($this->module_id)
+                    new ChaptersBelongToModule($this->module_id)
                 ],
                 'starts_at' => 'required|date',
                 'ends_at' => 'required|date|gte:starts_at',
@@ -57,7 +57,7 @@ class CourseRequest extends BaseFormRequest
                     'sometimes',
                     'required',
                     'array',
-                    new CourseChapterRule($this->route('course')->module_id)
+                    new ChaptersBelongToModule($this->route('course')->module_id)
                 ],
                 'price' => 'sometimes|required|numeric',
                 'chapters.*' => 'required|exists:chapters,id',

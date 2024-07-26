@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 
-use App\Rules\CourseChapterRule;
+use App\Rules\ChaptersBelongToModule;
 
 class RateRequest extends BaseFormRequest
 {

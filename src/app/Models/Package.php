@@ -33,7 +33,8 @@ class Package extends Model implements HasMedia
 
     public function chapters()
     {
-        return $this->belongsToMany(Chapter::class, 'chapter_packages');
+        return $this->belongsToMany(Chapter::class, 'chapter_packages')
+            ->withPivot('exams_count');
     }
 
     public function module()
