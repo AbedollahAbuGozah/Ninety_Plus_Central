@@ -3,7 +3,10 @@
 namespace App\Http\Requests;
 
 
-use App\Rules\ChaptersBelongToModule;
+use App\Models\Chapter;
+use App\Models\Module;
+use App\Models\Package;
+use App\Rules\BelongsToSameParent;
 
 class PackageRequest extends BaseFormRequest
 {
@@ -22,6 +25,7 @@ class PackageRequest extends BaseFormRequest
      */
     public function rules(): array
     {
+
         $rules = [];
 
         if ($this->isStore()) {
@@ -29,12 +33,15 @@ class PackageRequest extends BaseFormRequest
                 'name' => 'required|string',
                 'description' => 'required|string|min:10|max:250',
                 'price' => 'required|numeric',
-                'chapters' => 'required|array',
                 'chapters.*' => 'required|array',
                 'chapters.*.id' => [
                     'required',
                     'exists:chapters,id',
-//                    new ChaptersBelongToModule($this->module_id)
+                ],
+                'chapters' => [
+                    'required',
+                    'array',
+                    new BelongsToSameParent(Module::class,Chapter::class ,Package::class,'module_id', null)
                 ],
                 'chapters.*.exams_count' => 'sometimes|required|integer',
                 'discount' => 'sometimes|required|numeric|min:1|max:100',
@@ -50,13 +57,15 @@ class PackageRequest extends BaseFormRequest
                 'name' => 'sometimes|required|string',
                 'description' => 'sometimes|required|string|min:10|max:250',
                 'price' => 'sometimes|required|numeric',
-                'chapters' => 'sometimes|required|array',
-                'chapters.*' => 'sometimes|required|array',
+                'chapters.*' => 'required|array',
                 'chapters.*.id' => [
-                    'sometimes',
                     'required',
                     'exists:chapters,id',
-//                    new ChaptersBelongToModule($this->module_id)
+                ],
+                'chapters' => [
+                    'required',
+                    'array',
+                    new BelongsToSameParent(Module::class,Chapter::class ,Package::class,'module_id', 'package')
                 ],
                 'chapters.*.exams_count' => 'sometimes|required|integer',
                 'discount' => 'sometimes|required|numeric|min:1|max:100',
