@@ -59,7 +59,9 @@ jobs:
               docker-compose -f docker-compose.prod.yaml exec -T php php artisan migrate --force ||
               { echo "Migration failed"; exit 1; } &&
               docker-compose -f docker-compose.prod.yaml exec -T php php artisan config:clear ||
-              { echo "Config cache failed"; exit 1; } &&
+              { echo "Config clear failed"; exit 1; } &&
+             docker-compose -f docker-compose.prod.yaml exec -T php php artisan optimize ||
+              { echo "Config clear failed"; exit 1; } &&
                docker-compose -f docker-compose.prod.yaml exec -T php php artisan config:cache ||
               { echo "Config cache failed"; exit 1; } &&
               docker-compose -f docker-compose.prod.yaml exec -T php php artisan route:cache ||
