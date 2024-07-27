@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\LectureController;
 use App\Http\Controllers\Api\V1\Markables\FavoriteController;
 use App\Http\Controllers\Api\V1\MarkController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\QuestionController;
 use App\Http\Controllers\Api\V1\RateController;
 use App\Http\Controllers\Api\V1\RequestMoneyController;
 use App\Http\Controllers\Api\V1\StudentController;
@@ -85,6 +86,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'/*, 'verified'*/], fun
     Route::post('bank-account', [BankAccountcontroller::class, 'store']);
     Route::apiResource('comments', CommentController::class)->except(['store', 'index']);
     Route::apiResource('rates', RateController::class)->except(['store', 'index']);
+
+    Route::apiResource('questions', QuestionController::class);
 });
 
 

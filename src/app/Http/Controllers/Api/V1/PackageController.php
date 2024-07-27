@@ -18,7 +18,10 @@ class PackageController extends BaseController
 
     public function index(PackageRequest $request, Module $module)
     {
-        $packages = Package::query()->with(['module'])->filter()->sort();
+        $packages = Package::query()->with(['module'])
+            ->filter()
+            ->sort();
+
         return $this->success(PackageResource::collection($packages, $request->boolean('paginate'), $request->get('page_size')), trans('messages.success.index'), 200);
     }
 
