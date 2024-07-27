@@ -79,13 +79,11 @@ class QuestionRequest extends BaseFormRequest
         return [
             'answer_options' => 'required|array',
             'answer_options.*' => 'required|array',
-            'answer_options.*.id' => 'sometimes|required|exists:answer_options,id',
             'answer_options.*.text' => 'required|string',
             'answer_options.*.is_correct' => [
                 'required_if:type,' . QuestionType::MULTIPLE_CHOICE->value,
                 'required_if:type,' . QuestionType::CONSTRUCTION->value,
             ],
-//            'answer_options.*.question_id' => 'required|exists:questions,id',
             'answer_options.*.seq' => 'sometimes|required_if:type,' . QuestionType::SORTING->value,
             'answer_options.*.answer_id' => 'sometimes|required_if:type,' . QuestionType::MATCHING->value,
             'answer_options.*.blank' => 'sometimes|required_if:type,' . QuestionType::FILL_BLANK->value,

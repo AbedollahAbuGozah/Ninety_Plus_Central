@@ -5,26 +5,22 @@ namespace App\services;
 
 use App\Models\AnswerOption;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 
 class QuestionService extends BaseService
 {
 
     public function postCreateOrUpdate($data, Model $question): void
     {
-        $this->assignOrUpdateAnswerOptionsToQuestions($data['answer_options'], $question->id);
+        $this->assignOrUpdateAnswerOptionsToQuestions($data['answer_options'], $question);
     }
 
-    private function assignOrUpdateAnswerOptionsToQuestions($answer_options, $questionId): void
+    private function assignOrUpdateAnswerOptionsToQuestions($answer_options, $question): void
     {
-        array_map(function ($options) use ($questionId) {
-            $options['question_id'] = $questionId;
-            if (isset($options['id'])) {
-                $answerOption = AnswerOption::hydrate([Arr::only($options, 'id')])->first();
-                 (new AnswerOptionsService())->update(Arr::except($options, 'id'), $answerOption);
-            } else {
+        $question->answerOptions()->delete();
+
+        array_map(function ($options) use ($question) {
+                $options['question_id'] = $question->id;
                 (new AnswerOptionsService())->create($options, new AnswerOption());
-            }
         }, $answer_options);
     }
 
