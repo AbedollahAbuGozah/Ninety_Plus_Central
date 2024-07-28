@@ -23,6 +23,7 @@ class Package extends Model implements HasMedia
 
     protected array $sortable = [
         'created_at',
+        'price'
     ];
 
 
