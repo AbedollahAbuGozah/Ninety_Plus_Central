@@ -20,13 +20,15 @@ services:
         - NO_CACHE=1
     volumes:
       - ./src:/var/www/html
+    env_file:
+      - .env.prod
     depends_on:
       - composer
     command: >
       /bin/sh -c "
       mkdir -p /var/www/html/storage/logs 
-      && chown -R www-data:www-data /var/www/html/storage 
-      && chmod -R 775 /var/www/html/storage 
+      && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+      && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
       && php artisan optimize
       && php-fpm -y /usr/local/etc/php-fpm.conf -R"
     networks:
