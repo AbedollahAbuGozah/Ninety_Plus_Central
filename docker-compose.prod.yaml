@@ -21,7 +21,7 @@ services:
     volumes:
       - ./src:/var/www/html
     env_file:
-      - .env.production
+      - ./src/.env.production
     depends_on:
       - composer
     command: >
