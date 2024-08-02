@@ -74,7 +74,7 @@ class QuestionRequest extends BaseFormRequest
         return $rules;
     }
 
-    private function getAnswersRules()
+    private function getAnswersRules(): array
     {
         return [
             'answer_options' => 'required|array',
