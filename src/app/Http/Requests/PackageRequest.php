@@ -25,6 +25,8 @@ class PackageRequest extends BaseFormRequest
      */
     public function rules(): array
     {
+        logger(__METHOD__);
+        logger($this);
 
         $rules = [];
 
