@@ -27,6 +27,9 @@ class PackageController extends BaseController
 
     public function store(PackageRequest $request, Module $module)
     {
+        logger(__METHOD__);
+        logger($request);
+
         $validatedData = $request->safe()->all();
         $package = $this->packageService->create($validatedData, new Package(), ['module', 'chapters']);
         return $this->success(PackageResource::make($package), trans('messages.success.store'), 201);
