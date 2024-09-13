@@ -29,7 +29,7 @@ jobs:
               openssh
 
       - run:
-          name: Ensure target directory exists and has correct permissions
+          name: Ensure target directory exist and has correct permissions
           command: |
             ssh -o "StrictHostKeyChecking=no" ubuntu@${SSH_HOST} '
               sudo mkdir -p ~/repo &&
