@@ -20,7 +20,7 @@ jobs:
             - "SHA256:ka5Spl7z++GW5Yr/KQdLSpTB2+2OMDNa1dxtW+cI4Sw"
 
       - run:
-          name: Install Systems Dependencies
+          name: Install System Dependencies
           command: |
             set -ex
             apk update
