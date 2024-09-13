@@ -15,7 +15,7 @@ jobs:
 
       - checkout
 
-      - add_ssh_keys:
+      - add_ssh_key:
           fingerprints:
             - "SHA256:ka5Spl7z++GW5Yr/KQdLSpTB2+2OMDNa1dxtW+cI4Sw"
 
